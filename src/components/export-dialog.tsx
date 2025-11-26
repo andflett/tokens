@@ -1,0 +1,146 @@
+"use client";
+
+import * as React from "react";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { exportTokens, getSuggestedFilename, type ExportFormat } from "@/lib/export";
+import type { TokenSystem } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+interface ExportDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  tokens: TokenSystem;
+  mode: "light" | "dark" | "both";
+}
+
+const FORMAT_INFO: Record<ExportFormat, { label: string; description: string }> = {
+  css: {
+    label: "CSS Variables",
+    description: "Standard CSS custom properties that work everywhere",
+  },
+  "tailwind-v3": {
+    label: "Tailwind v3",
+    description: "JavaScript config for Tailwind CSS v3.x",
+  },
+  "tailwind-v4": {
+    label: "Tailwind v4",
+    description: "CSS-based config for Tailwind CSS v4.x",
+  },
+  json: {
+    label: "JSON",
+    description: "Raw token data in JSON format",
+  },
+  scss: {
+    label: "SCSS",
+    description: "SCSS variables for Sass projects",
+  },
+};
+
+/**
+ * Export dialog with format selection and preview
+ */
+export function ExportDialog({
+  open,
+  onOpenChange,
+  tokens,
+  mode,
+}: ExportDialogProps) {
+  const [format, setFormat] = React.useState<ExportFormat>("css");
+  const [output, setOutput] = React.useState("");
+
+  // Generate output when format changes
+  React.useEffect(() => {
+    try {
+      const result = exportTokens(tokens, format, mode);
+      setOutput(result);
+    } catch (error) {
+      console.error("Export error:", error);
+      setOutput("// Error generating export");
+    }
+  }, [tokens, format, mode]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(output);
+      toast.success("Copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy");
+    }
+  };
+
+  const handleDownload = () => {
+    const filename = getSuggestedFilename(format);
+    const blob = new Blob([output], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${filename}`);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Export Tokens</DialogTitle>
+          <DialogDescription>
+            Choose a format and copy or download your design tokens.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Tabs
+          value={format}
+          onValueChange={(v) => setFormat(v as ExportFormat)}
+          className="flex-1 overflow-hidden flex flex-col"
+        >
+          <TabsList className="grid grid-cols-5">
+            {(Object.keys(FORMAT_INFO) as ExportFormat[]).map((f) => (
+              <TabsTrigger key={f} value={f} className="text-xs">
+                {FORMAT_INFO[f].label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          <p className="text-sm text-muted-foreground mt-2">
+            {FORMAT_INFO[format].description}
+          </p>
+
+          <div className="flex-1 overflow-hidden mt-4">
+            <div className="relative h-full">
+              <pre
+                className={cn(
+                  "h-full max-h-[400px] overflow-auto rounded-lg bg-muted p-4",
+                  "text-xs font-mono whitespace-pre"
+                )}
+              >
+                {output}
+              </pre>
+            </div>
+          </div>
+        </Tabs>
+
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={handleCopy}>
+            📋 Copy
+          </Button>
+          <Button onClick={handleDownload}>
+            ⬇️ Download
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vibe Themes
+
+A design token generator with web UI and MCP server, built for designers learning to code with AI.
+
+## Features
+
+- 🎨 **OKLCH Color Generation** — Perceptually uniform color scales that look balanced
+- ♿ **Accessible by Default** — Every color combination meets WCAG contrast requirements
+- 🤖 **MCP Ready** — Use directly from Claude, Copilot, or other AI assistants
+- 📦 **Multiple Exports** — CSS, Tailwind v3/v4, JSON, SCSS
+- 🌗 **Light & Dark** — Generate both modes from the same brand colors
+- 📚 **Beginner Friendly** — Jargon popovers explain every technical term
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+- Supabase project (for auth/database)
+- Upstash Redis (for MCP SSE support)
+
+### Environment Variables
+
+Copy `.env.template` to `.env.local` and fill in:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+REDIS_URL=your-upstash-redis-url
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install & Run
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## MCP Integration
 
-To learn more about Next.js, take a look at the following resources:
+The MCP server is available at `/mcp`. Connect with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+  "vibe-themes": {
+    "url": "http://localhost:3000/mcp"
+  }
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Available Tools
 
-## Deploy on Vercel
+| Tool | Description |
+|------|-------------|
+| `generate_tokens` | Generate design tokens from brand colors (OKLCH) |
+| `generate_tokens_ai` | Generate AI prompt for creative token creation |
+| `analyze_vibe` | Analyze a vibe description and suggest colors |
+| `export_tokens` | Export tokens to CSS, Tailwind, JSON, or SCSS |
+| `generate_component` | Generate AI prompt for shadcn/ui components |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Database Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run the migration in your Supabase SQL editor:
+
+```sql
+-- See supabase/migrations/001_create_themes_table.sql
+```
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS v4
+- **Components:** shadcn/ui + Radix
+- **Auth/DB:** Supabase
+- **MCP:** Vercel mcp-handler + Upstash Redis
+- **Colors:** culori (OKLCH)
+
+## License
+
+MIT
