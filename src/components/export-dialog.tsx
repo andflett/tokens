@@ -51,6 +51,10 @@ const FORMAT_INFO: Record<ExportFormat, { label: string; description: string }> 
     label: "SCSS",
     description: "SCSS variables for Sass projects",
   },
+  lovable: {
+    label: "Lovable",
+    description: "shadcn/ui compatible theme for Lovable projects",
+  },
 };
 
 /**
@@ -116,7 +120,7 @@ export function ExportDialog({
           onValueChange={(v) => setFormat(v as ExportFormat)}
           className="flex-1 overflow-hidden flex flex-col"
         >
-          <TabsList className="grid grid-cols-5">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6">
             {(Object.keys(FORMAT_INFO) as ExportFormat[]).map((f) => (
               <TabsTrigger key={f} value={f} className="text-xs">
                 {FORMAT_INFO[f].label}
