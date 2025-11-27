@@ -8,7 +8,6 @@ import TurdLogo from "./turd-logo";
 import {
   SwatchIcon,
   DocumentTextIcon,
-  BoltIcon,
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
@@ -100,12 +99,7 @@ export function SiteHeader() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" asChild>
-            <Link href="/login" className="gap-1.5">
-              <BoltIcon className="h-4 w-4" />
-              Sign In
-            </Link>
-          </Button>
+          {/* Sign-in removed */}
         </nav>
       </div>
     </header>

@@ -98,12 +98,7 @@ export const glossary: Record<string, GlossaryTerm> = {
     full: 'shadcn/ui is not a component library you install - it\'s a collection of reusable components you copy into your project. Built on Radix UI, they come with sensible defaults but are fully customizable. Very popular in the React ecosystem.',
     learnMoreUrl: 'https://ui.shadcn.com',
   },
-  supabase: {
-    term: 'Supabase',
-    short: 'An open-source backend platform with auth and database',
-    full: 'Supabase is an open-source alternative to Firebase. It provides a PostgreSQL database, authentication, storage, and real-time subscriptions. We use it to store your saved themes.',
-    learnMoreUrl: 'https://supabase.com',
-  },
+  // Supabase glossary entry removed as Supabase integration has been removed.
   'vibe-coding': {
     term: 'Vibe Coding',
     short: 'Building software by describing what you want to AI',
