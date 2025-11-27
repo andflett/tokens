@@ -385,44 +385,34 @@ interface BordersPreviewProps {
 
 export function BordersPreview({ previewMode, borderColors, className }: BordersPreviewProps) {
   const bgColor = previewMode === 'light' ? '#ffffff' : '#0a0a0a';
+  const textColor = previewMode === 'light' ? '#0a0a0a' : '#fafafa';
+  const mutedTextColor = previewMode === 'light' ? '#6b7280' : '#9ca3af';
   const defaultBorderColor = borderColors?.default || (previewMode === 'light' ? '#e5e7eb' : '#374151');
   const inputBorderColor = borderColors?.input || (previewMode === 'light' ? '#d1d5db' : '#4b5563');
-  const ringColor = borderColors?.ring || (previewMode === 'light' ? '#9ca3af' : '#6b7280');
-  
-  const widths = [
-    { name: '1', value: '1px' },
-    { name: '2', value: '2px' },
-    { name: '4', value: '4px' },
-  ];
-  
-  const styles = [
-    { name: 'solid', value: 'solid' },
-    { name: 'dashed', value: 'dashed' },
-    { name: 'dotted', value: 'dotted' },
-  ];
+  const ringColor = borderColors?.ring || (previewMode === 'light' ? '#3b82f6' : '#60a5fa');
   
   return (
     <div 
-      className={cn("rounded-lg p-6 space-y-6", className)}
-      style={{ backgroundColor: bgColor }}
+      className={cn("rounded-lg p-6 space-y-8", className)}
+      style={{ backgroundColor: bgColor, color: textColor }}
     >
-      {/* Border Colors */}
+      {/* Border Colors Swatches */}
       <div className="space-y-3">
-        <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Colors</h4>
+        <h4 className="text-xs font-medium uppercase tracking-wider" style={{ color: mutedTextColor }}>Border Color Tokens</h4>
         <div className="flex gap-6">
           <div className="flex flex-col items-center gap-2">
             <div
               className="h-12 w-12 rounded-md border-2"
               style={{ borderColor: defaultBorderColor }}
             />
-            <div className="font-mono text-xs text-muted-foreground">border</div>
+            <div className="font-mono text-xs" style={{ color: mutedTextColor }}>--border</div>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div
               className="h-12 w-12 rounded-md border-2"
               style={{ borderColor: inputBorderColor }}
             />
-            <div className="font-mono text-xs text-muted-foreground">input</div>
+            <div className="font-mono text-xs" style={{ color: mutedTextColor }}>--input</div>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div
@@ -431,48 +421,85 @@ export function BordersPreview({ previewMode, borderColors, className }: Borders
                 boxShadow: `0 0 0 3px ${ringColor}`,
               }}
             />
-            <div className="font-mono text-xs text-muted-foreground">ring</div>
+            <div className="font-mono text-xs" style={{ color: mutedTextColor }}>--ring</div>
           </div>
         </div>
       </div>
       
-      {/* Border Widths */}
+      {/* Real-world Examples */}
       <div className="space-y-3">
-        <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Widths</h4>
-        <div className="flex gap-4">
-          {widths.map(({ name, value }) => (
-            <div key={name} className="flex flex-col items-center gap-2">
-              <div
-                className="h-12 w-12 rounded-md"
-                style={{ 
-                  borderWidth: value,
-                  borderStyle: 'solid',
-                  borderColor: defaultBorderColor,
-                }}
-              />
-              <div className="font-mono text-xs text-muted-foreground">{value}</div>
+        <h4 className="text-xs font-medium uppercase tracking-wider" style={{ color: mutedTextColor }}>Form Elements Preview</h4>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* Input field */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium" style={{ color: mutedTextColor }}>Text Input</label>
+            <div 
+              className="h-10 px-3 rounded-md border flex items-center text-sm"
+              style={{ borderColor: inputBorderColor }}
+            >
+              <span style={{ color: mutedTextColor }}>Enter text...</span>
             </div>
-          ))}
+          </div>
+          
+          {/* Focused input */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium" style={{ color: mutedTextColor }}>Focused Input</label>
+            <div 
+              className="h-10 px-3 rounded-md border flex items-center text-sm"
+              style={{ 
+                borderColor: ringColor,
+                boxShadow: `0 0 0 2px ${ringColor}40`,
+              }}
+            >
+              <span>Typing here...</span>
+            </div>
+          </div>
+          
+          {/* Card with border */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium" style={{ color: mutedTextColor }}>Card Border</label>
+            <div 
+              className="p-3 rounded-lg border"
+              style={{ borderColor: defaultBorderColor }}
+            >
+              <div className="text-sm font-medium">Card Title</div>
+              <div className="text-xs" style={{ color: mutedTextColor }}>Card content here</div>
+            </div>
+          </div>
+          
+          {/* Divider */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium" style={{ color: mutedTextColor }}>Divider</label>
+            <div className="space-y-2">
+              <div className="text-sm">Content above</div>
+              <div className="h-px" style={{ backgroundColor: defaultBorderColor }} />
+              <div className="text-sm">Content below</div>
+            </div>
+          </div>
         </div>
       </div>
       
-      {/* Border Styles */}
+      {/* Button with ring focus state */}
       <div className="space-y-3">
-        <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Styles</h4>
+        <h4 className="text-xs font-medium uppercase tracking-wider" style={{ color: mutedTextColor }}>Focus Ring Example</h4>
         <div className="flex gap-4">
-          {styles.map(({ name, value }) => (
-            <div key={name} className="flex flex-col items-center gap-2">
-              <div
-                className="h-12 w-12 rounded-md"
-                style={{ 
-                  borderWidth: '2px',
-                  borderStyle: value,
-                  borderColor: defaultBorderColor,
-                }}
-              />
-              <div className="font-mono text-xs text-muted-foreground">{name}</div>
-            </div>
-          ))}
+          <button
+            className="px-4 py-2 rounded-md text-sm font-medium"
+            style={{ 
+              backgroundColor: previewMode === 'light' ? '#f3f4f6' : '#374151',
+              boxShadow: `0 0 0 2px ${ringColor}`,
+            }}
+          >
+            Focused Button
+          </button>
+          <button
+            className="px-4 py-2 rounded-md border text-sm font-medium"
+            style={{ 
+              borderColor: defaultBorderColor,
+            }}
+          >
+            Default Button
+          </button>
         </div>
       </div>
     </div>
@@ -781,50 +808,97 @@ interface LayoutPreviewProps {
 
 export function LayoutPreview({ layout, className }: LayoutPreviewProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("space-y-8", className)}>
+      {/* Breakpoints Section */}
       <div className="space-y-4">
-        <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Breakpoints</h4>
-        <div className="space-y-2">
-          {Object.entries(layout.breakpoints).map(([key, value]) => {
-            const pxValue = parseInt(value);
-            const barWidth = Math.min((pxValue / 1536) * 100, 100);
-            
-            return (
-              <div key={key} className="flex items-center gap-4">
-                <div className="w-10 font-mono text-xs text-muted-foreground">{key}</div>
-                <div className="flex-1 h-4 bg-muted rounded-sm overflow-hidden">
-                  <div 
-                    className="h-full bg-foreground/20 rounded-sm"
-                    style={{ width: `${barWidth}%` }}
-                  />
+        <div>
+          <h4 className="text-sm font-medium">Breakpoints</h4>
+          <p className="text-xs text-muted-foreground mt-1">
+            Screen width thresholds for responsive design. Use these with Tailwind&apos;s responsive prefixes (sm:, md:, lg:, xl:, 2xl:).
+          </p>
+        </div>
+        
+        {/* Visual representation */}
+        <div className="relative border rounded-lg p-4 bg-muted/30">
+          <div className="text-xs text-muted-foreground mb-3">Screen widths visualization</div>
+          <div className="space-y-2">
+            {Object.entries(layout.breakpoints).map(([key, value]) => {
+              const pxValue = parseInt(value);
+              const barWidth = Math.min((pxValue / 1536) * 100, 100);
+              
+              const descriptions: Record<string, string> = {
+                sm: 'Small devices (phones landscape)',
+                md: 'Medium devices (tablets)',
+                lg: 'Large devices (laptops)',
+                xl: 'Extra large (desktops)',
+                '2xl': 'Wide screens',
+              };
+              
+              return (
+                <div key={key} className="group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 font-mono text-xs font-medium">{key}</div>
+                    <div className="flex-1 h-6 bg-muted rounded-sm overflow-hidden relative">
+                      <div 
+                        className="h-full bg-primary/40 rounded-sm flex items-center justify-end pr-2"
+                        style={{ width: `${barWidth}%` }}
+                      >
+                        <span className="text-[10px] font-mono text-primary-foreground/70">{value}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="ml-14 text-[10px] text-muted-foreground">{descriptions[key]}</div>
                 </div>
-                <div className="w-16 font-mono text-xs text-muted-foreground text-right">{value}</div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Usage example */}
+        <div className="bg-muted/50 rounded-md p-3 font-mono text-xs">
+          <div className="text-muted-foreground mb-1">{'/* Example: Hide on mobile, show on tablet+ */'}</div>
+          <div>&lt;div className=&quot;hidden <span className="text-primary">md:block</span>&quot;&gt;...&lt;/div&gt;</div>
         </div>
       </div>
 
+      {/* Containers Section */}
       <div className="space-y-4">
-        <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Containers</h4>
-        <div className="space-y-2">
-          {Object.entries(layout.containers).map(([key, value]) => {
-            const pxValue = parseInt(value);
-            const barWidth = Math.min((pxValue / 1536) * 100, 100);
-            
-            return (
-              <div key={key} className="flex items-center gap-4">
-                <div className="w-10 font-mono text-xs text-muted-foreground">{key}</div>
-                <div className="flex-1 h-4 bg-muted rounded-sm overflow-hidden">
-                  <div 
-                    className="h-full bg-primary/30 rounded-sm"
-                    style={{ width: `${barWidth}%` }}
-                  />
+        <div>
+          <h4 className="text-sm font-medium">Container Widths</h4>
+          <p className="text-xs text-muted-foreground mt-1">
+            Maximum widths for centered content containers at each breakpoint. These ensure content doesn&apos;t stretch too wide on large screens.
+          </p>
+        </div>
+        
+        {/* Visual representation */}
+        <div className="relative border rounded-lg p-4 bg-muted/30">
+          <div className="text-xs text-muted-foreground mb-3">Container max-widths at each breakpoint</div>
+          <div className="space-y-2">
+            {Object.entries(layout.containers).map(([key, value]) => {
+              const pxValue = parseInt(value);
+              const barWidth = Math.min((pxValue / 1536) * 100, 100);
+              
+              return (
+                <div key={key} className="flex items-center gap-4">
+                  <div className="w-10 font-mono text-xs font-medium">{key}</div>
+                  <div className="flex-1 h-6 bg-muted rounded-sm overflow-hidden relative">
+                    <div 
+                      className="h-full bg-secondary/40 rounded-sm flex items-center justify-end pr-2"
+                      style={{ width: `${barWidth}%` }}
+                    >
+                      <span className="text-[10px] font-mono text-secondary-foreground/70">{value}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-16 font-mono text-xs text-muted-foreground text-right">{value}</div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Usage example */}
+        <div className="bg-muted/50 rounded-md p-3 font-mono text-xs">
+          <div className="text-muted-foreground mb-1">{'/* Centered container with max-width */'}</div>
+          <div>&lt;div className=&quot;<span className="text-primary">container mx-auto</span>&quot;&gt;...&lt;/div&gt;</div>
         </div>
       </div>
     </div>

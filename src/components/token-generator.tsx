@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger, AnimatedTabsList } from "@/components/ui/tabs";
+import { Tabs, TabsContent, AnimatedTabsList } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -77,6 +77,8 @@ export function TokenGenerator({
   const [exportOpen, setExportOpen] = React.useState(false);
   const [colorFormat, setColorFormat] = React.useState<ColorFormat>("oklch");
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
+  const [tokenTab, setTokenTab] = React.useState<string>("colors");
+  const [colorSubTab, setColorSubTab] = React.useState<string>("primitives");
   
   // Token customization state
   const [spacingBaseUnit, setSpacingBaseUnit] = React.useState(4);
@@ -393,45 +395,33 @@ export function TokenGenerator({
                 />
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="colors" className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7">
-                    <TabsTrigger value="colors" className="gap-1.5">
-                      <SwatchIcon className="h-4 w-4 hidden sm:block" />
-                      Colors
-                    </TabsTrigger>
-                    <TabsTrigger value="typography" className="gap-1.5">
-                      <DocumentTextIcon className="h-4 w-4 hidden sm:block" />
-                      Type
-                    </TabsTrigger>
-                    <TabsTrigger value="spacing" className="gap-1.5">
-                      <ArrowsPointingOutIcon className="h-4 w-4 hidden sm:block" />
-                      Space
-                    </TabsTrigger>
-                    <TabsTrigger value="radii" className="gap-1.5">
-                      <StopIcon className="h-4 w-4 hidden sm:block" />
-                      Radius
-                    </TabsTrigger>
-                    <TabsTrigger value="shadows" className="gap-1.5">
-                      <Square3Stack3DIcon className="h-4 w-4 hidden sm:block" />
-                      Shadows
-                    </TabsTrigger>
-                    <TabsTrigger value="borders" className="gap-1.5">
-                      <StopIcon className="h-4 w-4 hidden sm:block" />
-                      Borders
-                    </TabsTrigger>
-                    <TabsTrigger value="layout" className="gap-1.5">
-                      <Squares2X2Icon className="h-4 w-4 hidden sm:block" />
-                      Layout
-                    </TabsTrigger>
-                  </TabsList>
+                <Tabs value={tokenTab} onValueChange={setTokenTab} className="space-y-6">
+                  <AnimatedTabsList
+                    value={tokenTab}
+                    onValueChange={setTokenTab}
+                    items={[
+                      { value: "colors", label: <><SwatchIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Colors</span></> },
+                      { value: "typography", label: <><DocumentTextIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Type</span></> },
+                      { value: "spacing", label: <><ArrowsPointingOutIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Space</span></> },
+                      { value: "radii", label: <><StopIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Radius</span></> },
+                      { value: "shadows", label: <><Square3Stack3DIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Shadows</span></> },
+                      { value: "borders", label: <><StopIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Borders</span></> },
+                      { value: "layout", label: <><Squares2X2Icon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Layout</span></> },
+                    ]}
+                    className="flex-wrap"
+                  />
                   
                   {/* Colors Tab */}
                   <TabsContent value="colors" className="space-y-6">
-                    <Tabs defaultValue="primitives">
-                      <TabsList>
-                        <TabsTrigger value="primitives">Color Scales</TabsTrigger>
-                        <TabsTrigger value="semantic">Semantic</TabsTrigger>
-                      </TabsList>
+                    <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
+                      <AnimatedTabsList
+                        value={colorSubTab}
+                        onValueChange={setColorSubTab}
+                        items={[
+                          { value: "primitives", label: "Color Scales" },
+                          { value: "semantic", label: "Semantic" },
+                        ]}
+                      />
                       
                       <TabsContent value="primitives" className="mt-4">
                         <PalettePreviewEditable 
