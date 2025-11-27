@@ -127,7 +127,7 @@ export function SiteHeader() {
                 className={cn(
                   "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
                   mobileMenuOpen
-                    ? "rotate-45 translate-y-[3px]"
+                    ? "rotate-45 translate-y-0.5"
                     : "-translate-y-1"
                 )}
               />
@@ -141,7 +141,7 @@ export function SiteHeader() {
                 className={cn(
                   "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
                   mobileMenuOpen
-                    ? "-rotate-45 -translate-y-[3px]"
+                    ? "-rotate-45 -translate-y-0.5"
                     : "translate-y-1"
                 )}
               />
@@ -155,7 +155,7 @@ export function SiteHeader() {
         className={cn(
           "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
           mobileMenuOpen 
-            ? "max-h-96 opacity-100 border-t border-border/50" 
+            ? "max-h-screen opacity-100 border-t border-border/50" 
             : "max-h-0 opacity-0"
         )}
       >
