@@ -113,7 +113,7 @@ export function SiteHeader() {
           <Button asChild size="sm" className="gap-1.5">
             <Link href="/generate">
               <SwatchIcon className="h-4 w-4" />
-              <span className="hidden xs:inline">Design Your Tokens</span>
+              <span className="hidden sm:inline">Design Your Tokens</span>
             </Link>
           </Button>
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
