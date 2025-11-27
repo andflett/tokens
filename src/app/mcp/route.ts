@@ -6,12 +6,14 @@
  * redirects requests from `/mcp` to the common transport `/mcp/http` so
  * clients that call `/mcp` will still reach the MCP handler.
  */
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export function GET() {
-  return NextResponse.redirect('/mcp/http');
+export function GET(request: NextRequest) {
+  const url = new URL('/mcp/http', request.url);
+  return NextResponse.redirect(url);
 }
 
-export function HEAD() {
-  return NextResponse.redirect('/mcp/http');
+export function HEAD(request: NextRequest) {
+  const url = new URL('/mcp/http', request.url);
+  return NextResponse.redirect(url);
 }
