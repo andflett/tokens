@@ -14,7 +14,7 @@ const getAppUrl = () => {
 
 export const config = {
   // App
-  appName: 'Vibe Themes',
+  appName: 'Tokens',
   appDescription: 'Design token generator + MCP server for AI-powered theming',
   appUrl: getAppUrl(),
   

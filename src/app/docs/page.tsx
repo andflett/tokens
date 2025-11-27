@@ -16,7 +16,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Documentation",
-  description: "Learn how to use Vibe Themes with your AI assistant",
+  description: "Learn how to use Tokens with your AI assistant",
 };
 
 export default function DocsPage() {
@@ -27,7 +27,7 @@ export default function DocsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
           <p className="text-muted-foreground">
-            Learn how to use Vibe Themes with your AI assistant
+            Learn how to use Tokens with your AI assistant
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function DocsPage() {
           <section id="getting-started">
             <h2 className="text-2xl font-bold mb-4">Getting Started</h2>
             <p className="text-muted-foreground mb-6">
-              Vibe Themes helps you create professional <Term term="design-tokens">design tokens</Term> from
+              Tokens helps you create professional <Term term="design-tokens">design tokens</Term> from
               your brand colors. You can use it directly in your browser, or connect it to
               your <Term term="llm">AI assistant</Term> for a more conversational experience.
             </p>
@@ -123,7 +123,7 @@ export default function DocsPage() {
 
             <h3 className="font-semibold mb-2">Token Types</h3>
             <p className="text-muted-foreground mb-4">
-              Vibe Themes generates several types of tokens:
+              Tokens generates several types of tokens:
             </p>
 
             <div className="space-y-3">
@@ -159,7 +159,7 @@ export default function DocsPage() {
             <h2 className="text-2xl font-bold mb-4">MCP Setup</h2>
             <p className="text-muted-foreground mb-6">
               The <Term term="mcp">Model Context Protocol</Term> allows AI assistants to use
-              external tools. There are two ways to use Vibe Themes with MCP:
+              external tools. There are two ways to use Tokens with MCP:
             </p>
 
             {/* Installation Options */}
@@ -176,7 +176,7 @@ export default function DocsPage() {
                     Connect directly to our server. Best for quick setup and always up-to-date.
                   </p>
                   <code className="text-xs bg-muted px-2 py-1 rounded block">
-                    https://vibethemes.flett.cc/mcp
+                    https://tokens.flett.cc/mcp
                   </code>
                 </CardContent>
               </Card>
@@ -194,7 +194,7 @@ export default function DocsPage() {
                   </p>
                   <Button asChild variant="outline" size="sm">
                     <Link
-                      href="https://www.npmjs.com/package/vibe-themes-mcp"
+                      href="https://www.npmjs.com/package/tokens-mcp"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -228,9 +228,9 @@ export default function DocsPage() {
                       <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
+    "tokens": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vibethemes.flett.cc/mcp"]
+      "args": ["-y", "mcp-remote", "https://tokens.flett.cc/mcp"]
     }
   }
 }`}
@@ -240,13 +240,13 @@ export default function DocsPage() {
                   
                   <div className="space-y-3">
                     <p className="text-sm font-medium">Option 2: Local NPM Package</p>
-                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g vibe-themes-mcp</code></p>
+                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code></p>
                     <div className="rounded-lg bg-muted p-4">
                       <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
-      "command": "vibe-themes-mcp"
+    "tokens": {
+      "command": "tokens-mcp"
     }
   }
 }`}
@@ -280,8 +280,8 @@ export default function DocsPage() {
 {`{
   "github.copilot.chat.mcp": {
     "servers": {
-      "vibe-themes": {
-        "url": "https://vibethemes.flett.cc/mcp"
+      "tokens": {
+        "url": "https://tokens.flett.cc/mcp"
       }
     }
   }
@@ -314,8 +314,8 @@ export default function DocsPage() {
                     <div className="rounded-lg bg-muted p-4">
                       <pre className="text-sm font-mono overflow-x-auto">
 {`{
-  "vibe-themes": {
-    "url": "https://vibethemes.flett.cc/mcp"
+  "tokens": {
+    "url": "https://tokens.flett.cc/mcp"
   }
 }`}
                       </pre>
@@ -332,7 +332,7 @@ export default function DocsPage() {
           <section id="tools">
             <h2 className="text-2xl font-bold mb-4">Available Tools</h2>
             <p className="text-muted-foreground mb-6">
-              These are the tools your AI assistant can use when connected to Vibe Themes:
+              These are the tools your AI assistant can use when connected to Tokens:
             </p>
 
             <div className="space-y-4">

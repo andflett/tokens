@@ -1,4 +1,4 @@
-# Vibe Themes — LLM Context Document
+# Tokens — LLM Context Document
 
 > This document provides context for future LLM coding sessions. It captures the architecture, key decisions, technical choices, and planned improvements for this project.
 
@@ -9,13 +9,13 @@
 
 ## 📋 Project Overview
 
-**Vibe Themes** is a design token generator built for **designers learning to code with AI assistants**. It provides:
+**Tokens** is a design token generator built for **designers learning to code with AI assistants**. It provides:
 
 1. **Web UI** — A visual token generator at `/generate`
 2. **MCP Server** — AI-accessible tools at `/mcp` for Claude, Copilot, Cursor, etc.
 3. **Documentation** — Educational docs with jargon popovers at `/docs`
 
-The target audience is **non-technical designers** who are starting to "vibe code" with LLMs. Every technical term has tooltip explanations.
+The target audience is **non-technical designers** who are starting to code with AI assistants and LLMs. Every technical term has tooltip explanations.
 
 ---
 
@@ -283,7 +283,7 @@ Export tokens directly to Figma variables:
 #### 5. CLI Tool
 
 ```bash
-npx vibe-themes generate --primary "#3b82f6" --format tailwind-v4
+npx tokens generate --primary "#3b82f6" --format tailwind-v4
 ```
 
 #### 6. More Token Types
@@ -356,7 +356,7 @@ npm run lint     # ESLint
 Connect Claude Desktop or VS Code Copilot to:
 ```json
 {
-  "vibe-themes": {
+  "tokens": {
     "url": "http://localhost:3000/mcp"
   }
 }
