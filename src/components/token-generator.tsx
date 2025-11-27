@@ -59,6 +59,16 @@ interface TokenGeneratorProps {
   className?: string;
 }
 
+// Map semantic color names to their relevant primitive scale
+const SEMANTIC_SCALE_MAPPING: Record<string, string> = {
+  primary: 'primary',
+  secondary: 'secondary',
+  success: 'success',
+  warning: 'warning',
+  danger: 'danger',
+  info: 'info',
+};
+
 /**
  * Main token generator component
  * Create a complete, professional design token system for your web applications
@@ -446,16 +456,7 @@ export function TokenGenerator({
                           </p>
                           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {Object.entries(tokens.semantic[previewMode]).map(([name, color]) => {
-                              // Map semantic color name to its relevant primitive scale
-                              const scaleMapping: Record<string, string> = {
-                                primary: 'primary',
-                                secondary: 'secondary',
-                                success: 'success',
-                                warning: 'warning',
-                                danger: 'danger',
-                                info: 'info',
-                              };
-                              const scaleName = scaleMapping[name] || 'primary';
+                              const scaleName = SEMANTIC_SCALE_MAPPING[name] || 'primary';
                               const relevantScale = tokens.primitives[scaleName];
                               
                               if (relevantScale) {

@@ -1023,7 +1023,13 @@ const usageExamples: Record<TailwindUsageExampleProps['type'], { title: string; 
   },
 };
 
-// Token highlight component - shows token info on hover/click
+/**
+ * Token highlight component - displays token information in a popover
+ * @param token - The Tailwind token/class name (e.g., "bg-primary")
+ * @param description - Human-readable description of what the token does
+ * @param example - Optional CSS example showing the actual value
+ * @param children - The content to display (usually the token name)
+ */
 interface TokenHighlightProps {
   token: string;
   description: string;
@@ -1035,7 +1041,10 @@ function TokenHighlight({ token, description, example, children }: TokenHighligh
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="text-primary hover:text-primary/80 bg-primary/10 px-1 rounded cursor-pointer transition-colors font-mono">
+        <button 
+          className="text-primary hover:text-primary/80 bg-primary/10 px-1 rounded cursor-pointer transition-colors font-mono"
+          aria-label={`View details for ${token}`}
+        >
           {children}
         </button>
       </PopoverTrigger>
@@ -1382,7 +1391,9 @@ export function TailwindUsageExample({ type, className }: TailwindUsageExamplePr
       <div>
         <h4 className="text-sm font-medium">{example.title}</h4>
         <p className="text-xs text-muted-foreground">{example.description}</p>
-        <p className="text-xs text-primary mt-1">💡 Click on highlighted tokens to see details</p>
+        <p className="text-xs text-primary mt-1">
+          <span role="img" aria-label="tip">💡</span> Click on highlighted tokens to see details
+        </p>
       </div>
       <div className="bg-muted rounded p-3 overflow-x-auto">
         {renderInteractiveCode()}
