@@ -3,11 +3,12 @@
  * OKLCH provides perceptually uniform color manipulation
  */
 
-import { formatHex, Oklch, converter } from 'culori';
-import type { ColorScale } from '../types';
+import { formatHex, formatRgb, formatHsl, Oklch, converter } from 'culori';
+import type { ColorScale, ColorFormat } from '../types';
 
 const toOklch = converter('oklch');
 const toRgbConverter = converter('rgb');
+const toHslConverter = converter('hsl');
 
 /**
  * Convert any color format to OKLCH
@@ -174,4 +175,27 @@ export function getOklchString(color: string): string {
   const c = (oklch.c * 100).toFixed(1);
   const h = (oklch.h || 0).toFixed(0);
   return `oklch(${l}% ${c}% ${h})`;
+}
+
+/**
+ * Convert a color to the specified format
+ */
+export function formatColorAs(color: string, format: ColorFormat): string {
+  switch (format) {
+    case 'hex':
+      return formatHex(color) || '#000000';
+    case 'rgb': {
+      const rgb = toRgbConverter(color);
+      if (!rgb) return 'rgb(0, 0, 0)';
+      return formatRgb(rgb) || 'rgb(0, 0, 0)';
+    }
+    case 'hsl': {
+      const hsl = toHslConverter(color);
+      if (!hsl) return 'hsl(0, 0%, 0%)';
+      return formatHsl(hsl) || 'hsl(0, 0%, 0%)';
+    }
+    case 'oklch':
+    default:
+      return getOklchString(color);
+  }
 }

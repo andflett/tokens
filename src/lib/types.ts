@@ -21,6 +21,25 @@ export interface ColorScale {
   100: string;
 }
 
+export interface ShadowSettings {
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread: number;
+  opacity: number;
+}
+
+export interface BorderColors {
+  default: string;
+  input: string;
+  ring: string;
+}
+
+export interface LayoutTokens {
+  breakpoints: Record<string, string>;
+  containers: Record<string, string>;
+}
+
 export interface TokenSystem {
   primitives: {
     [colorName: string]: ColorScale;
@@ -40,7 +59,14 @@ export interface TokenSystem {
     light: Record<string, string>;
     dark: Record<string, string>;
   };
+  borderColors?: {
+    light: BorderColors;
+    dark: BorderColors;
+  };
+  layout?: LayoutTokens;
 }
+
+export type ColorFormat = 'oklch' | 'rgb' | 'hsl' | 'hex';
 
 export interface SemanticTokens {
   primary: SemanticColor;

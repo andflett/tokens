@@ -63,4 +63,80 @@ function TabsContent({
   )
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+// Animated pill tabs with sliding effect
+interface AnimatedTabsListProps extends React.ComponentProps<typeof TabsPrimitive.List> {
+  value?: string;
+  items: { value: string; label: React.ReactNode }[];
+  onValueChange?: (value: string) => void;
+}
+
+function AnimatedTabsList({
+  className,
+  value,
+  items,
+  onValueChange,
+  ...props
+}: AnimatedTabsListProps) {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const tabsRef = React.useRef<(HTMLButtonElement | null)[]>([]);
+  const [pillStyle, setPillStyle] = React.useState({ left: 0, width: 0 });
+
+  React.useEffect(() => {
+    const idx = items.findIndex(item => item.value === value);
+    if (idx !== -1) setActiveIndex(idx);
+  }, [value, items]);
+
+  React.useEffect(() => {
+    const activeTab = tabsRef.current[activeIndex];
+    if (activeTab) {
+      setPillStyle({
+        left: activeTab.offsetLeft,
+        width: activeTab.offsetWidth,
+      });
+    }
+  }, [activeIndex]);
+
+  return (
+    <TabsPrimitive.List
+      data-slot="tabs-list"
+      className={cn(
+        "bg-muted text-muted-foreground relative inline-flex h-10 w-fit items-center justify-center rounded-full p-1",
+        className
+      )}
+      {...props}
+    >
+      {/* Animated pill background */}
+      <div
+        className="absolute h-8 rounded-full bg-background shadow-sm transition-all duration-200 ease-out"
+        style={{
+          left: pillStyle.left,
+          width: pillStyle.width,
+        }}
+      />
+      {items.map((item, index) => (
+        <button
+          key={item.value}
+          ref={(el) => { tabsRef.current[index] = el; }}
+          type="button"
+          role="tab"
+          aria-selected={activeIndex === index}
+          data-state={activeIndex === index ? 'active' : 'inactive'}
+          onClick={() => {
+            setActiveIndex(index);
+            onValueChange?.(item.value);
+          }}
+          className={cn(
+            "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+            activeIndex === index
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground/80"
+          )}
+        >
+          {item.label}
+        </button>
+      ))}
+    </TabsPrimitive.List>
+  )
+}
+
+export { Tabs, TabsList, TabsTrigger, TabsContent, AnimatedTabsList }

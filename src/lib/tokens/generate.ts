@@ -5,7 +5,7 @@
 
 import { generatePrimitivePalette } from './primitives';
 import { generateSemanticTokens } from './semantic';
-import type { BrandColors, TokenSystem, SemanticTokens } from '../types';
+import type { BrandColors, TokenSystem, SemanticTokens, ShadowSettings, LayoutTokens } from '../types';
 
 /**
  * Generate spacing scale from a base unit
@@ -96,9 +96,7 @@ export function generateRadiiScale(baseRadius: number = 0.25): Record<string, st
 /**
  * Generate shadow tokens for light and dark modes
  */
-function generateShadows(primitives: TokenSystem['primitives']): TokenSystem['shadows'] {
-  const neutral = primitives.neutral;
-  
+function generateShadows(_primitives: TokenSystem['primitives']): TokenSystem['shadows'] {
   return {
     light: {
       sm: `0 1px 2px 0 rgba(0, 0, 0, 0.05)`,
@@ -151,11 +149,100 @@ export function generateShadowsWithIntensity(intensity: number = 1): TokenSystem
 }
 
 /**
+ * Generate shadows with detailed settings
+ */
+export function generateShadowsWithSettings(settings: ShadowSettings): TokenSystem['shadows'] {
+  const { offsetX, offsetY, blur, spread, opacity } = settings;
+  
+  // Scale values for each shadow size
+  const scales = {
+    sm: { y: 0.25, blur: 0.5, spread: 0 },
+    DEFAULT: { y: 0.5, blur: 0.75, spread: 0 },
+    md: { y: 1, blur: 1.5, spread: -0.25 },
+    lg: { y: 2.5, blur: 3.75, spread: -0.75 },
+    xl: { y: 5, blur: 6.25, spread: -1.25 },
+    '2xl': { y: 6.25, blur: 12.5, spread: -3 },
+  };
+  
+  const createShadow = (scale: typeof scales['sm'], mode: 'light' | 'dark') => {
+    const modeOpacity = mode === 'light' ? opacity : opacity * 1.5;
+    const x = offsetX * scale.y;
+    const y = offsetY * scale.y;
+    const b = blur * scale.blur;
+    const s = spread * scale.spread;
+    return `${x}px ${y}px ${b}px ${s}px rgba(0, 0, 0, ${modeOpacity.toFixed(2)})`;
+  };
+  
+  return {
+    light: {
+      sm: createShadow(scales.sm, 'light'),
+      DEFAULT: createShadow(scales.DEFAULT, 'light'),
+      md: createShadow(scales.md, 'light'),
+      lg: createShadow(scales.lg, 'light'),
+      xl: createShadow(scales.xl, 'light'),
+      '2xl': createShadow(scales['2xl'], 'light'),
+      inner: `inset 0 ${offsetY * 0.5}px ${blur * 1}px 0 rgba(0, 0, 0, ${(opacity * 0.5).toFixed(2)})`,
+    },
+    dark: {
+      sm: createShadow(scales.sm, 'dark'),
+      DEFAULT: createShadow(scales.DEFAULT, 'dark'),
+      md: createShadow(scales.md, 'dark'),
+      lg: createShadow(scales.lg, 'dark'),
+      xl: createShadow(scales.xl, 'dark'),
+      '2xl': createShadow(scales['2xl'], 'dark'),
+      inner: `inset 0 ${offsetY * 0.5}px ${blur * 1}px 0 rgba(0, 0, 0, ${(opacity * 0.75).toFixed(2)})`,
+    },
+  };
+}
+
+/**
+ * Generate default border colors based on primitives
+ */
+export function generateBorderColors(primitives: TokenSystem['primitives']): TokenSystem['borderColors'] {
+  const neutral = primitives.neutral;
+  
+  return {
+    light: {
+      default: neutral[80],
+      input: neutral[70],
+      ring: neutral[50],
+    },
+    dark: {
+      default: neutral[30],
+      input: neutral[40],
+      ring: neutral[60],
+    },
+  };
+}
+
+/**
+ * Generate default layout tokens (breakpoints and containers)
+ */
+export function generateLayoutTokens(): LayoutTokens {
+  return {
+    breakpoints: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+    containers: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+  };
+}
+
+/**
  * Generate a complete token system from brand colors
  */
 export function generateTokens(
   brandColors: BrandColors,
-  mode: 'light' | 'dark' | 'both' = 'both'
+  _mode: 'light' | 'dark' | 'both' = 'both'
 ): TokenSystem {
   // Generate primitive color palette
   const primitives = generatePrimitivePalette(brandColors);
@@ -175,6 +262,8 @@ export function generateTokens(
     typography: defaultTypography,
     radii: defaultRadii,
     shadows: generateShadows(primitives),
+    borderColors: generateBorderColors(primitives),
+    layout: generateLayoutTokens(),
   };
   
   // If only one mode requested, we still generate both but could optimize later
