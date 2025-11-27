@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import TurdLogo from "./turd-logo";
 import {
   SwatchIcon,
   DocumentTextIcon,
@@ -27,11 +28,13 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 font-semibold">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background text-sm font-bold">
-              V
-            </div>
-            <span className="hidden sm:inline">Vibe Themes</span>
+          <Link href="/" aria-label="Home" className="flex items-center">
+            <TurdLogo
+              width={28}
+              height={28}
+              background="var(--foreground)"
+              foreground="var(--background)"
+            />
           </Link>
         </div>
 
@@ -40,7 +43,9 @@ export function SiteHeader() {
             variant="ghost"
             size="sm"
             asChild
-            className={pathname === "/docs" ? "text-foreground" : "text-muted-foreground"}
+            className={
+              pathname === "/docs" ? "text-foreground" : "text-muted-foreground"
+            }
           >
             <Link href="/docs" className="gap-1.5">
               <DocumentTextIcon className="h-4 w-4" />
@@ -51,7 +56,11 @@ export function SiteHeader() {
             variant="ghost"
             size="sm"
             asChild
-            className={pathname === "/generate" ? "text-foreground" : "text-muted-foreground"}
+            className={
+              pathname === "/generate"
+                ? "text-foreground"
+                : "text-muted-foreground"
+            }
           >
             <Link href="/generate" className="gap-1.5">
               <SwatchIcon className="h-4 w-4" />
@@ -68,15 +77,24 @@ export function SiteHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")} className="gap-2">
+              <DropdownMenuItem
+                onClick={() => setTheme("light")}
+                className="gap-2"
+              >
                 <SunIcon className="h-4 w-4" />
                 Light
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")} className="gap-2">
+              <DropdownMenuItem
+                onClick={() => setTheme("dark")}
+                className="gap-2"
+              >
                 <MoonIcon className="h-4 w-4" />
                 Dark
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")} className="gap-2">
+              <DropdownMenuItem
+                onClick={() => setTheme("system")}
+                className="gap-2"
+              >
                 <ComputerDesktopIcon className="h-4 w-4" />
                 System
               </DropdownMenuItem>
