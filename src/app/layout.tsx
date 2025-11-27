@@ -20,18 +20,21 @@ export const metadata: Metadata = {
     default: "Vibe Themes - Design Token Generator",
     template: "%s | Vibe Themes",
   },
-  description: "Generate beautiful, accessible design tokens from your brand colors. Perfect for designers learning to code with AI assistants.",
+  description:
+    "Generate beautiful, accessible design tokens from your brand colors. Perfect for designers learning to code with AI assistants.",
   metadataBase: new URL(config.appUrl),
   openGraph: {
     title: "Vibe Themes",
-    description: "Generate beautiful, accessible design tokens from your brand colors",
+    description:
+      "Generate beautiful, accessible design tokens from your brand colors",
     siteName: "Vibe Themes",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Vibe Themes",
-    description: "Generate beautiful, accessible design tokens from your brand colors",
+    description:
+      "Generate beautiful, accessible design tokens from your brand colors",
   },
 };
 

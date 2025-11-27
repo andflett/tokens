@@ -3,9 +3,9 @@
  * Maps primitive colors to meaningful semantic roles
  */
 
-import { getContrastRatio, meetsWCAG_AA } from './oklch';
-import type { PrimitivePalette } from './primitives';
-import type { SemanticTokens, SemanticColor } from '../types';
+import { getContrastRatio, meetsWCAG_AA } from "./oklch";
+import type { PrimitivePalette } from "./primitives";
+import type { SemanticTokens, SemanticColor } from "../types";
 
 /**
  * Find the best contrasting text color for a background
@@ -17,7 +17,7 @@ function findContrastingColor(
 ): string {
   const lightContrast = getContrastRatio(background, lightColor);
   const darkContrast = getContrastRatio(background, darkColor);
-  
+
   return lightContrast > darkContrast ? lightColor : darkColor;
 }
 
@@ -27,7 +27,7 @@ function findContrastingColor(
 function createSemanticColor(
   palette: PrimitivePalette,
   colorName: string,
-  mode: 'light' | 'dark'
+  mode: "light" | "dark"
 ): SemanticColor {
   const scale = palette[colorName];
   if (!scale) {
@@ -36,14 +36,14 @@ function createSemanticColor(
 
   const neutral = palette.neutral;
   if (!neutral) {
-    throw new Error('Neutral palette not found');
+    throw new Error("Neutral palette not found");
   }
 
-  if (mode === 'light') {
+  if (mode === "light") {
     const base = scale[50];
     const muted = scale[90];
     const accent = scale[40];
-    
+
     return {
       base,
       muted,
@@ -57,7 +57,7 @@ function createSemanticColor(
     const base = scale[50];
     const muted = scale[20];
     const accent = scale[60];
-    
+
     return {
       base,
       muted,
@@ -74,14 +74,14 @@ function createSemanticColor(
  */
 export function generateSemanticTokens(
   palette: PrimitivePalette,
-  mode: 'light' | 'dark'
+  mode: "light" | "dark"
 ): SemanticTokens {
   return {
-    primary: createSemanticColor(palette, 'primary', mode),
-    secondary: createSemanticColor(palette, 'secondary', mode),
-    success: createSemanticColor(palette, 'success', mode),
-    warning: createSemanticColor(palette, 'warning', mode),
-    danger: createSemanticColor(palette, 'danger', mode),
+    primary: createSemanticColor(palette, "primary", mode),
+    secondary: createSemanticColor(palette, "secondary", mode),
+    success: createSemanticColor(palette, "success", mode),
+    warning: createSemanticColor(palette, "warning", mode),
+    danger: createSemanticColor(palette, "danger", mode),
   };
 }
 
@@ -90,11 +90,11 @@ export function generateSemanticTokens(
  */
 export function generateSurfaceTokens(
   palette: PrimitivePalette,
-  mode: 'light' | 'dark'
+  mode: "light" | "dark"
 ): Record<string, string> {
   const neutral = palette.neutral;
-  
-  if (mode === 'light') {
+
+  if (mode === "light") {
     return {
       background: neutral[100],
       foreground: neutral[10],
@@ -127,8 +127,11 @@ export function generateSurfaceTokens(
 export function checkSemanticContrast(
   tokens: SemanticTokens
 ): Record<string, { ratio: number; passesAA: boolean; passesAAA: boolean }> {
-  const results: Record<string, { ratio: number; passesAA: boolean; passesAAA: boolean }> = {};
-  
+  const results: Record<
+    string,
+    { ratio: number; passesAA: boolean; passesAAA: boolean }
+  > = {};
+
   for (const [name, color] of Object.entries(tokens)) {
     const ratio = getContrastRatio(color.base, color.onBase);
     results[`${name}/base`] = {
@@ -136,14 +139,14 @@ export function checkSemanticContrast(
       passesAA: meetsWCAG_AA(ratio),
       passesAAA: ratio >= 7,
     };
-    
+
     const mutedRatio = getContrastRatio(color.muted, color.onMuted);
     results[`${name}/muted`] = {
       ratio: Math.round(mutedRatio * 100) / 100,
       passesAA: meetsWCAG_AA(mutedRatio),
       passesAAA: mutedRatio >= 7,
     };
-    
+
     const accentRatio = getContrastRatio(color.accent, color.onAccent);
     results[`${name}/accent`] = {
       ratio: Math.round(accentRatio * 100) / 100,
@@ -151,6 +154,6 @@ export function checkSemanticContrast(
       passesAAA: accentRatio >= 7,
     };
   }
-  
+
   return results;
 }
