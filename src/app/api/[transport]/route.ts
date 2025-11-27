@@ -218,7 +218,7 @@ const handler = createMcpHandler(
   {
     // Redis config for SSE support on Vercel
     redisUrl: process.env.REDIS_URL,
-    basePath: '/mcp',
+    basePath: '/api',
     maxDuration: 60,
     verboseLogs: process.env.NODE_ENV === 'development',
   }
