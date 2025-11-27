@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BrandColorPickers } from "@/components/color-picker";
-import { PalettePreviewEditable, SemanticColorPreview } from "@/components/color-preview";
+import { PalettePreviewEditable, SemanticColorPreview, SemanticColorEditable } from "@/components/color-preview";
 import { ExportDialog } from "@/components/export-dialog";
 import {
   SpacingPreview,
@@ -441,14 +441,49 @@ export function TokenGenerator({
                             backgroundColor: previewMode === "light" ? "#ffffff" : "#0a0a0a",
                           }}
                         >
+                          <p className="text-xs text-muted-foreground mb-4">
+                            Click on any semantic color to select from its related scale or customize with a color picker.
+                          </p>
                           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {Object.entries(tokens.semantic[previewMode]).map(([name, color]) => (
-                              <SemanticColorPreview
-                                key={name}
-                                name={name}
-                                semantic={color}
-                              />
-                            ))}
+                            {Object.entries(tokens.semantic[previewMode]).map(([name, color]) => {
+                              // Map semantic color name to its relevant primitive scale
+                              const scaleMapping: Record<string, string> = {
+                                primary: 'primary',
+                                secondary: 'secondary',
+                                success: 'success',
+                                warning: 'warning',
+                                danger: 'danger',
+                                info: 'info',
+                              };
+                              const scaleName = scaleMapping[name] || 'primary';
+                              const relevantScale = tokens.primitives[scaleName];
+                              
+                              if (relevantScale) {
+                                return (
+                                  <SemanticColorEditable
+                                    key={name}
+                                    name={name}
+                                    semantic={color}
+                                    relevantScale={relevantScale}
+                                    scaleName={scaleName}
+                                    onBaseChange={() => {
+                                      // Show a toast explaining how semantic colors work
+                                      toast.info(
+                                        `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
+                                        { duration: 3000 }
+                                      );
+                                    }}
+                                  />
+                                );
+                              }
+                              return (
+                                <SemanticColorPreview
+                                  key={name}
+                                  name={name}
+                                  semantic={color}
+                                />
+                              );
+                            })}
                           </div>
                         </div>
                       </TabsContent>

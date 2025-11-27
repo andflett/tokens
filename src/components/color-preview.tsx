@@ -363,3 +363,154 @@ export function SemanticColorPreview({
     </div>
   );
 }
+
+// ============================================================================
+// SEMANTIC COLOR SCALE PICKER
+// ============================================================================
+
+interface SemanticColorEditableProps {
+  semantic: {
+    base: string;
+    muted: string;
+    accent: string;
+    onBase: string;
+    onMuted: string;
+    onAccent: string;
+  };
+  name: string;
+  relevantScale: ColorScale;
+  scaleName: string;
+  onBaseChange: (color: string) => void;
+  className?: string;
+}
+
+/**
+ * Editable semantic color with scale picker
+ * Click to first select from the relevant scale, or customize with color picker
+ */
+export function SemanticColorEditable({
+  semantic,
+  name,
+  relevantScale,
+  scaleName,
+  onBaseChange,
+  className,
+}: SemanticColorEditableProps) {
+  const [open, setOpen] = React.useState(false);
+  const [showCustomPicker, setShowCustomPicker] = React.useState(false);
+  const shades = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
+
+  return (
+    <div className={cn("space-y-2", className)}>
+      <h4 className="text-sm font-medium capitalize">{name}</h4>
+      <div className="grid grid-cols-3 gap-2">
+        {/* Base color - clickable to open picker */}
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <button className="space-y-1 text-left group">
+              <div
+                className="flex h-16 items-center justify-center rounded text-xs font-medium transition-all group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2"
+                style={{
+                  backgroundColor: semantic.base,
+                  color: semantic.onBase,
+                }}
+              >
+                Base
+              </div>
+              <p className="text-center font-mono text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                Click to edit
+              </p>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" align="start">
+            <div className="space-y-4">
+              <div>
+                <h5 className="text-sm font-medium mb-2">
+                  Select from {scaleName} scale
+                </h5>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Choose a shade from your {scaleName} color scale, or customize below
+                </p>
+                <div className="flex gap-1">
+                  {shades.map((shade) => (
+                    <button
+                      key={shade}
+                      onClick={() => {
+                        onBaseChange(relevantScale[shade]);
+                        setOpen(false);
+                        setShowCustomPicker(false);
+                      }}
+                      className={cn(
+                        "flex-1 h-8 rounded-sm transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring",
+                        semantic.base === relevantScale[shade] && "ring-2 ring-primary ring-offset-1"
+                      )}
+                      style={{ backgroundColor: relevantScale[shade] }}
+                      title={`${scaleName}.${shade}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+                  <span>Light</span>
+                  <span>Dark</span>
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <button
+                  onClick={() => setShowCustomPicker(!showCustomPicker)}
+                  className="text-xs text-primary hover:underline"
+                >
+                  {showCustomPicker ? 'Hide custom picker' : 'Need a different color? Use custom picker'}
+                </button>
+                
+                {showCustomPicker && (
+                  <div className="mt-3">
+                    <HexColorPicker 
+                      color={semantic.base} 
+                      onChange={onBaseChange} 
+                    />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Custom color: <span className="font-mono">{semantic.base}</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Muted - auto-derived, shown for reference */}
+        <div className="space-y-1 opacity-75">
+          <div
+            className="flex h-16 items-center justify-center rounded text-xs font-medium"
+            style={{
+              backgroundColor: semantic.muted,
+              color: semantic.onMuted,
+            }}
+          >
+            Muted
+          </div>
+          <p className="text-center font-mono text-xs text-muted-foreground">
+            Auto-derived
+          </p>
+        </div>
+
+        {/* Accent - auto-derived, shown for reference */}
+        <div className="space-y-1 opacity-75">
+          <div
+            className="flex h-16 items-center justify-center rounded text-xs font-medium"
+            style={{
+              backgroundColor: semantic.accent,
+              color: semantic.onAccent,
+            }}
+          >
+            Accent
+          </div>
+          <p className="text-center font-mono text-xs text-muted-foreground">
+            Auto-derived
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

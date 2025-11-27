@@ -5,6 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { ColorPicker } from "@/components/color-picker";
 import type { TokenSystem, ShadowSettings, BorderColors, LayoutTokens } from "@/lib/types";
@@ -1018,18 +1023,370 @@ const usageExamples: Record<TailwindUsageExampleProps['type'], { title: string; 
   },
 };
 
+// Token highlight component - shows token info on hover/click
+interface TokenHighlightProps {
+  token: string;
+  description: string;
+  example?: string;
+  children: React.ReactNode;
+}
+
+function TokenHighlight({ token, description, example, children }: TokenHighlightProps) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button className="text-primary hover:text-primary/80 bg-primary/10 px-1 rounded cursor-pointer transition-colors font-mono">
+          {children}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72" align="start">
+        <div className="space-y-2">
+          <div className="font-mono text-sm font-medium text-primary">{token}</div>
+          <p className="text-xs text-muted-foreground">{description}</p>
+          {example && (
+            <div className="bg-muted rounded p-2 font-mono text-xs">
+              {example}
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function TailwindUsageExample({ type, className }: TailwindUsageExampleProps) {
   const example = usageExamples[type];
+  
+  // Render interactive code with token highlights
+  const renderInteractiveCode = () => {
+    switch (type) {
+      case 'colors':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Background colors -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="bg-primary" 
+                description="Sets the background to your primary brand color (primary.50)"
+                example="--color-primary-50: oklch(0.55 0.18 240)"
+              >bg-primary</TokenHighlight>
+              &quot;&gt;Primary background&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="bg-primary-50" 
+                description="Sets the background to a specific shade of primary (50 = base shade)"
+                example="Maps to --color-primary-50"
+              >bg-primary-50</TokenHighlight>
+              &quot;&gt;Light primary&lt;/div&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Text colors -->'}</div>
+            <div>
+              &lt;p class=&quot;
+              <TokenHighlight 
+                token="text-primary" 
+                description="Sets text color to primary brand color"
+                example="color: var(--color-primary)"
+              >text-primary</TokenHighlight>
+              &quot;&gt;Primary text&lt;/p&gt;
+            </div>
+            <div>
+              &lt;p class=&quot;
+              <TokenHighlight 
+                token="text-secondary-70" 
+                description="Sets text to secondary color at shade 70 (darker)"
+                example="color: var(--color-secondary-70)"
+              >text-secondary-70</TokenHighlight>
+              &quot;&gt;Secondary shade&lt;/p&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Border colors -->'}</div>
+            <div>
+              &lt;div class=&quot;border 
+              <TokenHighlight 
+                token="border-accent" 
+                description="Sets border color to your accent color"
+                example="border-color: var(--color-accent)"
+              >border-accent</TokenHighlight>
+              &quot;&gt;Accent border&lt;/div&gt;
+            </div>
+          </div>
+        );
+      case 'typography':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Font sizes -->'}</div>
+            <div>
+              &lt;h1 class=&quot;
+              <TokenHighlight 
+                token="text-4xl" 
+                description="Sets font size to 2.25rem (36px) with line-height 2.5rem"
+                example="font-size: 2.25rem"
+              >text-4xl</TokenHighlight>
+              &quot;&gt;Large heading&lt;/h1&gt;
+            </div>
+            <div>
+              &lt;p class=&quot;
+              <TokenHighlight 
+                token="text-base" 
+                description="Base font size, typically 1rem (16px)"
+                example="font-size: 1rem"
+              >text-base</TokenHighlight>
+              &quot;&gt;Body text&lt;/p&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Font weights -->'}</div>
+            <div>
+              &lt;p class=&quot;
+              <TokenHighlight 
+                token="font-bold" 
+                description="Sets font weight to 700 (bold)"
+                example="font-weight: 700"
+              >font-bold</TokenHighlight>
+              &quot;&gt;Bold text&lt;/p&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Font families -->'}</div>
+            <div>
+              &lt;code class=&quot;
+              <TokenHighlight 
+                token="font-mono" 
+                description="Uses your monospace font family"
+                example="font-family: var(--font-mono)"
+              >font-mono</TokenHighlight>
+              &quot;&gt;Monospace code&lt;/code&gt;
+            </div>
+          </div>
+        );
+      case 'spacing':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Padding -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="p-4" 
+                description="Padding on all sides. Value = base unit × 4 (e.g., 16px)"
+                example="padding: var(--spacing-4)"
+              >p-4</TokenHighlight>
+              &quot;&gt;All sides padding&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="px-6" 
+                description="Horizontal padding (left & right). Value = base × 6"
+                example="padding-left/right: var(--spacing-6)"
+              >px-6</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="py-2" 
+                description="Vertical padding (top & bottom). Value = base × 2"
+                example="padding-top/bottom: var(--spacing-2)"
+              >py-2</TokenHighlight>
+              &quot;&gt;H & V&lt;/div&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Margin -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="mt-8" 
+                description="Top margin only. Value = base unit × 8"
+                example="margin-top: var(--spacing-8)"
+              >mt-8</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="mb-4" 
+                description="Bottom margin only. Value = base unit × 4"
+                example="margin-bottom: var(--spacing-4)"
+              >mb-4</TokenHighlight>
+              &quot;&gt;Top & bottom margin&lt;/div&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Gap (flexbox/grid) -->'}</div>
+            <div>
+              &lt;div class=&quot;flex 
+              <TokenHighlight 
+                token="gap-4" 
+                description="Gap between flex/grid items. Value = base × 4"
+                example="gap: var(--spacing-4)"
+              >gap-4</TokenHighlight>
+              &quot;&gt;Flex with gap&lt;/div&gt;
+            </div>
+          </div>
+        );
+      case 'radii':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Border radius -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="rounded" 
+                description="Default border radius from your scale"
+                example="border-radius: var(--radius)"
+              >rounded</TokenHighlight>
+              &quot;&gt;Default radius&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="rounded-lg" 
+                description="Large border radius, good for cards"
+                example="border-radius: var(--radius-lg)"
+              >rounded-lg</TokenHighlight>
+              &quot;&gt;Large radius&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="rounded-full" 
+                description="Fully rounded corners (9999px), creates pill shapes"
+                example="border-radius: 9999px"
+              >rounded-full</TokenHighlight>
+              &quot;&gt;Full (pill) radius&lt;/div&gt;
+            </div>
+          </div>
+        );
+      case 'shadows':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Box shadows -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="shadow-sm" 
+                description="Small subtle shadow for slight elevation"
+                example="box-shadow: var(--shadow-sm)"
+              >shadow-sm</TokenHighlight>
+              &quot;&gt;Small shadow&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="shadow" 
+                description="Default shadow for cards and elevated elements"
+                example="box-shadow: var(--shadow)"
+              >shadow</TokenHighlight>
+              &quot;&gt;Default shadow&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="shadow-lg" 
+                description="Large shadow for modals and dropdowns"
+                example="box-shadow: var(--shadow-lg)"
+              >shadow-lg</TokenHighlight>
+              &quot;&gt;Large shadow&lt;/div&gt;
+            </div>
+          </div>
+        );
+      case 'borders':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Border width -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="border" 
+                description="1px border with your border color token"
+                example="border: 1px solid var(--border)"
+              >border</TokenHighlight>
+              &quot;&gt;1px border&lt;/div&gt;
+            </div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="border-2" 
+                description="2px border for more emphasis"
+                example="border-width: 2px"
+              >border-2</TokenHighlight>
+              &quot;&gt;2px border&lt;/div&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Focus ring -->'}</div>
+            <div>
+              &lt;button class=&quot;
+              <TokenHighlight 
+                token="ring-2" 
+                description="Focus ring with your ring color token"
+                example="box-shadow: 0 0 0 2px var(--ring)"
+              >ring-2</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="ring-offset-2" 
+                description="Offset between element and ring"
+                example="--ring-offset-width: 2px"
+              >ring-offset-2</TokenHighlight>
+              &quot;&gt;Button&lt;/button&gt;
+            </div>
+          </div>
+        );
+      case 'layout':
+        return (
+          <div className="text-xs font-mono space-y-1">
+            <div className="text-muted-foreground">{'<!-- Responsive breakpoints -->'}</div>
+            <div>
+              &lt;div class=&quot;w-full 
+              <TokenHighlight 
+                token="md:w-1/2" 
+                description="Width becomes 50% at medium breakpoint (768px+)"
+                example="@media (min-width: 768px) { width: 50% }"
+              >md:w-1/2</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="lg:w-1/3" 
+                description="Width becomes 33% at large breakpoint (1024px+)"
+                example="@media (min-width: 1024px) { width: 33% }"
+              >lg:w-1/3</TokenHighlight>
+              &quot;&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Container -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="container" 
+                description="Centers content with max-width at each breakpoint"
+                example="max-width: var(--container-md) at md breakpoint"
+              >container</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="mx-auto" 
+                description="Centers the container horizontally"
+                example="margin-left: auto; margin-right: auto"
+              >mx-auto</TokenHighlight>
+              &quot;&gt;Centered&lt;/div&gt;
+            </div>
+            <div className="text-muted-foreground mt-2">{'<!-- Responsive visibility -->'}</div>
+            <div>
+              &lt;div class=&quot;
+              <TokenHighlight 
+                token="hidden" 
+                description="Hidden by default (mobile)"
+                example="display: none"
+              >hidden</TokenHighlight>
+              {' '}
+              <TokenHighlight 
+                token="sm:block" 
+                description="Becomes visible at small breakpoint (640px+)"
+                example="@media (min-width: 640px) { display: block }"
+              >sm:block</TokenHighlight>
+              &quot;&gt;Visible on sm+&lt;/div&gt;
+            </div>
+          </div>
+        );
+      default:
+        return <pre className="text-xs font-mono">{example.code}</pre>;
+    }
+  };
   
   return (
     <div className={cn("rounded-lg border bg-muted/30 p-4 space-y-3", className)}>
       <div>
         <h4 className="text-sm font-medium">{example.title}</h4>
         <p className="text-xs text-muted-foreground">{example.description}</p>
+        <p className="text-xs text-primary mt-1">💡 Click on highlighted tokens to see details</p>
       </div>
-      <pre className="text-xs font-mono bg-muted rounded p-3 overflow-x-auto">
-        {example.code}
-      </pre>
+      <div className="bg-muted rounded p-3 overflow-x-auto">
+        {renderInteractiveCode()}
+      </div>
     </div>
   );
 }
