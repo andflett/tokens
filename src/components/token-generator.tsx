@@ -47,6 +47,7 @@ import {
   Squares2X2Icon,
   CommandLineIcon,
   ComputerDesktopIcon,
+  ViewColumnsIcon,
 } from "@heroicons/react/24/outline";
 
 interface TokenGeneratorProps {
@@ -405,7 +406,7 @@ export function TokenGenerator({
                       { value: "spacing", label: <><ArrowsPointingOutIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Space</span></> },
                       { value: "radii", label: <><StopIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Radius</span></> },
                       { value: "shadows", label: <><Square3Stack3DIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Shadows</span></> },
-                      { value: "borders", label: <><StopIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Borders</span></> },
+                      { value: "borders", label: <><ViewColumnsIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Borders</span></> },
                       { value: "layout", label: <><Squares2X2Icon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Layout</span></> },
                     ]}
                     className="flex-wrap"
