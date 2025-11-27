@@ -159,8 +159,51 @@ export default function DocsPage() {
             <h2 className="text-2xl font-bold mb-4">MCP Setup</h2>
             <p className="text-muted-foreground mb-6">
               The <Term term="mcp">Model Context Protocol</Term> allows AI assistants to use
-              external tools. Here&apos;s how to connect Vibe Themes to your favorite assistant.
+              external tools. There are two ways to use Vibe Themes with MCP:
             </p>
+
+            {/* Installation Options */}
+            <div className="grid gap-4 sm:grid-cols-2 mb-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">🌐 Hosted Server</CardTitle>
+                  <CardDescription>
+                    Use our hosted MCP server - no installation required
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Connect directly to our server. Best for quick setup and always up-to-date.
+                  </p>
+                  <code className="text-xs bg-muted px-2 py-1 rounded block">
+                    https://vibethemes.flett.cc/mcp
+                  </code>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📦 NPM Package</CardTitle>
+                  <CardDescription>
+                    Install locally via npm for offline use
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Run locally using stdio. Best for privacy and offline access.
+                  </p>
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      href="https://www.npmjs.com/package/vibe-themes-mcp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View on NPM →
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
 
             <div className="space-y-6">
               {/* Claude Desktop */}
@@ -173,13 +216,16 @@ export default function DocsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    Add this to your <Term term="claude">Claude Desktop</Term> configuration file:
+                    Add to your <Term term="claude">Claude Desktop</Term> config file:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <p className="text-xs text-muted-foreground mb-2">
-                      macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
-                    </p>
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  <p className="text-xs text-muted-foreground">
+                    macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Option 1: Hosted Server (Recommended)</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "mcpServers": {
     "vibe-themes": {
@@ -188,8 +234,26 @@ export default function DocsPage() {
     }
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g vibe-themes-mcp</code></p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
+{`{
+  "mcpServers": {
+    "vibe-themes": {
+      "command": "vibe-themes-mcp"
+    }
+  }
+}`}
+                      </pre>
+                    </div>
+                  </div>
+                  
                   <p className="text-sm text-muted-foreground">
                     Restart Claude Desktop and look for the hammer icon in the bottom right.
                   </p>
@@ -208,8 +272,11 @@ export default function DocsPage() {
                   <p className="text-sm text-muted-foreground">
                     Add this to your <Term term="vs-code">VS Code</Term> settings.json:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "github.copilot.chat.mcp": {
     "servers": {
@@ -219,8 +286,10 @@ export default function DocsPage() {
     }
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
+                  
                   <p className="text-sm text-muted-foreground">
                     Then ask <Term term="copilot">Copilot</Term>: &quot;Generate design tokens for a calm, professional brand with blue as the primary color&quot;
                   </p>
@@ -239,14 +308,18 @@ export default function DocsPage() {
                   <p className="text-sm text-muted-foreground">
                     Add to ~/.cursor/mcp.json:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "vibe-themes": {
     "url": "https://vibethemes.flett.cc/mcp"
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
