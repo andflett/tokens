@@ -9,6 +9,9 @@ export {
   generateSpacingScale,
   generateRadiiScale,
   generateShadowsWithIntensity,
+  generateShadowsWithSettings,
+  generateBorderColors,
+  generateLayoutTokens,
 } from './generate';
 export { generatePrimitivePalette, getShade, type PrimitivePalette } from './primitives';
 export { generateSemanticTokens, generateSurfaceTokens, checkSemanticContrast } from './semantic';
@@ -23,4 +26,5 @@ export {
   meetsWCAG_AA,
   meetsWCAG_AAA,
   getOklchString,
+  formatColorAs,
 } from './oklch';

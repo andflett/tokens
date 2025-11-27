@@ -10,9 +10,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { exportTokens, getSuggestedFilename, type ExportFormat } from "@/lib/export";
-import type { TokenSystem } from "@/lib/types";
+import type { TokenSystem, ColorFormat } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface ExportDialogProps {
@@ -20,6 +20,7 @@ interface ExportDialogProps {
   onOpenChange: (open: boolean) => void;
   tokens: TokenSystem;
   mode: "light" | "dark" | "both";
+  colorFormat?: ColorFormat;
 }
 
 const FORMAT_INFO: Record<ExportFormat, { label: string; description: string }> = {
@@ -53,20 +54,21 @@ export function ExportDialog({
   onOpenChange,
   tokens,
   mode,
+  colorFormat = "hex",
 }: ExportDialogProps) {
   const [format, setFormat] = React.useState<ExportFormat>("css");
   const [output, setOutput] = React.useState("");
 
-  // Generate output when format changes
+  // Generate output when format or colorFormat changes
   React.useEffect(() => {
     try {
-      const result = exportTokens(tokens, format, mode);
+      const result = exportTokens(tokens, format, mode, colorFormat);
       setOutput(result);
     } catch (error) {
       console.error("Export error:", error);
       setOutput("// Error generating export");
     }
-  }, [tokens, format, mode]);
+  }, [tokens, format, mode, colorFormat]);
 
   const handleCopy = async () => {
     try {
