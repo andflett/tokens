@@ -338,7 +338,7 @@ export function exportToLovable(tokens: TokenSystem, colorFormat: ColorFormat = 
   lines.push(`    --input: ${formatColor(neutralScale[80] || '#e4e4e7', colorFormat)};`);
   lines.push(`    --ring: ${formatColor(lightPrimary.base, colorFormat)};`);
   lines.push('');
-  lines.push(`    --radius: ${tokens.radii.lg || '0.5rem'};`);
+  lines.push(`    --radius: ${tokens.radii?.lg || tokens.radii?.md || '0.5rem'};`);
   lines.push('');
   lines.push('    /* Sidebar */');
   lines.push(`    --sidebar-background: ${formatColor(neutralScale[100] || '#ffffff', colorFormat)};`);
@@ -463,7 +463,7 @@ export function getSuggestedFilename(format: ExportFormat, themeName?: string): 
     case 'scss':
       return `_${base}.scss`;
     case 'lovable':
-      return 'lovable-theme.css';
+      return `${base}-lovable-theme.css`;
     default:
       return `${base}.txt`;
   }
