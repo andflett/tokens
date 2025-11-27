@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { exportTokens, getSuggestedFilename, type ExportFormat } from "@/lib/export";
 import type { TokenSystem, ColorFormat } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -54,9 +61,10 @@ export function ExportDialog({
   onOpenChange,
   tokens,
   mode,
-  colorFormat = "hex",
+  colorFormat: initialColorFormat = "hex",
 }: ExportDialogProps) {
   const [format, setFormat] = React.useState<ExportFormat>("css");
+  const [colorFormat, setColorFormat] = React.useState<ColorFormat>(initialColorFormat);
   const [output, setOutput] = React.useState("");
 
   // Generate output when format or colorFormat changes
@@ -116,9 +124,25 @@ export function ExportDialog({
             ))}
           </TabsList>
 
-          <p className="text-sm text-muted-foreground mt-2">
-            {FORMAT_INFO[format].description}
-          </p>
+          <div className="flex items-center justify-between mt-2">
+            <p className="text-sm text-muted-foreground">
+              {FORMAT_INFO[format].description}
+            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Color format:</span>
+              <Select value={colorFormat} onValueChange={(v) => setColorFormat(v as ColorFormat)}>
+                <SelectTrigger className="w-24 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="oklch">OKLCH</SelectItem>
+                  <SelectItem value="rgb">RGB</SelectItem>
+                  <SelectItem value="hsl">HSL</SelectItem>
+                  <SelectItem value="hex">Hex</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           <div className="flex-1 overflow-hidden mt-4">
             <div className="relative h-full">
