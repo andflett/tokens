@@ -647,68 +647,120 @@ export function TokenGenerator({
                 <p className="text-muted-foreground">
                   The Model Context Protocol (MCP) allows AI assistants like Claude, GitHub Copilot,
                   and others to connect to external tools and services. This means you can ask your
-                  AI assistant to generate design tokens for you directly! You can also install the MCP server via{" "}
-                  <a
-                    href="https://www.npmjs.com/package/vibe-themes-mcp"
-                    className="text-foreground underline hover:no-underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    NPM
-                  </a>.
+                  AI assistant to generate design tokens for you directly!
                 </p>
+              </div>
+
+              {/* Installation Options */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl border p-4">
+                  <h4 className="font-medium mb-2">🌐 Hosted Server</h4>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Use our hosted MCP server - no installation required. Always up-to-date.
+                  </p>
+                  <code className="text-xs bg-muted px-2 py-1 rounded block">
+                    https://vibethemes.flett.cc/mcp
+                  </code>
+                </div>
+                <div className="rounded-xl border p-4">
+                  <h4 className="font-medium mb-2">📦 NPM Package</h4>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Install locally via npm for offline use and privacy.
+                  </p>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                  >
+                    <a
+                      href="https://www.npmjs.com/package/vibe-themes-mcp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View on NPM →
+                    </a>
+                  </Button>
+                </div>
               </div>
               
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Setup Instructions</h3>
-                <ol className="list-decimal list-inside space-y-3 text-muted-foreground">
-                  <li>
-                    <span className="font-medium text-foreground">Open your AI assistant&apos;s settings</span>
-                    <br />
-                    <span className="text-sm">Look for MCP or tool configuration options</span>
-                  </li>
-                  <li>
-                    <span className="font-medium text-foreground">Add the Vibe Themes MCP server</span>
-                    <br />
-                    <span className="text-sm">Use the configuration below</span>
-                  </li>
-                  <li>
-                    <span className="font-medium text-foreground">Start using it!</span>
-                    <br />
-                    <span className="text-sm">Ask your AI to &quot;generate tokens for my brand&quot;</span>
-                  </li>
-                </ol>
-              </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">MCP Configuration</h4>
-                <div className="rounded-lg bg-muted p-4">
-                  <pre className="text-sm font-mono overflow-x-auto">
+                
+                {/* Claude Desktop */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">Claude Desktop</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Add to ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Option 1: Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-3">
+                      <pre className="text-xs font-mono overflow-x-auto">
 {`{
   "mcpServers": {
     "vibe-themes": {
-      "url": "https://vibethemes.flett.cc/mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://vibethemes.flett.cc/mcp"]
     }
   }
 }`}
-                  </pre>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    navigator.clipboard.writeText(`{
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                    <p className="text-xs text-muted-foreground">
+                      First: <code className="bg-muted px-1 rounded">npm install -g vibe-themes-mcp</code>
+                    </p>
+                    <div className="rounded-lg bg-muted p-3">
+                      <pre className="text-xs font-mono overflow-x-auto">
+{`{
   "mcpServers": {
     "vibe-themes": {
-      "url": "https://vibethemes.flett.cc/mcp"
+      "command": "vibe-themes-mcp"
     }
   }
-}`);
-                    toast.success("Copied to clipboard!");
-                  }}
-                >
-                  📋 Copy Configuration
-                </Button>
+}`}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VS Code */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">VS Code + GitHub Copilot</h4>
+                  <p className="text-xs text-muted-foreground">Add to settings.json:</p>
+                  <div className="rounded-lg bg-muted p-3">
+                    <pre className="text-xs font-mono overflow-x-auto">
+{`{
+  "github.copilot.chat.mcp": {
+    "servers": {
+      "vibe-themes": {
+        "url": "https://vibethemes.flett.cc/mcp"
+      }
+    }
+  }
+}`}
+                    </pre>
+                  </div>
+                </div>
+
+                {/* Cursor */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">Cursor</h4>
+                  <p className="text-xs text-muted-foreground">Add to ~/.cursor/mcp.json:</p>
+                  <div className="rounded-lg bg-muted p-3">
+                    <pre className="text-xs font-mono overflow-x-auto">
+{`{
+  "vibe-themes": {
+    "url": "https://vibethemes.flett.cc/mcp"
+  }
+}`}
+                    </pre>
+                  </div>
+                </div>
               </div>
               
               <div className="space-y-4">

@@ -395,7 +395,7 @@ export default function HomePage() {
             <Button size="lg" asChild className="gap-2">
               <Link href="/generate">
                 <BoltIcon className="h-4 w-4" />
-                Generate Tokens
+                Design Your Tokens
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="gap-2">
@@ -524,7 +524,7 @@ export default function HomePage() {
             <Button size="lg" asChild className="gap-2">
               <Link href="/generate">
                 <BoltIcon className="h-4 w-4" />
-                Generate Your Tokens
+                Design Your Tokens
               </Link>
             </Button>
           </div>
@@ -580,6 +580,12 @@ export default function HomePage() {
               rel="noopener noreferrer"
             >
               NPM
+            </Link>
+            <Link
+              href="/legal"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Legal
             </Link>
           </div>
         </div>

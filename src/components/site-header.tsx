@@ -53,7 +53,7 @@ export function SiteHeader() {
           <Button asChild size="sm" className="gap-1.5">
             <Link href="/generate">
               <SwatchIcon className="h-4 w-4" />
-              Get Your Tokens
+              Design Your Tokens
             </Link>
           </Button>
           <div className="h-4 w-px bg-border" />
