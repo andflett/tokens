@@ -11,7 +11,6 @@ import {
   MoonIcon,
   ComputerDesktopIcon,
   SwatchIcon,
-  Bars3Icon,
 } from "@heroicons/react/24/outline";
 import {
   DropdownMenu,
@@ -19,19 +18,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+
+  // Only show theme after mounting to avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navLinkClass = (href: string) =>
     cn(
@@ -41,7 +39,7 @@ export function SiteHeader() {
 
   const mobileNavLinkClass = (href: string) =>
     cn(
-      "block py-2 text-lg font-medium hover:text-foreground transition-colors",
+      "block py-3 text-lg font-medium hover:text-foreground transition-colors",
       pathname === href ? "text-foreground" : "text-foreground/80"
     );
 
@@ -113,68 +111,120 @@ export function SiteHeader() {
           <Button asChild size="sm" className="gap-1.5">
             <Link href="/generate">
               <SwatchIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Design Your Tokens</span>
+              Design Your Tokens
             </Link>
           </Button>
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Bars3Icon className="h-5 w-5" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-64">
-              <SheetHeader>
-                <SheetTitle className="text-left">Menu</SheetTitle>
-              </SheetHeader>
-              <nav className="mt-6 flex flex-col space-y-1">
-                <Link
-                  href="/"
-                  className={mobileNavLinkClass("/")}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </Link>
-                <Link
-                  href="/docs"
-                  className={mobileNavLinkClass("/docs")}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Docs
-                </Link>
-                <Link
-                  href="/generate"
-                  className={mobileNavLinkClass("/generate")}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Generator
-                </Link>
-              </nav>
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-sm text-muted-foreground mb-3">Theme</p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setTheme("light")}
-                    className="gap-2"
-                  >
-                    <SunIcon className="h-4 w-4" />
-                    Light
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setTheme("dark")}
-                    className="gap-2"
-                  >
-                    <MoonIcon className="h-4 w-4" />
-                    Dark
-                  </Button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 relative"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {/* Hamburger to X animation */}
+            <div className="flex flex-col justify-center items-center w-5 h-5">
+              <span
+                className={cn(
+                  "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
+                  mobileMenuOpen
+                    ? "rotate-45 translate-y-[3px]"
+                    : "-translate-y-1"
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
+                  mobileMenuOpen ? "opacity-0" : "opacity-100"
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
+                  mobileMenuOpen
+                    ? "-rotate-45 -translate-y-[3px]"
+                    : "translate-y-1"
+                )}
+              />
+            </div>
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      <div
+        className={cn(
+          "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
+          mobileMenuOpen 
+            ? "max-h-96 opacity-100 border-t border-border/50" 
+            : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="mx-auto max-w-5xl px-6 py-4">
+          <nav className="flex flex-col">
+            <Link
+              href="/"
+              className={mobileNavLinkClass("/")}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              href="/docs"
+              className={mobileNavLinkClass("/docs")}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Docs
+            </Link>
+            <Link
+              href="/generate"
+              className={mobileNavLinkClass("/generate")}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Generator
+            </Link>
+          </nav>
+          
+          {/* Theme Toggle - Animated Pill */}
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <div className="inline-flex items-center rounded-lg bg-muted p-1">
+              <button
+                onClick={() => setTheme("light")}
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                  mounted && theme === "light"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <SunIcon className="h-4 w-4" />
+                Light
+              </button>
+              <button
+                onClick={() => setTheme("dark")}
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                  mounted && theme === "dark"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <MoonIcon className="h-4 w-4" />
+                Dark
+              </button>
+              <button
+                onClick={() => setTheme("system")}
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                  mounted && theme === "system"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <ComputerDesktopIcon className="h-4 w-4" />
+                System
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </header>
