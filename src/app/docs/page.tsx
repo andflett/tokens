@@ -194,7 +194,7 @@ export default function DocsPage() {
                   </p>
                   <Button asChild variant="outline" size="sm">
                     <Link
-                      href="https://www.npmjs.com/package/toke-mcp"
+                      href="https://www.npmjs.com/package/tokens-mcp"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -240,13 +240,13 @@ export default function DocsPage() {
                   
                   <div className="space-y-3">
                     <p className="text-sm font-medium">Option 2: Local NPM Package</p>
-                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g toke-mcp</code></p>
+                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code></p>
                     <div className="rounded-lg bg-muted p-4">
                       <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "mcpServers": {
     "tokens": {
-      "command": "toke-mcp"
+      "command": "tokens-mcp"
     }
   }
 }`}

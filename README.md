@@ -58,7 +58,7 @@ The MCP server is available at `/mcp`. Connect with:
 |------|-------------|
 | `generate_tokens` | Generate design tokens from brand colors (OKLCH) |
 | `generate_tokens_ai` | Generate AI prompt for creative token creation |
-| `analyze_aesthetic` | Analyze an aesthetic description and suggest colors |
+| `analyze_vibe` | Analyze a vibe description and suggest colors |
 | `export_tokens` | Export tokens to CSS, Tailwind, JSON, or SCSS |
 | `generate_component` | Generate AI prompt for shadcn/ui components |
 

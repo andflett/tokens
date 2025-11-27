@@ -620,7 +620,7 @@ export function TokenGenerator({
                     size="sm"
                   >
                     <a
-                      href="https://www.npmjs.com/package/toke-mcp"
+                      href="https://www.npmjs.com/package/tokens-mcp"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -659,14 +659,14 @@ export function TokenGenerator({
                   <div className="space-y-2">
                     <p className="text-sm font-medium">Option 2: Local NPM Package</p>
                     <p className="text-xs text-muted-foreground">
-                      First: <code className="bg-muted px-1 rounded">npm install -g toke-mcp</code>
+                      First: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code>
                     </p>
                     <div className="rounded-lg bg-muted p-3">
                       <pre className="text-xs font-mono overflow-x-auto">
 {`{
   "mcpServers": {
     "tokens": {
-      "command": "toke-mcp"
+      "command": "tokens-mcp"
     }
   }
 }`}

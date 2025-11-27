@@ -147,7 +147,7 @@ Uses Vercel's `mcp-handler` package with dynamic route segment for transport typ
 | `generate_tokens_ai` | Generates prompt for AI to create tokens with context |
 | `generate_component` | Generates prompt for creating shadcn/ui components |
 | `export_tokens` | Converts tokens to CSS, Tailwind v3/v4, JSON, SCSS |
-| `analyze_aesthetic` | Takes an aesthetic description, suggests brand colors |
+| `analyze_vibe` | Takes a vibe description, suggests brand colors |
 
 ### SSE on Vercel
 
@@ -283,7 +283,7 @@ Export tokens directly to Figma variables:
 #### 5. CLI Tool
 
 ```bash
-npx toke generate --primary "#3b82f6" --format tailwind-v4
+npx tokens generate --primary "#3b82f6" --format tailwind-v4
 ```
 
 #### 6. More Token Types
