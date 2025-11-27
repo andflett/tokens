@@ -165,7 +165,7 @@ export default function DocsPage() {
                 href="https://www.npmjs.com/package/vibe-themes-mcp"
                 className="text-foreground underline hover:no-underline"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 NPM
               </Link>.

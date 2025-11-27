@@ -540,6 +540,7 @@ export default function HomePage() {
               height={20}
               background="var(--foreground)"
               foreground="var(--background)"
+              className="shrink-0"
             />
             <span className="text-sm text-muted-foreground">
               © 2025{" "}
@@ -547,7 +548,7 @@ export default function HomePage() {
                 href="https://flett.cc"
                 className="hover:text-foreground"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 Andrew Flett
               </Link>
@@ -576,7 +577,7 @@ export default function HomePage() {
               href="https://www.npmjs.com/package/vibe-themes-mcp"
               className="text-sm text-muted-foreground hover:text-foreground"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
               NPM
             </Link>
