@@ -1,4 +1,4 @@
-# Vibe Themes
+# Tokens
 
 A design token generator with web UI and MCP server, built for designers learning to code with AI.
 
@@ -46,7 +46,7 @@ The MCP server is available at `/mcp`. Connect with:
 
 ```json
 {
-  "vibe-themes": {
+  "tokens": {
     "url": "http://localhost:3000/mcp"
   }
 }
@@ -58,7 +58,7 @@ The MCP server is available at `/mcp`. Connect with:
 |------|-------------|
 | `generate_tokens` | Generate design tokens from brand colors (OKLCH) |
 | `generate_tokens_ai` | Generate AI prompt for creative token creation |
-| `analyze_vibe` | Analyze a vibe description and suggest colors |
+| `analyze_aesthetic` | Analyze an aesthetic description and suggest colors |
 | `export_tokens` | Export tokens to CSS, Tailwind, JSON, or SCSS |
 | `generate_component` | Generate AI prompt for shadcn/ui components |
 

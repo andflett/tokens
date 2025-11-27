@@ -606,7 +606,7 @@ export function TokenGenerator({
                     Use our hosted MCP server - no installation required. Always up-to-date.
                   </p>
                   <code className="text-xs bg-muted px-2 py-1 rounded block">
-                    https://vibethemes.flett.cc/mcp
+                    https://tokens.flett.cc/mcp
                   </code>
                 </div>
                 <div className="rounded-xl border p-4">
@@ -620,7 +620,7 @@ export function TokenGenerator({
                     size="sm"
                   >
                     <a
-                      href="https://www.npmjs.com/package/vibe-themes-mcp"
+                      href="https://www.npmjs.com/package/toke-mcp"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -646,9 +646,9 @@ export function TokenGenerator({
                       <pre className="text-xs font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
+    "tokens": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vibethemes.flett.cc/mcp"]
+      "args": ["-y", "mcp-remote", "https://tokens.flett.cc/mcp"]
     }
   }
 }`}
@@ -659,14 +659,14 @@ export function TokenGenerator({
                   <div className="space-y-2">
                     <p className="text-sm font-medium">Option 2: Local NPM Package</p>
                     <p className="text-xs text-muted-foreground">
-                      First: <code className="bg-muted px-1 rounded">npm install -g vibe-themes-mcp</code>
+                      First: <code className="bg-muted px-1 rounded">npm install -g toke-mcp</code>
                     </p>
                     <div className="rounded-lg bg-muted p-3">
                       <pre className="text-xs font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
-      "command": "vibe-themes-mcp"
+    "tokens": {
+      "command": "toke-mcp"
     }
   }
 }`}
@@ -684,8 +684,8 @@ export function TokenGenerator({
 {`{
   "github.copilot.chat.mcp": {
     "servers": {
-      "vibe-themes": {
-        "url": "https://vibethemes.flett.cc/mcp"
+      "tokens": {
+        "url": "https://tokens.flett.cc/mcp"
       }
     }
   }
@@ -701,8 +701,8 @@ export function TokenGenerator({
                   <div className="rounded-lg bg-muted p-3">
                     <pre className="text-xs font-mono overflow-x-auto">
 {`{
-  "vibe-themes": {
-    "url": "https://vibethemes.flett.cc/mcp"
+  "tokens": {
+    "url": "https://tokens.flett.cc/mcp"
   }
 }`}
                     </pre>

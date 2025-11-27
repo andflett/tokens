@@ -574,7 +574,7 @@ export default function HomePage() {
               Generator
             </Link>
             <Link
-              href="https://www.npmjs.com/package/vibe-themes-mcp"
+              href="https://www.npmjs.com/package/toke-mcp"
               className="text-sm text-muted-foreground hover:text-foreground"
               target="_blank"
               rel="noopener noreferrer"
