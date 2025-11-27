@@ -160,6 +160,15 @@ export default function DocsPage() {
             <p className="text-muted-foreground mb-6">
               The <Term term="mcp">Model Context Protocol</Term> allows AI assistants to use
               external tools. Here&apos;s how to connect Vibe Themes to your favorite assistant.
+              You can also install the MCP server directly via{" "}
+              <Link
+                href="https://www.npmjs.com/package/vibe-themes-mcp"
+                className="text-foreground underline hover:no-underline"
+                target="_blank"
+                rel="noopener"
+              >
+                NPM
+              </Link>.
             </p>
 
             <div className="space-y-6">

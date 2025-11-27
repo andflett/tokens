@@ -647,7 +647,15 @@ export function TokenGenerator({
                 <p className="text-muted-foreground">
                   The Model Context Protocol (MCP) allows AI assistants like Claude, GitHub Copilot,
                   and others to connect to external tools and services. This means you can ask your
-                  AI assistant to generate design tokens for you directly!
+                  AI assistant to generate design tokens for you directly! You can also install the MCP server via{" "}
+                  <a
+                    href="https://www.npmjs.com/package/vibe-themes-mcp"
+                    className="text-foreground underline hover:no-underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    NPM
+                  </a>.
                 </p>
               </div>
               

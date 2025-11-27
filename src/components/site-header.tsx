@@ -9,6 +9,7 @@ import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
+  SwatchIcon,
 } from "@heroicons/react/24/outline";
 import {
   DropdownMenu,
@@ -49,10 +50,13 @@ export function SiteHeader() {
           <Link href="/docs" className={navLinkClass("/docs")}>
             Docs
           </Link>
-          <Button asChild size="sm">
-            <Link href="/generate">Get Your Tokens</Link>
+          <Button asChild size="sm" className="gap-1.5">
+            <Link href="/generate">
+              <SwatchIcon className="h-4 w-4" />
+              Get Your Tokens
+            </Link>
           </Button>
-          <div className="mx-1 h-4 w-px bg-border" />
+          <div className="h-4 w-px bg-border" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
