@@ -593,6 +593,7 @@ export function TokenGenerator({
               onOpenChange={setExportOpen}
               tokens={tokens}
               mode={mode}
+              colorFormat={colorFormat}
             />
           )}
         </TabsContent>

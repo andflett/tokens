@@ -3,14 +3,22 @@
  * Converts token system to CSS variables, Tailwind config, etc.
  */
 
-import type { TokenSystem, ColorScale } from '../types';
+import type { TokenSystem, ColorScale, ColorFormat } from '../types';
+import { formatColorAs } from '../tokens';
+
+/**
+ * Convert a color to the target format
+ */
+function formatColor(color: string, format: ColorFormat): string {
+  return formatColorAs(color, format);
+}
 
 /**
  * Convert a color scale to CSS custom properties
  */
-function colorScaleToCssVars(name: string, scale: ColorScale): string[] {
+function colorScaleToCssVars(name: string, scale: ColorScale, colorFormat: ColorFormat = 'hex'): string[] {
   return Object.entries(scale).map(
-    ([shade, color]) => `  --color-${name}-${shade}: ${color};`
+    ([shade, color]) => `  --color-${name}-${shade}: ${formatColor(color, colorFormat)};`
   );
 }
 
@@ -19,7 +27,8 @@ function colorScaleToCssVars(name: string, scale: ColorScale): string[] {
  */
 export function exportToCss(
   tokens: TokenSystem,
-  mode: 'light' | 'dark' | 'both' = 'both'
+  mode: 'light' | 'dark' | 'both' = 'both',
+  colorFormat: ColorFormat = 'hex'
 ): string {
   const lines: string[] = [];
   
@@ -28,7 +37,7 @@ export function exportToCss(
   lines.push('  /* Primitive Colors */');
   
   for (const [name, scale] of Object.entries(tokens.primitives)) {
-    lines.push(...colorScaleToCssVars(name, scale));
+    lines.push(...colorScaleToCssVars(name, scale, colorFormat));
   }
   
   lines.push('');
@@ -60,12 +69,12 @@ export function exportToCss(
     lines.push(`${lightSelector} {`);
     
     for (const [name, color] of Object.entries(tokens.semantic.light)) {
-      lines.push(`  --${name}: ${color.base};`);
-      lines.push(`  --${name}-muted: ${color.muted};`);
-      lines.push(`  --${name}-accent: ${color.accent};`);
-      lines.push(`  --on-${name}: ${color.onBase};`);
-      lines.push(`  --on-${name}-muted: ${color.onMuted};`);
-      lines.push(`  --on-${name}-accent: ${color.onAccent};`);
+      lines.push(`  --${name}: ${formatColor(color.base, colorFormat)};`);
+      lines.push(`  --${name}-muted: ${formatColor(color.muted, colorFormat)};`);
+      lines.push(`  --${name}-accent: ${formatColor(color.accent, colorFormat)};`);
+      lines.push(`  --on-${name}: ${formatColor(color.onBase, colorFormat)};`);
+      lines.push(`  --on-${name}-muted: ${formatColor(color.onMuted, colorFormat)};`);
+      lines.push(`  --on-${name}-accent: ${formatColor(color.onAccent, colorFormat)};`);
     }
     
     lines.push('');
@@ -86,12 +95,12 @@ export function exportToCss(
     lines.push(`${darkSelector} {`);
     
     for (const [name, color] of Object.entries(tokens.semantic.dark)) {
-      lines.push(`  --${name}: ${color.base};`);
-      lines.push(`  --${name}-muted: ${color.muted};`);
-      lines.push(`  --${name}-accent: ${color.accent};`);
-      lines.push(`  --on-${name}: ${color.onBase};`);
-      lines.push(`  --on-${name}-muted: ${color.onMuted};`);
-      lines.push(`  --on-${name}-accent: ${color.onAccent};`);
+      lines.push(`  --${name}: ${formatColor(color.base, colorFormat)};`);
+      lines.push(`  --${name}-muted: ${formatColor(color.muted, colorFormat)};`);
+      lines.push(`  --${name}-accent: ${formatColor(color.accent, colorFormat)};`);
+      lines.push(`  --on-${name}: ${formatColor(color.onBase, colorFormat)};`);
+      lines.push(`  --on-${name}-muted: ${formatColor(color.onMuted, colorFormat)};`);
+      lines.push(`  --on-${name}-accent: ${formatColor(color.onAccent, colorFormat)};`);
     }
     
     lines.push('');
@@ -112,12 +121,12 @@ export function exportToCss(
     lines.push('  :root:not([data-theme="light"]) {');
     
     for (const [name, color] of Object.entries(tokens.semantic.dark)) {
-      lines.push(`    --${name}: ${color.base};`);
-      lines.push(`    --${name}-muted: ${color.muted};`);
-      lines.push(`    --${name}-accent: ${color.accent};`);
-      lines.push(`    --on-${name}: ${color.onBase};`);
-      lines.push(`    --on-${name}-muted: ${color.onMuted};`);
-      lines.push(`    --on-${name}-accent: ${color.onAccent};`);
+      lines.push(`    --${name}: ${formatColor(color.base, colorFormat)};`);
+      lines.push(`    --${name}-muted: ${formatColor(color.muted, colorFormat)};`);
+      lines.push(`    --${name}-accent: ${formatColor(color.accent, colorFormat)};`);
+      lines.push(`    --on-${name}: ${formatColor(color.onBase, colorFormat)};`);
+      lines.push(`    --on-${name}-muted: ${formatColor(color.onMuted, colorFormat)};`);
+      lines.push(`    --on-${name}-accent: ${formatColor(color.onAccent, colorFormat)};`);
     }
     
     for (const [name, value] of Object.entries(tokens.shadows.dark)) {
@@ -135,7 +144,7 @@ export function exportToCss(
 /**
  * Export tokens as Tailwind v3 config
  */
-export function exportToTailwindV3(tokens: TokenSystem): string {
+export function exportToTailwindV3(tokens: TokenSystem, colorFormat: ColorFormat = 'hex'): string {
   const config = {
     theme: {
       extend: {
@@ -154,7 +163,7 @@ export function exportToTailwindV3(tokens: TokenSystem): string {
   for (const [name, scale] of Object.entries(tokens.primitives)) {
     config.theme.extend.colors[name] = {};
     for (const [shade, color] of Object.entries(scale)) {
-      config.theme.extend.colors[name][shade] = color;
+      config.theme.extend.colors[name][shade] = formatColor(color, colorFormat);
     }
   }
   
@@ -180,7 +189,7 @@ module.exports = ${JSON.stringify(config, null, 2)};`;
 /**
  * Export tokens as Tailwind v4 CSS
  */
-export function exportToTailwindV4(tokens: TokenSystem): string {
+export function exportToTailwindV4(tokens: TokenSystem, colorFormat: ColorFormat = 'hex'): string {
   const lines: string[] = [];
   
   lines.push('@theme {');
@@ -189,7 +198,7 @@ export function exportToTailwindV4(tokens: TokenSystem): string {
   // Primitive colors
   for (const [name, scale] of Object.entries(tokens.primitives)) {
     for (const [shade, color] of Object.entries(scale)) {
-      lines.push(`  --color-${name}-${shade}: ${color};`);
+      lines.push(`  --color-${name}-${shade}: ${formatColor(color, colorFormat)};`);
     }
   }
   
@@ -243,13 +252,13 @@ export function exportToJson(tokens: TokenSystem, pretty: boolean = true): strin
 /**
  * Export tokens as SCSS variables
  */
-export function exportToScss(tokens: TokenSystem): string {
+export function exportToScss(tokens: TokenSystem, colorFormat: ColorFormat = 'hex'): string {
   const lines: string[] = [];
   
   lines.push('// Primitive Colors');
   for (const [name, scale] of Object.entries(tokens.primitives)) {
     for (const [shade, color] of Object.entries(scale)) {
-      lines.push(`$color-${name}-${shade}: ${color};`);
+      lines.push(`$color-${name}-${shade}: ${formatColor(color, colorFormat)};`);
     }
   }
   
@@ -290,19 +299,20 @@ export type ExportFormat = 'css' | 'tailwind-v3' | 'tailwind-v4' | 'json' | 'scs
 export function exportTokens(
   tokens: TokenSystem,
   format: ExportFormat,
-  mode: 'light' | 'dark' | 'both' = 'both'
+  mode: 'light' | 'dark' | 'both' = 'both',
+  colorFormat: ColorFormat = 'hex'
 ): string {
   switch (format) {
     case 'css':
-      return exportToCss(tokens, mode);
+      return exportToCss(tokens, mode, colorFormat);
     case 'tailwind-v3':
-      return exportToTailwindV3(tokens);
+      return exportToTailwindV3(tokens, colorFormat);
     case 'tailwind-v4':
-      return exportToTailwindV4(tokens);
+      return exportToTailwindV4(tokens, colorFormat);
     case 'json':
       return exportToJson(tokens);
     case 'scss':
-      return exportToScss(tokens);
+      return exportToScss(tokens, colorFormat);
     default:
       throw new Error(`Unknown export format: ${format}`);
   }
