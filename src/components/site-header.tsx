@@ -6,8 +6,6 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import TurdLogo from "./turd-logo";
 import {
-  SwatchIcon,
-  DocumentTextIcon,
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
@@ -18,10 +16,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
+
+  const navLinkClass = (href: string) =>
+    cn(
+      "text-sm font-medium hover:text-foreground transition-colors",
+      pathname === href ? "text-foreground" : "text-foreground/80"
+    );
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-sm">
@@ -37,36 +42,17 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className={
-              pathname === "/docs" ? "text-foreground" : "text-muted-foreground"
-            }
-          >
-            <Link href="/docs" className="gap-1.5">
-              <DocumentTextIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Docs</span>
-            </Link>
+        <nav className="flex items-center gap-4">
+          <Link href="/" className={navLinkClass("/")}>
+            About
+          </Link>
+          <Link href="/docs" className={navLinkClass("/docs")}>
+            Docs
+          </Link>
+          <Button asChild size="sm">
+            <Link href="/generate">Get Your Tokens</Link>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className={
-              pathname === "/generate"
-                ? "text-foreground"
-                : "text-muted-foreground"
-            }
-          >
-            <Link href="/generate" className="gap-1.5">
-              <SwatchIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Generator</span>
-            </Link>
-          </Button>
-          <div className="mx-2 h-4 w-px bg-border" />
+          <div className="mx-1 h-4 w-px bg-border" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -99,7 +85,6 @@ export function SiteHeader() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Sign-in removed */}
         </nav>
       </div>
     </header>
