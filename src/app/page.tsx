@@ -6,6 +6,7 @@ import { PageLayout } from "@/components/page-layout";
 import TurdLogo from "@/components/turd-logo";
 import Link from "next/link";
 import {
+  ArrowDownCircleIcon,
   BoltIcon,
   CommandLineIcon,
   ComputerDesktopIcon,
@@ -34,9 +35,10 @@ import {
 } from "@/components/home/token-visuals";
 import { AnimatedTabsList } from "@/components/ui/tabs";
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, MoveDownIcon } from "lucide-react";
 import React from "react";
 import { Card } from "@/components/ui/card";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 export default function HomePage() {
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
@@ -79,13 +81,13 @@ export default function HomePage() {
             and{" "}
             <span className="text-muted-foreground font-normal">shadows</span>.
             Clearly defining these is the key to taking control and avoiding
-            sloppy design drift.
+            design drift.
           </p>
         </div>
       </section>
 
       {/* Next Steps */}
-      <section className="pb-12">
+      <section className="pt-6 pb-18">
         <div className="mx-auto max-w-2xl text-center">
           <Tabs
             value={generatorTab}
@@ -93,7 +95,7 @@ export default function HomePage() {
           >
             <div className="flex justify-center">
               <AnimatedTabsList
-                className="bg-card/70 border border-border/80 p-2 h-12"
+                className="border border-border/100 p-2 h-12"
                 value={generatorTab}
                 onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
                 items={[
@@ -102,7 +104,7 @@ export default function HomePage() {
                     label: (
                       <>
                         <ComputerDesktopIcon className="h-4 w-4 mr-1.5 text-purple-500" />
-                        Design tokens on the web
+                        Design Tokens on the Web
                       </>
                     ),
                   },
@@ -111,7 +113,7 @@ export default function HomePage() {
                     label: (
                       <>
                         <SparklesIcon className="h-4 w-4 mr-1.5 text-purple-500" />
-                        Show your AI how to create tokens
+                        Teach your AI with MCP Tools
                       </>
                     ),
                   },
@@ -154,21 +156,22 @@ export default function HomePage() {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-8 flex flex-col items-center gap-3">
-            <p className="text-sm font-medium text-foreground">
-              Or continue reading to learn more
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <p className="text-lg font-medium text-foreground">
+              New to all this? Continue down there to learn how to prompt for
+              coherent design
             </p>
-            <Link href="#spacing" className="-mb-2">
-              <ArrowDown className="h-6 w-6 text-purple-500 animate-bounce" />
+            <Link href="#spacing" className="-mb-8">
+              <ArrowDown className="h-10 w-10 text-purple-500 animate-bounce" />
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="flex flex-col items-center text-center border-t pt-12 pb-0">
+      <section className="flex flex-col items-center text-center border-t pt-16 pb-0">
         {/* Token Type Visual Indicator */}
 
-        <div className="mb-4 inline-flex items-center gap-1 rounded-full bg-muted/50 p-1.5 shadow-lg ring-1 ring-border/50">
+        <div className="mb-8 inline-flex items-center gap-1 rounded-full bg-muted/50 p-1.5 shadow-lg ring-1 ring-border/50">
           <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
             <SwatchIcon className="h-5 w-5" />
           </div>
@@ -192,7 +195,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-center mb-4">
+        <h2 className="text-2xl font-bold text-center mb-6">
           You and your AI aren't speaking the same design language
         </h2>
 
@@ -200,9 +203,10 @@ export default function HomePage() {
           When you generate a web app with AI, it&apos;s probably using{" "}
           <Term term="tailwind">Tailwind CSS</Term> with{" "}
           <Term term="shadcn">shadcn/ui</Term> components. This gives us a solid
-          start, but unless you are describing what you want in terms of design
-          tokens and being explicit about following a coherant design language,
-          the more you prompt, the more inconsistent your app will look.
+          start, but it only holds together if you explicitly direct the model
+          to use your design tokens and follow a coherent design language.
+          Without that, the more you prompt, the more of a sloppy mess your app
+          will become.
         </p>
       </section>
 
@@ -210,49 +214,49 @@ export default function HomePage() {
       <TokenSection
         id="spacing"
         title="Spacing Tokens"
-        description="In Tailwind, spacing uses a scale where the number × 4 = pixels. So p-4 is 16px padding, gap-6 is 24px gap. When you tell your AI 'add some space,' it picks randomly. Use specific tokens like p-6 or gap-4 instead."
+        description="Spacing uses a scale where each step is 4 pixels. When you tell your AI 'add some space,' it picks randomly. Be specific about your spacing values and stick to the scale."
         visual={<SpacingVisual />}
-        prompt="Add consistent spacing between these cards using gap-6, and use padding of p-8 inside each card"
+        prompt="Add consistent spacing between these cards using our spacing scale (6 units), and set padding inside each card to 8 units"
       />
 
       <TokenSection
         id="colors"
         title="Color Tokens"
-        description="Colors are organized in layers with semantic names. bg-background is your base, bg-card sits on top, bg-popover floats above. Each has a matching text color (text-foreground, text-card-foreground). Tell your AI which layer, not which hex code."
+        description="Colors are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code."
         visual={<ColorVisual />}
-        prompt="Use bg-card with text-card-foreground for this section, and bg-primary with text-primary-foreground for the button"
+        prompt="Use the card background color with its foreground for this section, and primary with primary-foreground for the button"
       />
 
       <TokenSection
         id="typography"
         title="Typography Tokens"
-        description="Font sizes use names like text-sm, text-base, text-lg, text-xl. Weights are font-normal, font-medium, font-semibold, font-bold. Combine them: text-lg font-semibold. Your AI understands these better than '18px bold'."
+        description="Font sizes use a named scale from extra-small to extra-large. Weights range from normal to bold. Your AI understands these token names better than raw pixel values."
         visual={<TypographyVisual />}
-        prompt="Make all headings text-2xl font-bold, body text should be text-base, and captions text-sm text-muted-foreground"
+        prompt="Make all headings extra-large and bold, body text should be the base size, and captions should be small with muted color"
       />
 
       <TokenSection
         id="shadows"
         title="Shadow Tokens"
-        description="Shadows use preset levels: shadow-sm (subtle), shadow-md (medium), shadow-lg (pronounced). Don't tell your AI 'add a shadow'—specify which level. Cards usually get shadow-sm, modals get shadow-lg."
+        description="Shadows use preset levels: small (subtle), medium, and large (pronounced). Don't tell your AI 'add a shadow'—specify which level. Cards usually get small shadows, modals get large."
         visual={<ShadowVisual />}
-        prompt="Add shadow-sm to cards in their default state, and shadow-md on hover to show interactivity"
+        prompt="Add a small shadow to cards in their default state, and increase to medium on hover to show interactivity"
       />
 
       <TokenSection
         id="layout"
         title="Layout Tokens"
-        description="Responsive design uses breakpoint prefixes: sm: (640px), md: (768px), lg: (1024px). Tell your AI 'stack on mobile, two columns on md:' instead of writing media queries. The prefix applies the style at that screen size and up."
+        description="Layout tokens define breakpoints for different screen sizes and container widths. Tell your AI which container size to use and when layouts should change, instead of writing custom media queries or arbitrary widths."
         visual={<LayoutVisual />}
-        prompt="Make this grid grid-cols-1 by default, md:grid-cols-2 on tablet, and lg:grid-cols-3 on desktop"
+        prompt="Set the main content container to our 4xl width token and center it. On tablet and larger, add more horizontal padding"
       />
 
       <TokenSection
         id="borders"
         title="Border Tokens"
-        description="Borders use border (1px), border-2 (2px), border-4 (4px). Styles are border-solid, border-dashed, border-dotted. Color is usually border (the default). Tell your AI 'border-2 border-dashed' instead of 'add a dashed border'."
+        description="Borders use preset widths (1px, 2px, 4px) and styles (solid, dashed, dotted). Tell your AI which width and style from our token system, not arbitrary values."
         visual={<BorderVisual />}
-        prompt="Add border to all cards, and border-2 border-primary to the active card to highlight it"
+        prompt="Add a default border to all cards, and use a thicker border with the primary color on the active card to highlight it"
       />
 
       {/* CTA */}
