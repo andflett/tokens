@@ -12,12 +12,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { HexColorPicker } from "react-colorful";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatColorAs } from "@/lib/tokens";
-import type { ColorScale, ColorFormat } from "@/lib/types";
+import type {
+  ColorScale,
+  ColorFormat,
+  ExtendedSemanticColor,
+  SemanticColorPair,
+} from "@/lib/types";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+
+/**
+ * Type guard to check if semantic color is an extended type with scale
+ */
+function isExtendedSemanticColor(
+  color: ExtendedSemanticColor | SemanticColorPair
+): color is ExtendedSemanticColor {
+  return "subdued" in color;
+}
 
 interface ColorSwatchProps {
   color: string;
@@ -52,7 +66,9 @@ export function ColorSwatch({ color, label, className }: ColorSwatchProps) {
         </TooltipTrigger>
         <TooltipContent>
           <p className="font-mono text-xs">
-            {copied ? "Copied!" : `${label ? `${label}: ` : ""}${color.toUpperCase()}`}
+            {copied
+              ? "Copied!"
+              : `${label ? `${label}: ` : ""}${color.toUpperCase()}`}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -73,26 +89,27 @@ interface EditableColorSwatchProps {
 /**
  * Editable color swatch with color picker
  */
-export function EditableColorSwatch({ 
-  color, 
+export function EditableColorSwatch({
+  color,
   primitiveRef,
   colorFormat,
   isEdited,
   onColorChange,
   onReset,
-  className 
+  className,
 }: EditableColorSwatchProps) {
-  const [copied, setCopied] = React.useState(false);
+  const [copiedFormat, setCopiedFormat] = React.useState<string | null>(null);
   const [open, setOpen] = React.useState(false);
 
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    await navigator.clipboard.writeText(primitiveRef);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const handleCopy = async (value: string, format: string) => {
+    await navigator.clipboard.writeText(value);
+    setCopiedFormat(format);
+    setTimeout(() => setCopiedFormat(null), 1500);
   };
 
-  const formattedColor = formatColorAs(color, colorFormat);
+  const hexColor = formatColorAs(color, "hex");
+  const rgbColor = formatColorAs(color, "rgb");
+  const oklchColor = formatColorAs(color, "oklch");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -113,32 +130,65 @@ export function EditableColorSwatch({
       <PopoverContent className="w-auto p-3" align="start">
         <div className="space-y-3">
           <HexColorPicker color={color} onChange={onColorChange} />
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-xs">
-              <div className="font-medium text-foreground">{primitiveRef}</div>
-              <button 
-                onClick={handleCopy}
-                className="font-mono text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {copied ? "Copied!" : formattedColor}
-              </button>
-            </div>
-            {isEdited && (
-              <Button
-                variant="ghost"
-                size="sm"
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">#</span>
+            <HexColorInput
+              color={color}
+              onChange={onColorChange}
+              className="h-8 w-full rounded-md border border-input bg-background px-2 font-mono text-sm uppercase"
+              prefixed={false}
+            />
+          </div>
+          <div className="space-y-2 text-xs">
+            <div className="font-medium text-foreground">{primitiveRef}</div>
+            <div className="space-y-1">
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onReset();
-                  setOpen(false);
+                  handleCopy(hexColor, "hex");
                 }}
-                className="h-8 px-2"
+                className="flex items-center gap-2 w-full font-mono text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowPathIcon className="h-4 w-4 mr-1" />
-                Reset
-              </Button>
-            )}
+                <span className="text-muted-foreground/60 w-10">HEX</span>
+                <span>{copiedFormat === "hex" ? "Copied!" : hexColor}</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopy(rgbColor, "rgb");
+                }}
+                className="flex items-center gap-2 w-full font-mono text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span className="text-muted-foreground/60 w-10">RGB</span>
+                <span>{copiedFormat === "rgb" ? "Copied!" : rgbColor}</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopy(oklchColor, "oklch");
+                }}
+                className="flex items-center gap-2 w-full font-mono text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span className="text-muted-foreground/60 w-10">OKLCH</span>
+                <span>{copiedFormat === "oklch" ? "Copied!" : oklchColor}</span>
+              </button>
+            </div>
           </div>
+          {isEdited && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onReset();
+                setOpen(false);
+              }}
+              className="h-8 px-2 w-full"
+            >
+              <ArrowPathIcon className="h-4 w-4 mr-1" />
+              Reset
+            </Button>
+          )}
         </div>
       </PopoverContent>
     </Popover>
@@ -162,7 +212,9 @@ export function ColorScalePreview({
   scale,
   className,
 }: ColorScalePreviewProps) {
-  const shades = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
+  const shades = [
+    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+  ] as const;
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -171,7 +223,7 @@ export function ColorScalePreview({
         {shades.map((shade) => (
           <div key={shade} className="flex-1">
             <ColorSwatch
-              color={scale[shade]}
+              color={scale[shade as keyof ColorScale]}
               label={`${name}-${shade}`}
             />
             <p className="mt-1 text-center text-xs text-muted-foreground">
@@ -206,7 +258,9 @@ export function ColorScalePreviewEditable({
   isColorEdited,
   className,
 }: ColorScalePreviewEditableProps) {
-  const shades = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
+  const shades = [
+    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+  ] as const;
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -215,7 +269,7 @@ export function ColorScalePreviewEditable({
         {shades.map((shade) => (
           <div key={shade} className="flex-1">
             <EditableColorSwatch
-              color={scale[shade]}
+              color={scale[shade as keyof ColorScale]}
               primitiveRef={`${name}.${shade}`}
               colorFormat={colorFormat}
               isEdited={isColorEdited(shade)}
@@ -264,20 +318,20 @@ interface PalettePreviewEditableProps {
 /**
  * Editable palette preview
  */
-export function PalettePreviewEditable({ 
-  palette, 
+export function PalettePreviewEditable({
+  palette,
   colorFormat,
   onColorEdit,
   onColorReset,
   isColorEdited,
-  className 
+  className,
 }: PalettePreviewEditableProps) {
   return (
     <div className={cn("space-y-6", className)}>
       {Object.entries(palette).map(([name, scale]) => (
-        <ColorScalePreviewEditable 
-          key={name} 
-          name={name} 
+        <ColorScalePreviewEditable
+          key={name}
+          name={name}
           scale={scale}
           colorFormat={colorFormat}
           onColorEdit={(shade, color) => onColorEdit(name, shade, color)}
@@ -290,15 +344,8 @@ export function PalettePreviewEditable({
 }
 
 interface SemanticColorPreviewProps {
-  /** Semantic color object */
-  semantic: {
-    base: string;
-    muted: string;
-    accent: string;
-    onBase: string;
-    onMuted: string;
-    onAccent: string;
-  };
+  /** Semantic color object - supports both extended and simple pair types */
+  semantic: ExtendedSemanticColor | SemanticColorPair;
   /** Name of the semantic color */
   name: string;
   /** Additional CSS classes */
@@ -306,57 +353,96 @@ interface SemanticColorPreviewProps {
 }
 
 /**
- * Preview semantic color with base, muted, and accent variants
+ * Preview semantic color with DEFAULT, foreground, and variants
  */
 export function SemanticColorPreview({
   semantic,
   name,
   className,
 }: SemanticColorPreviewProps) {
+  if (isExtendedSemanticColor(semantic)) {
+    return (
+      <div className={cn("space-y-2", className)}>
+        <h4 className="text-sm font-medium capitalize">{name}</h4>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="space-y-1">
+            <div
+              className="flex h-16 items-center justify-center rounded text-xs font-medium"
+              style={{
+                backgroundColor: semantic.DEFAULT,
+                color: semantic.foreground,
+              }}
+            >
+              Default
+            </div>
+            <p className="text-center font-mono text-xs text-muted-foreground">
+              {semantic.DEFAULT}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <div
+              className="flex h-16 items-center justify-center rounded text-xs font-medium"
+              style={{
+                backgroundColor: semantic.subdued,
+                color: semantic["subdued-foreground"],
+              }}
+            >
+              Subdued
+            </div>
+            <p className="text-center font-mono text-xs text-muted-foreground">
+              {semantic.subdued}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <div
+              className="flex h-16 items-center justify-center rounded text-xs font-medium"
+              style={{
+                backgroundColor: semantic.highlight,
+                color: semantic["highlight-foreground"],
+              }}
+            >
+              Highlight
+            </div>
+            <p className="text-center font-mono text-xs text-muted-foreground">
+              {semantic.highlight}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Simple color pair (muted, accent)
   return (
     <div className={cn("space-y-2", className)}>
       <h4 className="text-sm font-medium capitalize">{name}</h4>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1">
           <div
             className="flex h-16 items-center justify-center rounded text-xs font-medium"
             style={{
-              backgroundColor: semantic.base,
-              color: semantic.onBase,
+              backgroundColor: semantic.DEFAULT,
+              color: semantic.foreground,
             }}
           >
-            Base
+            Default
           </div>
           <p className="text-center font-mono text-xs text-muted-foreground">
-            {semantic.base}
+            {semantic.DEFAULT}
           </p>
         </div>
         <div className="space-y-1">
           <div
-            className="flex h-16 items-center justify-center rounded text-xs font-medium"
+            className="flex h-16 items-center justify-center rounded text-xs font-medium border"
             style={{
-              backgroundColor: semantic.muted,
-              color: semantic.onMuted,
+              backgroundColor: "transparent",
+              color: semantic.foreground,
             }}
           >
-            Muted
+            Foreground
           </div>
           <p className="text-center font-mono text-xs text-muted-foreground">
-            {semantic.muted}
-          </p>
-        </div>
-        <div className="space-y-1">
-          <div
-            className="flex h-16 items-center justify-center rounded text-xs font-medium"
-            style={{
-              backgroundColor: semantic.accent,
-              color: semantic.onAccent,
-            }}
-          >
-            Accent
-          </div>
-          <p className="text-center font-mono text-xs text-muted-foreground">
-            {semantic.accent}
+            {semantic.foreground}
           </p>
         </div>
       </div>
@@ -369,14 +455,7 @@ export function SemanticColorPreview({
 // ============================================================================
 
 interface SemanticColorEditableProps {
-  semantic: {
-    base: string;
-    muted: string;
-    accent: string;
-    onBase: string;
-    onMuted: string;
-    onAccent: string;
-  };
+  semantic: ExtendedSemanticColor | SemanticColorPair;
   name: string;
   relevantScale: ColorScale;
   scaleName: string;
@@ -398,24 +477,30 @@ export function SemanticColorEditable({
 }: SemanticColorEditableProps) {
   const [open, setOpen] = React.useState(false);
   const [showCustomPicker, setShowCustomPicker] = React.useState(false);
-  const shades = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
+  const shades = [
+    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+  ] as const;
+
+  const isExtended = isExtendedSemanticColor(semantic);
 
   return (
     <div className={cn("space-y-2", className)}>
       <h4 className="text-sm font-medium capitalize">{name}</h4>
-      <div className="grid grid-cols-3 gap-2">
-        {/* Base color - clickable to open picker */}
+      <div
+        className={cn("grid gap-2", isExtended ? "grid-cols-3" : "grid-cols-2")}
+      >
+        {/* Default color - clickable to open picker */}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <button className="space-y-1 text-left group">
               <div
                 className="flex h-16 items-center justify-center rounded text-xs font-medium transition-all group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2"
                 style={{
-                  backgroundColor: semantic.base,
-                  color: semantic.onBase,
+                  backgroundColor: semantic.DEFAULT,
+                  color: semantic.foreground,
                 }}
               >
-                Base
+                Default
               </div>
               <p className="text-center font-mono text-xs text-muted-foreground group-hover:text-primary transition-colors">
                 Click to edit
@@ -429,22 +514,28 @@ export function SemanticColorEditable({
                   Select from {scaleName} scale
                 </h5>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Choose a shade from your {scaleName} color scale, or customize below
+                  Choose a shade from your {scaleName} color scale, or customize
+                  below
                 </p>
                 <div className="flex gap-1">
                   {shades.map((shade) => (
                     <button
                       key={shade}
                       onClick={() => {
-                        onBaseChange(relevantScale[shade]);
+                        onBaseChange(relevantScale[shade as keyof ColorScale]);
                         setOpen(false);
                         setShowCustomPicker(false);
                       }}
                       className={cn(
                         "flex-1 h-8 rounded-sm transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring",
-                        semantic.base === relevantScale[shade] && "ring-2 ring-primary ring-offset-1"
+                        semantic.DEFAULT ===
+                          relevantScale[shade as keyof ColorScale] &&
+                          "ring-2 ring-primary ring-offset-1"
                       )}
-                      style={{ backgroundColor: relevantScale[shade] }}
+                      style={{
+                        backgroundColor:
+                          relevantScale[shade as keyof ColorScale],
+                      }}
                       title={`${scaleName}.${shade}`}
                     />
                   ))}
@@ -460,17 +551,20 @@ export function SemanticColorEditable({
                   onClick={() => setShowCustomPicker(!showCustomPicker)}
                   className="text-xs text-primary hover:underline"
                 >
-                  {showCustomPicker ? 'Hide custom picker' : 'Need a different color? Use custom picker'}
+                  {showCustomPicker
+                    ? "Hide custom picker"
+                    : "Need a different color? Use custom picker"}
                 </button>
-                
+
                 {showCustomPicker && (
                   <div className="mt-3">
-                    <HexColorPicker 
-                      color={semantic.base} 
-                      onChange={onBaseChange} 
+                    <HexColorPicker
+                      color={semantic.DEFAULT}
+                      onChange={onBaseChange}
                     />
                     <p className="text-xs text-muted-foreground mt-2">
-                      Custom color: <span className="font-mono">{semantic.base}</span>
+                      Custom color:{" "}
+                      <span className="font-mono">{semantic.DEFAULT}</span>
                     </p>
                   </div>
                 )}
@@ -479,37 +573,57 @@ export function SemanticColorEditable({
           </PopoverContent>
         </Popover>
 
-        {/* Muted - auto-derived, shown for reference */}
-        <div className="space-y-1 opacity-75">
-          <div
-            className="flex h-16 items-center justify-center rounded text-xs font-medium"
-            style={{
-              backgroundColor: semantic.muted,
-              color: semantic.onMuted,
-            }}
-          >
-            Muted
-          </div>
-          <p className="text-center font-mono text-xs text-muted-foreground">
-            Auto-derived
-          </p>
-        </div>
+        {isExtended ? (
+          <>
+            {/* Subdued - auto-derived, shown for reference */}
+            <div className="space-y-1 opacity-75">
+              <div
+                className="flex h-16 items-center justify-center rounded text-xs font-medium"
+                style={{
+                  backgroundColor: semantic.subdued,
+                  color: semantic["subdued-foreground"],
+                }}
+              >
+                Subdued
+              </div>
+              <p className="text-center font-mono text-xs text-muted-foreground">
+                Auto-derived
+              </p>
+            </div>
 
-        {/* Accent - auto-derived, shown for reference */}
-        <div className="space-y-1 opacity-75">
-          <div
-            className="flex h-16 items-center justify-center rounded text-xs font-medium"
-            style={{
-              backgroundColor: semantic.accent,
-              color: semantic.onAccent,
-            }}
-          >
-            Accent
+            {/* Highlight - auto-derived, shown for reference */}
+            <div className="space-y-1 opacity-75">
+              <div
+                className="flex h-16 items-center justify-center rounded text-xs font-medium"
+                style={{
+                  backgroundColor: semantic.highlight,
+                  color: semantic["highlight-foreground"],
+                }}
+              >
+                Highlight
+              </div>
+              <p className="text-center font-mono text-xs text-muted-foreground">
+                Auto-derived
+              </p>
+            </div>
+          </>
+        ) : (
+          /* Foreground - shown for reference in simple pair */
+          <div className="space-y-1 opacity-75">
+            <div
+              className="flex h-16 items-center justify-center rounded text-xs font-medium border"
+              style={{
+                backgroundColor: "transparent",
+                color: semantic.foreground,
+              }}
+            >
+              Foreground
+            </div>
+            <p className="text-center font-mono text-xs text-muted-foreground">
+              Auto-derived
+            </p>
           </div>
-          <p className="text-center font-mono text-xs text-muted-foreground">
-            Auto-derived
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );

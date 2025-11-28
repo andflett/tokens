@@ -35,9 +35,7 @@ export function ColorPicker({
 
   return (
     <div className={cn("space-y-2", className)}>
-      {label && (
-        <Label className="text-sm font-medium">{label}</Label>
-      )}
+      {label && <Label className="text-sm font-medium">{label}</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -78,40 +76,33 @@ interface BrandColorPickersProps {
   primary: string;
   /** Secondary color */
   secondary: string;
-  /** Accent color */
-  accent: string;
   /** Callback when any color changes */
-  onChange: (colors: { primary: string; secondary: string; accent: string }) => void;
+  onChange: (colors: { primary: string; secondary: string }) => void;
   /** Additional CSS classes */
   className?: string;
 }
 
 /**
- * Three color pickers for brand colors
+ * Two color pickers for brand colors (primary and secondary)
+ * Other colors (neutral, success, destructive, warning) are derived automatically
  */
 export function BrandColorPickers({
   primary,
   secondary,
-  accent,
   onChange,
   className,
 }: BrandColorPickersProps) {
   return (
-    <div className={cn("grid gap-4 sm:grid-cols-3", className)}>
+    <div className={cn("grid gap-4 sm:grid-cols-2", className)}>
       <ColorPicker
         label="Primary"
         value={primary}
-        onChange={(color) => onChange({ primary: color, secondary, accent })}
+        onChange={(color) => onChange({ primary: color, secondary })}
       />
       <ColorPicker
         label="Secondary"
         value={secondary}
-        onChange={(color) => onChange({ primary, secondary: color, accent })}
-      />
-      <ColorPicker
-        label="Accent"
-        value={accent}
-        onChange={(color) => onChange({ primary, secondary, accent: color })}
+        onChange={(color) => onChange({ primary, secondary: color })}
       />
     </div>
   );

@@ -49,9 +49,9 @@ export default function HomePage() {
   return (
     <PageLayout showGrid>
       {/* Hero */}
-      <section className="py-20 md:pt-28 md:pb-8 relative overflow-hidden">
+      <section className="py-20 pt-28 md:pb-8 relative overflow-hidden">
         <div className="mx-auto max-w-2xl text-center relative z-10">
-          <h1 className="text-4xl font-black md:text-5xl leading-13">
+          <h1 className="text-5xl font-black md:text-5xl md:leading-13">
             <span className="relative inline-block">
               Why
               <TokenBadge
@@ -62,7 +62,7 @@ export default function HomePage() {
                 font-size.random
               </TokenBadge>
             </span>{" "}
-            does my AI generated site look like turd?
+            does my AI-generated site look like turd?
           </h1>
           <TokenBadge
             className="absolute mt-[-1rem] ml-[-2rem] inline-block font-light left-full"
@@ -206,11 +206,11 @@ export default function HomePage() {
           When you generate a web site with AI, it&apos;s probably using{" "}
           <Term term="tailwind">Tailwind CSS</Term> and a component library like{" "}
           <Term term="shadcn">shadcn/ui</Term>, depending on the underlying{" "}
-          <Term term="framework">framework</Term>. This gives us a solid
-          start, but it only holds together if you explicitly direct the model
-          to use your design tokens and follow a coherent design language.
-          Without that, the more you prompt, the more of a sloppy mess your site
-          will become.
+          <Term term="framework">framework</Term>. This gives us a solid start,
+          but it only holds together if you explicitly direct the model to use
+          your design tokens and follow a coherent design language. Without
+          that, the more you prompt, the more of a sloppy mess your site will
+          become.
         </p>
       </section>
 

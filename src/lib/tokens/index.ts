@@ -3,8 +3,8 @@
  * Re-exports all token utilities
  */
 
-export { 
-  generateTokens, 
+export {
+  generateTokens,
   getSemanticForMode,
   generateSpacingScale,
   generateRadiiScale,
@@ -12,9 +12,18 @@ export {
   generateShadowsWithSettings,
   generateBorderColors,
   generateLayoutTokens,
-} from './generate';
-export { generatePrimitivePalette, getShade, type PrimitivePalette } from './primitives';
-export { generateSemanticTokens, generateSurfaceTokens, checkSemanticContrast } from './semantic';
+} from "./generate";
+export {
+  generatePrimitivePalette,
+  getShade,
+  type PrimitivePalette,
+} from "./primitives";
+export {
+  generateSemanticTokens,
+  generateSurfaceTokens,
+  generateUtilityTokens,
+  checkSemanticContrast,
+} from "./semantic";
 export {
   parseToOklch,
   oklchToHex,
@@ -27,4 +36,4 @@ export {
   meetsWCAG_AAA,
   getOklchString,
   formatColorAs,
-} from './oklch';
+} from "./oklch";

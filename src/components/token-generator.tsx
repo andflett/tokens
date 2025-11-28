@@ -80,10 +80,10 @@ interface TokenGeneratorProps {
 const SEMANTIC_SCALE_MAPPING: Record<string, string> = {
   primary: "primary",
   secondary: "secondary",
+  gray: "gray",
   success: "success",
   warning: "warning",
-  danger: "danger",
-  info: "info",
+  destructive: "destructive",
 };
 
 /**
@@ -107,7 +107,15 @@ export function TokenGenerator({
   );
   const [exportOpen, setExportOpen] = React.useState(false);
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
-  const validTabs = ["colors", "typography", "spacing", "radii", "shadows", "borders", "layout"];
+  const validTabs = [
+    "colors",
+    "typography",
+    "spacing",
+    "radii",
+    "shadows",
+    "borders",
+    "layout",
+  ];
   const [tokenTab, setTokenTab] = React.useState<string>(
     initialTab && validTabs.includes(initialTab) ? initialTab : "colors"
   );
@@ -334,7 +342,6 @@ export function TokenGenerator({
     setBrandColors({
       primary: randomColor(),
       secondary: randomColor(),
-      accent: randomColor(),
     });
     setColorEdits({});
     toast.success("Colors randomized!");
@@ -393,7 +400,6 @@ export function TokenGenerator({
               <BrandColorPickers
                 primary={brandColors.primary}
                 secondary={brandColors.secondary}
-                accent={brandColors.accent}
                 onChange={setBrandColors}
               />
               <div className="flex flex-wrap gap-2">

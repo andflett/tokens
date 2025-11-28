@@ -9,7 +9,6 @@ import { z } from "zod";
 import { generateTokens } from "@/lib/tokens";
 import { exportTokens, type ExportFormat } from "@/lib/export";
 import {
-  generateTokenPrompt,
   generateComponentPrompt,
   generateVibeAnalysisPrompt,
 } from "@/lib/prompts/templates";
@@ -24,12 +23,11 @@ const handler = createMcpHandler(
     // Tool: Generate design tokens from brand colors
     server.tool(
       "generate_tokens",
-      "Generate design tokens deterministically using OKLCH color generation from brand colors",
+      "Generate design tokens deterministically using OKLCH color generation from brand colors. Only requires primary and secondary colors - neutral, success, destructive, and warning colors are automatically derived.",
       {
         brandColors: z.object({
           primary: z.string().describe("Primary brand color (hex)"),
           secondary: z.string().describe("Secondary brand color (hex)"),
-          accent: z.string().describe("Accent brand color (hex)"),
         }),
         mode: z
           .enum(["light", "dark", "both"])
@@ -54,61 +52,6 @@ const handler = createMcpHandler(
               {
                 type: "text",
                 text: `Error generating tokens: ${
-                  error instanceof Error ? error.message : "Unknown error"
-                }`,
-              },
-            ],
-            isError: true,
-          };
-        }
-      }
-    );
-
-    // Tool: Generate AI prompt for creative token generation
-    server.tool(
-      "generate_tokens_ai",
-      "Generate a prompt for AI to create design tokens with creative context",
-      {
-        brandColors: z.object({
-          primary: z.string().describe("Primary brand color (hex)"),
-          secondary: z.string().describe("Secondary brand color (hex)"),
-          accent: z.string().describe("Accent brand color (hex)"),
-        }),
-        mode: z
-          .enum(["light", "dark", "both"])
-          .default("both")
-          .describe("Color mode"),
-        designContext: z
-          .string()
-          .optional()
-          .describe("Design context or brand description"),
-        preferences: z
-          .string()
-          .optional()
-          .describe("Specific preferences or requirements"),
-      },
-      async ({ brandColors, designContext, preferences }) => {
-        try {
-          const result = generateTokenPrompt(
-            brandColors as BrandColors,
-            designContext,
-            preferences
-          );
-
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(result, null, 2),
-              },
-            ],
-          };
-        } catch (error) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Error generating AI prompt: ${
                   error instanceof Error ? error.message : "Unknown error"
                 }`,
               },

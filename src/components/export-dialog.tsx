@@ -18,7 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { exportTokens, getSuggestedFilename, type ExportFormat } from "@/lib/export";
+import {
+  exportTokens,
+  getSuggestedFilename,
+  type ExportFormat,
+} from "@/lib/export";
 import type { TokenSystem, ColorFormat } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +34,10 @@ interface ExportDialogProps {
   colorFormat?: ColorFormat;
 }
 
-const FORMAT_INFO: Record<ExportFormat, { label: string; description: string }> = {
+const FORMAT_INFO: Record<
+  ExportFormat,
+  { label: string; description: string }
+> = {
   css: {
     label: "CSS Variables",
     description: "Standard CSS custom properties that work everywhere",
@@ -47,14 +54,6 @@ const FORMAT_INFO: Record<ExportFormat, { label: string; description: string }> 
     label: "JSON",
     description: "Raw token data in JSON format",
   },
-  scss: {
-    label: "SCSS",
-    description: "SCSS variables for Sass projects",
-  },
-  lovable: {
-    label: "Lovable",
-    description: "shadcn/ui compatible theme for Lovable projects",
-  },
 };
 
 /**
@@ -68,7 +67,8 @@ export function ExportDialog({
   colorFormat: initialColorFormat = "hex",
 }: ExportDialogProps) {
   const [format, setFormat] = React.useState<ExportFormat>("css");
-  const [colorFormat, setColorFormat] = React.useState<ColorFormat>(initialColorFormat);
+  const [colorFormat, setColorFormat] =
+    React.useState<ColorFormat>(initialColorFormat);
   const [output, setOutput] = React.useState("");
 
   // Generate output when format or colorFormat changes
@@ -105,6 +105,26 @@ export function ExportDialog({
     toast.success(`Downloaded ${filename}`);
   };
 
+  const handleDownloadForLovable = () => {
+    // Export Tailwind v4 format as globals.css for Lovable
+    const lovableOutput = exportTokens(
+      tokens,
+      "tailwind-v4",
+      mode,
+      colorFormat
+    );
+    const blob = new Blob([lovableOutput], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "globals.css";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("Downloaded globals.css for Lovable");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
@@ -120,7 +140,7 @@ export function ExportDialog({
           onValueChange={(v) => setFormat(v as ExportFormat)}
           className="flex-1 overflow-hidden flex flex-col"
         >
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-4">
             {(Object.keys(FORMAT_INFO) as ExportFormat[]).map((f) => (
               <TabsTrigger key={f} value={f} className="text-xs">
                 {FORMAT_INFO[f].label}
@@ -133,8 +153,13 @@ export function ExportDialog({
               {FORMAT_INFO[format].description}
             </p>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Color format:</span>
-              <Select value={colorFormat} onValueChange={(v) => setColorFormat(v as ColorFormat)}>
+              <span className="text-sm text-muted-foreground">
+                Color format:
+              </span>
+              <Select
+                value={colorFormat}
+                onValueChange={(v) => setColorFormat(v as ColorFormat)}
+              >
                 <SelectTrigger className="w-24 h-8">
                   <SelectValue />
                 </SelectTrigger>
@@ -163,12 +188,13 @@ export function ExportDialog({
         </Tabs>
 
         <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={handleDownloadForLovable}>
+            💜 Download for Lovable
+          </Button>
           <Button variant="outline" onClick={handleCopy}>
             📋 Copy
           </Button>
-          <Button onClick={handleDownload}>
-            ⬇️ Download
-          </Button>
+          <Button onClick={handleDownload}>⬇️ Download</Button>
         </div>
       </DialogContent>
     </Dialog>

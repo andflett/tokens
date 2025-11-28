@@ -5,20 +5,20 @@
 export interface BrandColors {
   primary: string;
   secondary: string;
-  accent: string;
 }
 
 export interface ColorScale {
-  10: string;
-  20: string;
-  30: string;
-  40: string;
   50: string;
-  60: string;
-  70: string;
-  80: string;
-  90: string;
   100: string;
+  200: string;
+  300: string;
+  400: string;
+  500: string;
+  600: string;
+  700: string;
+  800: string;
+  900: string;
+  950: string;
 }
 
 export interface ShadowSettings {
@@ -48,6 +48,14 @@ export interface TokenSystem {
     light: SemanticTokens;
     dark: SemanticTokens;
   };
+  surface: {
+    light: SurfaceTokens;
+    dark: SurfaceTokens;
+  };
+  utility: {
+    light: UtilityTokens;
+    dark: UtilityTokens;
+  };
   spacing: Record<string, string>;
   typography: {
     fontFamily: Record<string, string[]>;
@@ -66,16 +74,61 @@ export interface TokenSystem {
   layout?: LayoutTokens;
 }
 
-export type ColorFormat = 'oklch' | 'rgb' | 'hsl' | 'hex';
+export type ColorFormat = "oklch" | "rgb" | "hsl" | "hex";
 
 export interface SemanticTokens {
-  primary: SemanticColor;
-  secondary: SemanticColor;
-  success: SemanticColor;
-  warning: SemanticColor;
-  danger: SemanticColor;
+  primary: ExtendedSemanticColor;
+  secondary: ExtendedSemanticColor;
+  gray: ExtendedSemanticColor;
+  success: ExtendedSemanticColor;
+  destructive: ExtendedSemanticColor;
+  warning: ExtendedSemanticColor;
+  muted: SemanticColorPair;
+  accent: SemanticColorPair;
 }
 
+/**
+ * Extended semantic color with foreground, subdued, highlight variants plus full scale
+ */
+export interface ExtendedSemanticColor {
+  DEFAULT: string;
+  foreground: string;
+  subdued: string;
+  "subdued-foreground": string;
+  highlight: string;
+  "highlight-foreground": string;
+}
+
+/**
+ * Simple color pair for muted and accent
+ */
+export interface SemanticColorPair {
+  DEFAULT: string;
+  foreground: string;
+}
+
+/**
+ * Surface tokens derived from gray palette (shadcn-style)
+ */
+export interface SurfaceTokens {
+  background: string;
+  foreground: string;
+  card: string;
+  "card-foreground": string;
+  popover: string;
+  "popover-foreground": string;
+}
+
+/**
+ * Utility tokens for borders, rings, inputs
+ */
+export interface UtilityTokens {
+  border: string;
+  ring: string;
+  input: string;
+}
+
+/** @deprecated Use ExtendedSemanticColor instead */
 export interface SemanticColor {
   base: string;
   muted: string;
@@ -87,12 +140,12 @@ export interface SemanticColor {
 
 export interface GenerateTokensInput {
   brandColors: BrandColors;
-  mode: 'light' | 'dark' | 'both';
+  mode: "light" | "dark" | "both";
 }
 
 export interface GenerateTokensAIInput {
   brandColors: BrandColors;
-  mode: 'light' | 'dark' | 'both';
+  mode: "light" | "dark" | "both";
   designContext?: string;
   preferences?: string;
 }
@@ -115,7 +168,7 @@ export interface Theme {
   name: string;
   brand_colors: BrandColors;
   tokens: TokenSystem;
-  mode: 'light' | 'dark' | 'both';
+  mode: "light" | "dark" | "both";
   created_at: string;
   updated_at: string;
 }
@@ -124,5 +177,5 @@ export interface ThemeInsert {
   name: string;
   brand_colors: BrandColors;
   tokens: TokenSystem;
-  mode: 'light' | 'dark' | 'both';
+  mode: "light" | "dark" | "both";
 }
