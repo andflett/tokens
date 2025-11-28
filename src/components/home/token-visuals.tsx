@@ -514,6 +514,9 @@ export function ShadowVisual() {
 // ============================================================================
 
 // Spacing token list with scaled bars
+const SPACING_BAR_SCALE = 2; // Multiplier for visual bar width
+const MAX_SPACING_BAR_WIDTH = 160; // Maximum bar width in pixels
+
 export function SpacingTokenList() {
   const spacingTokens = [
     { name: "1", value: "0.25rem", px: 4 },
@@ -535,7 +538,7 @@ export function SpacingTokenList() {
           </div>
           <div
             className="h-5 bg-primary/30 rounded-sm"
-            style={{ width: `${Math.min(token.px * 2, 160)}px` }}
+            style={{ width: `${Math.min(token.px * SPACING_BAR_SCALE, MAX_SPACING_BAR_WIDTH)}px` }}
           />
           <div className="font-mono text-xs text-muted-foreground">
             {token.value}{" "}
@@ -637,6 +640,8 @@ export function ShadowTokenList() {
 }
 
 // Layout token list showing breakpoints
+const MAX_SCREEN_WIDTH = 1536; // Reference width for calculating bar percentages
+
 export function LayoutTokenList() {
   const layoutTokens = [
     { name: "sm", value: "640px", desc: "Small devices" },
@@ -654,7 +659,7 @@ export function LayoutTokenList() {
           <div className="flex-1">
             <div
               className="h-4 bg-primary/30 rounded-sm"
-              style={{ width: `${(parseInt(token.value) / 1536) * 100}%` }}
+              style={{ width: `${(parseInt(token.value) / MAX_SCREEN_WIDTH) * 100}%` }}
             />
           </div>
           <div className="font-mono text-xs text-muted-foreground w-16 text-right">

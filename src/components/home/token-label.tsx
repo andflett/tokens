@@ -4,7 +4,7 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cn } from "@/lib/utils";
 
-// Token label using Radix Tooltip for better positioning with collision avoidance
+// Token label using Radix Tooltip for positioning with collision avoidance
 export function TokenLabel({
   children,
   label,
