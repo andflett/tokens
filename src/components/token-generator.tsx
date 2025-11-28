@@ -72,6 +72,8 @@ interface TokenGeneratorProps {
   onGenerate?: (tokens: TokenSystem) => void;
   /** Additional CSS classes */
   className?: string;
+  /** Initial tab to show (from URL parameter) */
+  initialTab?: string;
 }
 
 // Map semantic color names to their relevant primitive scale
@@ -92,6 +94,7 @@ export function TokenGenerator({
   initialColors,
   onGenerate,
   className,
+  initialTab,
 }: TokenGeneratorProps) {
   const { setTheme, resolvedTheme } = useTheme();
   const [brandColors, setBrandColors] = React.useState<BrandColors>(
@@ -104,7 +107,10 @@ export function TokenGenerator({
   );
   const [exportOpen, setExportOpen] = React.useState(false);
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
-  const [tokenTab, setTokenTab] = React.useState<string>("colors");
+  const validTabs = ["colors", "typography", "spacing", "radii", "shadows", "borders", "layout"];
+  const [tokenTab, setTokenTab] = React.useState<string>(
+    initialTab && validTabs.includes(initialTab) ? initialTab : "colors"
+  );
   const [colorSubTab, setColorSubTab] = React.useState<string>("primitives");
 
   // Token customization state

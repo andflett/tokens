@@ -1,14 +1,15 @@
-import { Metadata } from "next";
+"use client";
+
 import { TokenGenerator } from "@/components/token-generator";
 import { Term } from "@/components/term";
 import { PageLayout } from "@/components/page-layout";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export const metadata: Metadata = {
-  title: "Generate Tokens",
-  description: "Create a complete, professional design token system for your web applications",
-};
+function GeneratorContent() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") as string | undefined;
 
-export default function GeneratorPage() {
   return (
     <PageLayout showGrid>
       <div className="py-10">
@@ -21,8 +22,16 @@ export default function GeneratorPage() {
           </p>
         </div>
 
-        <TokenGenerator />
+        <TokenGenerator initialTab={tab} />
       </div>
     </PageLayout>
+  );
+}
+
+export default function GeneratorPage() {
+  return (
+    <Suspense fallback={null}>
+      <GeneratorContent />
+    </Suspense>
   );
 }
