@@ -4,10 +4,20 @@ import * as React from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, AnimatedTabsList } from "@/components/ui/tabs";
 import { BrandColorPickers } from "@/components/color-picker";
-import { PalettePreviewEditable, SemanticColorPreview, SemanticColorEditable } from "@/components/color-preview";
+import {
+  PalettePreviewEditable,
+  SemanticColorPreview,
+  SemanticColorEditable,
+} from "@/components/color-preview";
 import { ExportDialog } from "@/components/export-dialog";
 import {
   SpacingPreview,
@@ -25,9 +35,21 @@ import {
   TailwindUsageExample,
   ComponentPreview,
 } from "@/components/token-editors";
-import { generateTokens, generateSpacingScale, generateRadiiScale, generateShadowsWithSettings, generateLayoutTokens } from "@/lib/tokens";
+import {
+  generateTokens,
+  generateSpacingScale,
+  generateRadiiScale,
+  generateShadowsWithSettings,
+  generateLayoutTokens,
+} from "@/lib/tokens";
 import { config } from "@/lib/config";
-import type { BrandColors, TokenSystem, ShadowSettings, BorderColors, LayoutTokens } from "@/lib/types";
+import type {
+  BrandColors,
+  TokenSystem,
+  ShadowSettings,
+  BorderColors,
+  LayoutTokens,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   SwatchIcon,
@@ -54,12 +76,12 @@ interface TokenGeneratorProps {
 
 // Map semantic color names to their relevant primitive scale
 const SEMANTIC_SCALE_MAPPING: Record<string, string> = {
-  primary: 'primary',
-  secondary: 'secondary',
-  success: 'success',
-  warning: 'warning',
-  danger: 'danger',
-  info: 'info',
+  primary: "primary",
+  secondary: "secondary",
+  success: "success",
+  warning: "warning",
+  danger: "danger",
+  info: "info",
 };
 
 /**
@@ -77,12 +99,14 @@ export function TokenGenerator({
   );
   const [mode] = React.useState<"light" | "dark" | "both">("both");
   const [tokens, setTokens] = React.useState<TokenSystem | null>(null);
-  const [previewMode, setPreviewMode] = React.useState<"light" | "dark">("light");
+  const [previewMode, setPreviewMode] = React.useState<"light" | "dark">(
+    "light"
+  );
   const [exportOpen, setExportOpen] = React.useState(false);
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
   const [tokenTab, setTokenTab] = React.useState<string>("colors");
   const [colorSubTab, setColorSubTab] = React.useState<string>("primitives");
-  
+
   // Token customization state
   const [spacingBaseUnit, setSpacingBaseUnit] = React.useState(4);
   const [baseRadius, setBaseRadius] = React.useState(0.25);
@@ -93,51 +117,60 @@ export function TokenGenerator({
     spread: 0,
     opacity: 0.1,
   });
-  const [typography, setTypography] = React.useState<TokenSystem['typography']>({
-    fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      mono: ['JetBrains Mono', 'monospace'],
-    },
-    fontSize: {
-      'xs': ['0.75rem', { lineHeight: '1rem' }],
-      'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-      'base': ['1rem', { lineHeight: '1.5rem' }],
-      'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-      'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-      '2xl': ['1.5rem', { lineHeight: '2rem' }],
-      '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-      '5xl': ['3rem', { lineHeight: '1' }],
-      '6xl': ['3.75rem', { lineHeight: '1' }],
-    },
-    fontWeight: {
-      thin: 100,
-      extralight: 200,
-      light: 300,
-      normal: 400,
-      medium: 500,
-      semibold: 600,
-      bold: 700,
-      extrabold: 800,
-      black: 900,
-    },
-  });
-  
+  const [typography, setTypography] = React.useState<TokenSystem["typography"]>(
+    {
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+      },
+      fontSize: {
+        xs: ["0.75rem", { lineHeight: "1rem" }],
+        sm: ["0.875rem", { lineHeight: "1.25rem" }],
+        base: ["1rem", { lineHeight: "1.5rem" }],
+        lg: ["1.125rem", { lineHeight: "1.75rem" }],
+        xl: ["1.25rem", { lineHeight: "1.75rem" }],
+        "2xl": ["1.5rem", { lineHeight: "2rem" }],
+        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+        "5xl": ["3rem", { lineHeight: "1" }],
+        "6xl": ["3.75rem", { lineHeight: "1" }],
+      },
+      fontWeight: {
+        thin: 100,
+        extralight: 200,
+        light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
+        extrabold: 800,
+        black: 900,
+      },
+    }
+  );
+
   // Border colors state
-  const [borderColors, setBorderColors] = React.useState<{ light: BorderColors; dark: BorderColors }>({
-    light: { default: '#e5e7eb', input: '#d1d5db', ring: '#9ca3af' },
-    dark: { default: '#374151', input: '#4b5563', ring: '#6b7280' },
+  const [borderColors, setBorderColors] = React.useState<{
+    light: BorderColors;
+    dark: BorderColors;
+  }>({
+    light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
+    dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
   });
-  
+
   // Layout tokens state
-  const [layoutTokens, setLayoutTokens] = React.useState<LayoutTokens>(generateLayoutTokens());
-  
+  const [layoutTokens, setLayoutTokens] = React.useState<LayoutTokens>(
+    generateLayoutTokens()
+  );
+
   // Color edits tracking
-  const [colorEdits, setColorEdits] = React.useState<Record<string, Record<number, string>>>({});
+  const [colorEdits, setColorEdits] = React.useState<
+    Record<string, Record<number, string>>
+  >({});
 
   // Sync preview mode with app theme
   React.useEffect(() => {
-    if (resolvedTheme === 'dark' || resolvedTheme === 'light') {
+    if (resolvedTheme === "dark" || resolvedTheme === "light") {
       setPreviewMode(resolvedTheme);
     }
   }, [resolvedTheme]);
@@ -152,7 +185,7 @@ export function TokenGenerator({
   React.useEffect(() => {
     try {
       const baseTokens = generateTokens(brandColors, mode);
-      
+
       // Apply color edits to primitives
       const editedPrimitives = { ...baseTokens.primitives };
       for (const [colorName, edits] of Object.entries(colorEdits)) {
@@ -167,7 +200,7 @@ export function TokenGenerator({
           editedPrimitives[colorName] = scale;
         }
       }
-      
+
       // Apply customizations
       const customizedTokens: TokenSystem = {
         ...baseTokens,
@@ -179,17 +212,32 @@ export function TokenGenerator({
         borderColors,
         layout: layoutTokens,
       };
-      
+
       setTokens(customizedTokens);
       onGenerate?.(customizedTokens);
     } catch (error) {
       console.error("Error generating tokens:", error);
       toast.error("Failed to generate tokens");
     }
-  }, [brandColors, mode, spacingBaseUnit, typography, baseRadius, shadowSettings, borderColors, layoutTokens, colorEdits, onGenerate]);
+  }, [
+    brandColors,
+    mode,
+    spacingBaseUnit,
+    typography,
+    baseRadius,
+    shadowSettings,
+    borderColors,
+    layoutTokens,
+    colorEdits,
+    onGenerate,
+  ]);
 
-  const handleColorEdit = (colorName: string, shade: number, newColor: string) => {
-    setColorEdits(prev => ({
+  const handleColorEdit = (
+    colorName: string,
+    shade: number,
+    newColor: string
+  ) => {
+    setColorEdits((prev) => ({
       ...prev,
       [colorName]: {
         ...prev[colorName],
@@ -199,7 +247,7 @@ export function TokenGenerator({
   };
 
   const handleColorReset = (colorName: string, shade: number) => {
-    setColorEdits(prev => {
+    setColorEdits((prev) => {
       const newEdits = { ...prev };
       if (newEdits[colorName]) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -222,29 +270,35 @@ export function TokenGenerator({
     setBrandColors(config.defaultBrandColors);
     setSpacingBaseUnit(4);
     setBaseRadius(0.25);
-    setShadowSettings({ offsetX: 0, offsetY: 4, blur: 6, spread: 0, opacity: 0.1 });
+    setShadowSettings({
+      offsetX: 0,
+      offsetY: 4,
+      blur: 6,
+      spread: 0,
+      opacity: 0.1,
+    });
     setColorEdits({});
     setBorderColors({
-      light: { default: '#e5e7eb', input: '#d1d5db', ring: '#9ca3af' },
-      dark: { default: '#374151', input: '#4b5563', ring: '#6b7280' },
+      light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
+      dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
     });
     setLayoutTokens(generateLayoutTokens());
     setTypography({
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       fontSize: {
-        'xs': ['0.75rem', { lineHeight: '1rem' }],
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'base': ['1rem', { lineHeight: '1.5rem' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-        '5xl': ['3rem', { lineHeight: '1' }],
-        '6xl': ['3.75rem', { lineHeight: '1' }],
+        xs: ["0.75rem", { lineHeight: "1rem" }],
+        sm: ["0.875rem", { lineHeight: "1.25rem" }],
+        base: ["1rem", { lineHeight: "1.5rem" }],
+        lg: ["1.125rem", { lineHeight: "1.75rem" }],
+        xl: ["1.25rem", { lineHeight: "1.75rem" }],
+        "2xl": ["1.5rem", { lineHeight: "2rem" }],
+        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+        "5xl": ["3rem", { lineHeight: "1" }],
+        "6xl": ["3.75rem", { lineHeight: "1" }],
       },
       fontWeight: {
         thin: 100,
@@ -283,13 +337,32 @@ export function TokenGenerator({
   return (
     <div className={cn("space-y-6", className)}>
       {/* Main Generator Tab (Web vs MCP) */}
-      <Tabs value={generatorTab} onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}>
+      <Tabs
+        value={generatorTab}
+        onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
+      >
         <AnimatedTabsList
           value={generatorTab}
           onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
           items={[
-            { value: "web", label: <><ComputerDesktopIcon className="h-4 w-4 mr-1.5" />Web Generator</> },
-            { value: "mcp", label: <><CommandLineIcon className="h-4 w-4 mr-1.5" />AI MCP Tool</> },
+            {
+              value: "web",
+              label: (
+                <>
+                  <ComputerDesktopIcon className="h-4 w-4 mr-1.5" />
+                  Web Generator
+                </>
+              ),
+            },
+            {
+              value: "mcp",
+              label: (
+                <>
+                  <CommandLineIcon className="h-4 w-4 mr-1.5" />
+                  AI MCP Tool
+                </>
+              ),
+            },
           ]}
         />
 
@@ -302,10 +375,10 @@ export function TokenGenerator({
                   <SwatchIcon className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div>
-                  <CardTitle>Brand Colors</CardTitle>
+                  <CardTitle>Colors</CardTitle>
                   <CardDescription>
-                    Choose your primary, secondary, and accent colors. The generator will
-                    create a complete color palette from these.
+                    Choose your primary, secondary, and accent colors. The
+                    generator will create a complete color palette from these.
                   </CardDescription>
                 </div>
               </div>
@@ -342,10 +415,26 @@ export function TokenGenerator({
                   {/* Light/Dark Toggle - sets app theme */}
                   <AnimatedTabsList
                     value={previewMode}
-                    onValueChange={(v) => handlePreviewModeChange(v as "light" | "dark")}
+                    onValueChange={(v) =>
+                      handlePreviewModeChange(v as "light" | "dark")
+                    }
                     items={[
-                      { value: "light", label: <><SunIcon className="h-4 w-4" /></> },
-                      { value: "dark", label: <><MoonIcon className="h-4 w-4" /></> },
+                      {
+                        value: "light",
+                        label: (
+                          <>
+                            <SunIcon className="h-4 w-4" />
+                          </>
+                        ),
+                      },
+                      {
+                        value: "dark",
+                        label: (
+                          <>
+                            <MoonIcon className="h-4 w-4" />
+                          </>
+                        ),
+                      },
                     ]}
                   />
                   <Button size="sm" onClick={() => setExportOpen(true)}>
@@ -354,22 +443,96 @@ export function TokenGenerator({
                 </div>
               </CardHeader>
               <CardContent>
-                <Tabs value={tokenTab} onValueChange={setTokenTab} className="space-y-6">
+                <Tabs
+                  value={tokenTab}
+                  onValueChange={setTokenTab}
+                  className="space-y-6"
+                >
                   <AnimatedTabsList
                     value={tokenTab}
                     onValueChange={setTokenTab}
                     items={[
-                      { value: "colors", label: <><SwatchIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Colors</span></> },
-                      { value: "typography", label: <><DocumentTextIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Type</span></> },
-                      { value: "spacing", label: <><ArrowsPointingOutIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Space</span></> },
-                      { value: "radii", label: <><StopIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Radius</span></> },
-                      { value: "shadows", label: <><Square3Stack3DIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Shadows</span></> },
-                      { value: "borders", label: <><ViewColumnsIcon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Borders</span></> },
-                      { value: "layout", label: <><Squares2X2Icon className="h-4 w-4" /><span className="hidden sm:inline ml-1.5">Layout</span></> },
+                      {
+                        value: "colors",
+                        label: (
+                          <>
+                            <SwatchIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Colors
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "typography",
+                        label: (
+                          <>
+                            <DocumentTextIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Type
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "spacing",
+                        label: (
+                          <>
+                            <ArrowsPointingOutIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Space
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "radii",
+                        label: (
+                          <>
+                            <StopIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Radius
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "shadows",
+                        label: (
+                          <>
+                            <Square3Stack3DIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Shadows
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "borders",
+                        label: (
+                          <>
+                            <ViewColumnsIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Borders
+                            </span>
+                          </>
+                        ),
+                      },
+                      {
+                        value: "layout",
+                        label: (
+                          <>
+                            <Squares2X2Icon className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-1.5">
+                              Layout
+                            </span>
+                          </>
+                        ),
+                      },
                     ]}
                     className="flex-wrap"
                   />
-                  
+
                   {/* Colors Tab */}
                   <TabsContent value="colors" className="space-y-6">
                     <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
@@ -381,9 +544,9 @@ export function TokenGenerator({
                           { value: "semantic", label: "Semantic" },
                         ]}
                       />
-                      
+
                       <TabsContent value="primitives" className="mt-4">
-                        <PalettePreviewEditable 
+                        <PalettePreviewEditable
                           palette={tokens.primitives}
                           colorFormat="oklch"
                           onColorEdit={handleColorEdit}
@@ -391,60 +554,69 @@ export function TokenGenerator({
                           isColorEdited={isColorEdited}
                         />
                       </TabsContent>
-                      
+
                       <TabsContent value="semantic" className="mt-4">
                         <div
                           className="rounded-lg p-6"
                           style={{
-                            backgroundColor: previewMode === "light" ? "#ffffff" : "#0a0a0a",
+                            backgroundColor:
+                              previewMode === "light" ? "#ffffff" : "#0a0a0a",
                           }}
                         >
                           <p className="text-xs text-muted-foreground mb-4">
-                            Click on any semantic color to select from its related scale or customize with a color picker.
+                            Click on any semantic color to select from its
+                            related scale or customize with a color picker.
                           </p>
                           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {Object.entries(tokens.semantic[previewMode]).map(([name, color]) => {
-                              const scaleName = SEMANTIC_SCALE_MAPPING[name] || 'primary';
-                              const relevantScale = tokens.primitives[scaleName];
-                              
-                              if (relevantScale) {
+                            {Object.entries(tokens.semantic[previewMode]).map(
+                              ([name, color]) => {
+                                const scaleName =
+                                  SEMANTIC_SCALE_MAPPING[name] || "primary";
+                                const relevantScale =
+                                  tokens.primitives[scaleName];
+
+                                if (relevantScale) {
+                                  return (
+                                    <SemanticColorEditable
+                                      key={name}
+                                      name={name}
+                                      semantic={color}
+                                      relevantScale={relevantScale}
+                                      scaleName={scaleName}
+                                      onBaseChange={() => {
+                                        // Show a toast explaining how semantic colors work
+                                        toast.info(
+                                          `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
+                                          { duration: 3000 }
+                                        );
+                                      }}
+                                    />
+                                  );
+                                }
                                 return (
-                                  <SemanticColorEditable
+                                  <SemanticColorPreview
                                     key={name}
                                     name={name}
                                     semantic={color}
-                                    relevantScale={relevantScale}
-                                    scaleName={scaleName}
-                                    onBaseChange={() => {
-                                      // Show a toast explaining how semantic colors work
-                                      toast.info(
-                                        `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
-                                        { duration: 3000 }
-                                      );
-                                    }}
                                   />
                                 );
                               }
-                              return (
-                                <SemanticColorPreview
-                                  key={name}
-                                  name={name}
-                                  semantic={color}
-                                />
-                              );
-                            })}
+                            )}
                           </div>
                         </div>
                       </TabsContent>
                     </Tabs>
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="colors" />
                   </TabsContent>
-                  
+
                   {/* Typography Tab */}
                   <TabsContent value="typography" className="space-y-6">
                     <div className="border-b pb-6">
@@ -453,18 +625,21 @@ export function TokenGenerator({
                         onTypographyChange={setTypography}
                       />
                     </div>
-                    <TypographyPreview 
-                      typography={tokens.typography} 
+                    <TypographyPreview
+                      typography={tokens.typography}
                       previewMode={previewMode}
                     />
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="typography" />
                   </TabsContent>
-                  
+
                   {/* Spacing Tab */}
                   <TabsContent value="spacing" className="space-y-6">
                     <div className="border-b pb-6">
@@ -474,14 +649,17 @@ export function TokenGenerator({
                       />
                     </div>
                     <SpacingPreview spacing={tokens.spacing} />
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="spacing" />
                   </TabsContent>
-                  
+
                   {/* Radii Tab */}
                   <TabsContent value="radii" className="space-y-6">
                     <div className="border-b pb-6">
@@ -490,18 +668,21 @@ export function TokenGenerator({
                         onBaseRadiusChange={setBaseRadius}
                       />
                     </div>
-                    <RadiiPreview 
-                      radii={tokens.radii} 
+                    <RadiiPreview
+                      radii={tokens.radii}
                       previewMode={previewMode}
                     />
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="radii" />
                   </TabsContent>
-                  
+
                   {/* Shadows Tab */}
                   <TabsContent value="shadows" className="space-y-6">
                     <div className="border-b pb-6">
@@ -510,18 +691,21 @@ export function TokenGenerator({
                         onSettingsChange={setShadowSettings}
                       />
                     </div>
-                    <ShadowsPreview 
-                      shadows={tokens.shadows} 
+                    <ShadowsPreview
+                      shadows={tokens.shadows}
                       previewMode={previewMode}
                     />
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="shadows" />
                   </TabsContent>
-                  
+
                   {/* Borders Tab */}
                   <TabsContent value="borders" className="space-y-6">
                     <div className="border-b pb-6">
@@ -531,18 +715,21 @@ export function TokenGenerator({
                         previewMode={previewMode}
                       />
                     </div>
-                    <BordersPreview 
+                    <BordersPreview
                       previewMode={previewMode}
                       borderColors={borderColors[previewMode]}
                     />
-                    
+
                     {/* Component Preview */}
-                    <ComponentPreview tokens={tokens} previewMode={previewMode} />
-                    
+                    <ComponentPreview
+                      tokens={tokens}
+                      previewMode={previewMode}
+                    />
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="borders" />
                   </TabsContent>
-                  
+
                   {/* Layout Tab */}
                   <TabsContent value="layout" className="space-y-6">
                     <div className="border-b pb-6">
@@ -552,7 +739,7 @@ export function TokenGenerator({
                       />
                     </div>
                     <LayoutPreview layout={layoutTokens} />
-                    
+
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="layout" />
                   </TabsContent>
@@ -583,7 +770,8 @@ export function TokenGenerator({
                 <div>
                   <CardTitle>AI MCP Tool</CardTitle>
                   <CardDescription>
-                    Use this generator with AI assistants via the Model Context Protocol (MCP)
+                    Use this generator with AI assistants via the Model Context
+                    Protocol (MCP)
                   </CardDescription>
                 </div>
               </div>
@@ -592,9 +780,10 @@ export function TokenGenerator({
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">What is MCP?</h3>
                 <p className="text-muted-foreground">
-                  The Model Context Protocol (MCP) allows AI assistants like Claude, GitHub Copilot,
-                  and others to connect to external tools and services. This means you can ask your
-                  AI assistant to generate design tokens for you directly!
+                  The Model Context Protocol (MCP) allows AI assistants like
+                  Claude, GitHub Copilot, and others to connect to external
+                  tools and services. This means you can ask your AI assistant
+                  to generate design tokens for you directly!
                 </p>
               </div>
 
@@ -603,7 +792,8 @@ export function TokenGenerator({
                 <div className="rounded-xl border p-4">
                   <h4 className="font-medium mb-2">🌐 Hosted Server</h4>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Use our hosted MCP server - no installation required. Always up-to-date.
+                    Use our hosted MCP server - no installation required. Always
+                    up-to-date.
                   </p>
                   <code className="text-xs bg-muted px-2 py-1 rounded block">
                     https://tokens.flett.cc/mcp
@@ -614,11 +804,7 @@ export function TokenGenerator({
                   <p className="text-sm text-muted-foreground mb-3">
                     Install locally via npm for offline use and privacy.
                   </p>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                  >
+                  <Button asChild variant="outline" size="sm">
                     <a
                       href="https://www.npmjs.com/package/tokens-mcp"
                       target="_blank"
@@ -629,22 +815,25 @@ export function TokenGenerator({
                   </Button>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Setup Instructions</h3>
-                
+
                 {/* Claude Desktop */}
                 <div className="rounded-xl border p-4 space-y-3">
                   <h4 className="font-medium">Claude Desktop</h4>
                   <p className="text-xs text-muted-foreground">
-                    Add to ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+                    Add to ~/Library/Application
+                    Support/Claude/claude_desktop_config.json (macOS)
                   </p>
-                  
+
                   <div className="space-y-2">
-                    <p className="text-sm font-medium">Option 1: Hosted Server</p>
+                    <p className="text-sm font-medium">
+                      Option 1: Hosted Server
+                    </p>
                     <div className="rounded-lg bg-muted p-3">
                       <pre className="text-xs font-mono overflow-x-auto">
-{`{
+                        {`{
   "mcpServers": {
     "tokens": {
       "command": "npx",
@@ -655,15 +844,20 @@ export function TokenGenerator({
                       </pre>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                    <p className="text-sm font-medium">
+                      Option 2: Local NPM Package
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      First: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code>
+                      First:{" "}
+                      <code className="bg-muted px-1 rounded">
+                        npm install -g tokens-mcp
+                      </code>
                     </p>
                     <div className="rounded-lg bg-muted p-3">
                       <pre className="text-xs font-mono overflow-x-auto">
-{`{
+                        {`{
   "mcpServers": {
     "tokens": {
       "command": "tokens-mcp"
@@ -678,10 +872,12 @@ export function TokenGenerator({
                 {/* VS Code */}
                 <div className="rounded-xl border p-4 space-y-3">
                   <h4 className="font-medium">VS Code + GitHub Copilot</h4>
-                  <p className="text-xs text-muted-foreground">Add to settings.json:</p>
+                  <p className="text-xs text-muted-foreground">
+                    Add to settings.json:
+                  </p>
                   <div className="rounded-lg bg-muted p-3">
                     <pre className="text-xs font-mono overflow-x-auto">
-{`{
+                      {`{
   "github.copilot.chat.mcp": {
     "servers": {
       "tokens": {
@@ -697,10 +893,12 @@ export function TokenGenerator({
                 {/* Cursor */}
                 <div className="rounded-xl border p-4 space-y-3">
                   <h4 className="font-medium">Cursor</h4>
-                  <p className="text-xs text-muted-foreground">Add to ~/.cursor/mcp.json:</p>
+                  <p className="text-xs text-muted-foreground">
+                    Add to ~/.cursor/mcp.json:
+                  </p>
                   <div className="rounded-lg bg-muted p-3">
                     <pre className="text-xs font-mono overflow-x-auto">
-{`{
+                      {`{
   "tokens": {
     "url": "https://tokens.flett.cc/mcp"
   }
@@ -709,21 +907,31 @@ export function TokenGenerator({
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Example Prompts</h3>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">&quot;Generate a token system with blue as the primary color&quot;</p>
+                    <p className="text-sm font-medium">
+                      &quot;Generate a token system with blue as the primary
+                      color&quot;
+                    </p>
                   </div>
                   <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">&quot;Create dark mode tokens for a fintech app&quot;</p>
+                    <p className="text-sm font-medium">
+                      &quot;Create dark mode tokens for a fintech app&quot;
+                    </p>
                   </div>
                   <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">&quot;Make a warm color palette with orange and brown&quot;</p>
+                    <p className="text-sm font-medium">
+                      &quot;Make a warm color palette with orange and
+                      brown&quot;
+                    </p>
                   </div>
                   <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">&quot;Export my tokens as Tailwind v4 CSS&quot;</p>
+                    <p className="text-sm font-medium">
+                      &quot;Export my tokens as Tailwind v4 CSS&quot;
+                    </p>
                   </div>
                 </div>
               </div>

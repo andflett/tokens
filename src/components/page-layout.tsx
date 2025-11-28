@@ -16,16 +16,32 @@ export function PageLayout({
       {/* Grid background */}
       {showGrid && (
         <div className="pointer-events-none absolute inset-0 -z-10">
+          {/* Grid lines */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)
+              `,
+              backgroundSize: "20px 20px",
+              maskImage:
+                "linear-gradient(to bottom, black 0%, transparent 25%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, black 0%, transparent 25%)",
+            }}
+          />
           {/* Intersection dots */}
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, var(--grid-dot) 1px, transparent 0)`,
+              backgroundImage: `radial-gradient(circle, var(--grid-dot) 1px, transparent 1px)`,
               backgroundSize: "10px 10px",
+
               maskImage:
-                "linear-gradient(to bottom, black 0%, black 25%, transparent 55%)",
+                "linear-gradient(to bottom, black 0%, transparent 25%)",
               WebkitMaskImage:
-                "linear-gradient(to bottom, black 0%, black 25%, transparent 55%)",
+                "linear-gradient(to bottom, black 0%, transparent 25%)",
             }}
           />
         </div>

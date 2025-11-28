@@ -33,19 +33,19 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "text-sm font-medium hover:text-foreground transition-colors",
-      pathname === href ? "text-foreground" : "text-foreground/80"
+      "px-3 py-1 rounded text-sm font-semibold text-foreground hover:bg-neutral-100 transition-colors",
+      pathname === href ? "bg-neutral-100" : ""
     );
 
   const mobileNavLinkClass = (href: string) =>
     cn(
       "block py-3 text-lg font-medium hover:text-foreground transition-colors",
-      pathname === href ? "text-foreground" : "text-foreground/80"
+      pathname === href ? "text-foreground" : "text-foreground"
     );
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <div className="flex items-center gap-6">
           <Link href="/" aria-label="Home" className="flex items-center">
             <TurdLogo
@@ -58,20 +58,18 @@ export function SiteHeader() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-4">
-          <Link href="/" className={navLinkClass("/")}>
-            About
-          </Link>
-          <Link href="/docs" className={navLinkClass("/docs")}>
-            Docs
-          </Link>
-          <Button asChild size="sm" className="gap-1.5">
-            <Link href="/generate">
-              <SwatchIcon className="h-4 w-4" />
+        <nav className="hidden md:flex items-center gap-2">
+          <div className="flex items-center gap-2 border-r border-border/80 pr-2">
+            <Link href="/" className={navLinkClass("/")}>
+              About
+            </Link>
+            <Link href="/docs" className={navLinkClass("/docs")}>
+              Documentation
+            </Link>
+            <Link href="/generate" className={navLinkClass("/docs")}>
               Design Your Tokens
             </Link>
-          </Button>
-          <div className="h-4 w-px bg-border" />
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -154,8 +152,8 @@ export function SiteHeader() {
       <div
         className={cn(
           "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
-          mobileMenuOpen 
-            ? "max-h-screen opacity-100 border-t border-border/50" 
+          mobileMenuOpen
+            ? "max-h-screen opacity-100 border-t border-border/50"
             : "max-h-0 opacity-0"
         )}
       >
@@ -173,17 +171,17 @@ export function SiteHeader() {
               className={mobileNavLinkClass("/docs")}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Docs
+              Documentation
             </Link>
             <Link
               href="/generate"
               className={mobileNavLinkClass("/generate")}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Generator
+              Design your Tokens
             </Link>
           </nav>
-          
+
           {/* Theme Toggle - Animated Pill */}
           <div className="mt-4 pt-4 border-t border-border/50">
             <div className="inline-flex items-center rounded-lg bg-muted p-1">

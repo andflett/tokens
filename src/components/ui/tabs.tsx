@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Tabs({
   className,
@@ -15,7 +15,7 @@ function Tabs({
       className={cn("flex flex-col gap-2", className)}
       {...props}
     />
-  )
+  );
 }
 
 function TabsList({
@@ -31,7 +31,7 @@ function TabsList({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TabsTrigger({
@@ -47,7 +47,7 @@ function TabsTrigger({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TabsContent({
@@ -60,11 +60,12 @@ function TabsContent({
       className={cn("flex-1 outline-none", className)}
       {...props}
     />
-  )
+  );
 }
 
 // Animated pill tabs with sliding effect
-interface AnimatedTabsListProps extends React.ComponentProps<typeof TabsPrimitive.List> {
+interface AnimatedTabsListProps
+  extends React.ComponentProps<typeof TabsPrimitive.List> {
   value?: string;
   items: { value: string; label: React.ReactNode }[];
   onValueChange?: (value: string) => void;
@@ -82,7 +83,7 @@ function AnimatedTabsList({
   const [pillStyle, setPillStyle] = React.useState({ left: 0, width: 0 });
 
   React.useEffect(() => {
-    const idx = items.findIndex(item => item.value === value);
+    const idx = items.findIndex((item) => item.value === value);
     if (idx !== -1) setActiveIndex(idx);
   }, [value, items]);
 
@@ -107,7 +108,7 @@ function AnimatedTabsList({
     >
       {/* Animated pill background */}
       <div
-        className="absolute h-8 rounded-full bg-background shadow-sm transition-all duration-200 ease-out"
+        className="cursor-pointer absolute h-8 rounded-full bg-card border border-border/0 shadow-sm transition-all duration-200 ease-out"
         style={{
           left: pillStyle.left,
           width: pillStyle.width,
@@ -116,19 +117,21 @@ function AnimatedTabsList({
       {items.map((item, index) => (
         <button
           key={item.value}
-          ref={(el) => { tabsRef.current[index] = el; }}
+          ref={(el) => {
+            tabsRef.current[index] = el;
+          }}
           type="button"
           role="tab"
           aria-selected={activeIndex === index}
-          data-state={activeIndex === index ? 'active' : 'inactive'}
+          data-state={activeIndex === index ? "active" : "inactive"}
           onClick={() => {
             setActiveIndex(index);
             onValueChange?.(item.value);
           }}
           className={cn(
-            "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+            "relative z-10 font-medium inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
             activeIndex === index
-              ? "text-foreground"
+              ? "text-foreground/80"
               : "text-muted-foreground hover:text-foreground/80"
           )}
         >
@@ -136,7 +139,7 @@ function AnimatedTabsList({
         </button>
       ))}
     </TabsPrimitive.List>
-  )
+  );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent, AnimatedTabsList }
+export { Tabs, TabsList, TabsTrigger, TabsContent, AnimatedTabsList };

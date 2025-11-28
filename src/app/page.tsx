@@ -1,524 +1,269 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Term } from "@/components/term";
 import { PageLayout } from "@/components/page-layout";
 import TurdLogo from "@/components/turd-logo";
 import Link from "next/link";
-import { ArrowDownIcon, BoltIcon } from "@heroicons/react/24/outline";
+import {
+  BoltIcon,
+  CommandLineIcon,
+  ComputerDesktopIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
+import {
+  SwatchIcon,
+  DocumentTextIcon,
+  ArrowsPointingOutIcon,
+  StopIcon,
+  Square3Stack3DIcon,
+  ViewColumnsIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/outline";
 
-// Token visualization showing different token types
-function TokenShowcase() {
-  return (
-    <div className="mx-auto mt-12 max-w-2xl">
-      <div className="relative rounded border bg-card/50 p-6 backdrop-blur-sm shadow-lg">
-        {/* Token categories */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          {/* Color tokens */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Color
-            </div>
-            <div className="flex gap-1.5">
-              {["#6366f1", "#8b5cf6", "#ec4899", "#22c55e", "#f59e0b"].map(
-                (color, i) => (
-                  <div
-                    key={i}
-                    className="h-6 w-6 rounded-md ring-1 ring-foreground/5"
-                    style={{ backgroundColor: color }}
-                  />
-                )
-              )}
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --color-primary-50...900
-            </div>
-          </div>
-
-          {/* Spacing tokens */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Spacing
-            </div>
-            <div className="flex items-end gap-1">
-              {[4, 8, 12, 16, 24, 32].map((size, i) => (
-                <div
-                  key={i}
-                  className="bg-foreground/10 rounded-sm"
-                  style={{ width: 6, height: size }}
-                />
-              ))}
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --space-1...12
-            </div>
-          </div>
-
-          {/* Typography tokens */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Typography
-            </div>
-            <div className="space-y-0.5">
-              <div className="text-lg font-semibold leading-tight">Heading</div>
-              <div className="text-sm text-muted-foreground">Body text</div>
-              <div className="font-mono text-xs text-muted-foreground/70">
-                mono
-              </div>
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --font-size-sm...2xl
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="my-5 border-t border-dashed" />
-
-        {/* Additional token types */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          {/* Border radius */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Radius
-            </div>
-            <div className="flex items-center gap-2">
-              {[0, 4, 8, 12, 9999].map((radius, i) => (
-                <div
-                  key={i}
-                  className="h-6 w-6 border-2 border-foreground/20"
-                  style={{ borderRadius: radius }}
-                />
-              ))}
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --radius-none...full
-            </div>
-          </div>
-
-          {/* Shadow tokens */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Shadow
-            </div>
-            <div className="flex items-center gap-2">
-              {[
-                "0 1px 2px rgba(0,0,0,0.05)",
-                "0 2px 4px rgba(0,0,0,0.1)",
-                "0 4px 8px rgba(0,0,0,0.1)",
-              ].map((shadow, i) => (
-                <div
-                  key={i}
-                  className="h-6 w-6 rounded-md bg-background"
-                  style={{ boxShadow: shadow }}
-                />
-              ))}
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --shadow-sm...lg
-            </div>
-          </div>
-
-          {/* Border tokens */}
-          <div className="space-y-3">
-            <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Border
-            </div>
-            <div className="flex items-center gap-2">
-              {[1, 2, 4].map((width, i) => (
-                <div
-                  key={i}
-                  className="h-6 w-6 rounded-md"
-                  style={{
-                    border: `${width}px solid var(--foreground)`,
-                    opacity: 0.2 + i * 0.2,
-                  }}
-                />
-              ))}
-              <div className="h-6 w-6 rounded-md border-2 border-dashed border-foreground/30" />
-            </div>
-            <div className="font-mono text-[11px] text-muted-foreground">
-              --border-width-1...4
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Token type section with visual example and AI prompts
-function TokenSection({
-  id,
-  title,
-  description,
-  visual,
-  prompts,
-}: {
-  id: string;
-  title: string;
-  description: string;
-  visual: React.ReactNode;
-  prompts: string[];
-}) {
-  return (
-    <section id={id} className="py-16 lg:py-20 border-t">
-      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">{title}</h2>
-          <p className="text-muted-foreground mb-6 leading-relaxed">
-            {description}
-          </p>
-
-          <div className="space-y-3">
-            <p className="text-sm font-medium text-muted-foreground">
-              Try prompting your AI with:
-            </p>
-            {prompts.map((prompt, i) => (
-              <div
-                key={i}
-                className="rounded-lg bg-muted/50 border px-4 py-3 text-sm font-mono"
-              >
-                &ldquo;{prompt}&rdquo;
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-xl border bg-card/50 p-6 backdrop-blur-sm">
-          {visual}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Visual demos for each token type
-function ColorVisual() {
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-          Primary Scale
-        </div>
-        <div className="flex gap-1">
-          {[
-            "#eff6ff",
-            "#dbeafe",
-            "#bfdbfe",
-            "#93c5fd",
-            "#60a5fa",
-            "#3b82f6",
-            "#2563eb",
-            "#1d4ed8",
-            "#1e40af",
-            "#1e3a8a",
-          ].map((color, i) => (
-            <div
-              key={i}
-              className="h-10 flex-1 first:rounded-l-md last:rounded-r-md"
-              style={{ backgroundColor: color }}
-            />
-          ))}
-        </div>
-        <div className="flex justify-between text-[10px] font-mono text-muted-foreground">
-          <span>50</span>
-          <span>500</span>
-          <span>950</span>
-        </div>
-      </div>
-      <div className="pt-2 border-t border-dashed">
-        <div className="text-xs text-muted-foreground mb-2">
-          Used for buttons, links, and focus states
-        </div>
-        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
-          bg-primary text-primary-foreground
-        </code>
-      </div>
-    </div>
-  );
-}
-
-function TypographyVisual() {
-  return (
-    <div className="space-y-4">
-      <div className="space-y-3">
-        <div className="text-4xl font-bold tracking-tight">Display</div>
-        <div className="text-2xl font-semibold">Heading</div>
-        <div className="text-base">Body text that&apos;s easy to read</div>
-        <div className="text-sm text-muted-foreground">
-          Small text for captions
-        </div>
-        <div className="font-mono text-sm bg-muted px-2 py-1 rounded inline-block">
-          Monospace for code
-        </div>
-      </div>
-      <div className="pt-4 border-t border-dashed">
-        <div className="text-xs text-muted-foreground mb-2">
-          Font sizes from xs to 4xl
-        </div>
-        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
-          text-sm font-medium tracking-tight
-        </code>
-      </div>
-    </div>
-  );
-}
-
-function SpacingVisual() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-end gap-2">
-        {[1, 2, 3, 4, 6, 8, 12, 16].map((space) => (
-          <div key={space} className="flex flex-col items-center gap-1">
-            <div
-              className="bg-primary/20 border border-primary/30 rounded"
-              style={{ width: space * 4, height: space * 4 }}
-            />
-            <span className="text-[10px] font-mono text-muted-foreground">
-              {space}
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="pt-4 border-t border-dashed">
-        <div className="text-xs text-muted-foreground mb-2">
-          Consistent spacing creates rhythm
-        </div>
-        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
-          p-4 gap-6 space-y-8
-        </code>
-      </div>
-    </div>
-  );
-}
-
-function RadiusVisual() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        {[
-          { radius: 0, label: "none" },
-          { radius: 4, label: "sm" },
-          { radius: 8, label: "md" },
-          { radius: 12, label: "lg" },
-          { radius: 9999, label: "full" },
-        ].map(({ radius, label }) => (
-          <div key={label} className="flex flex-col items-center gap-2">
-            <div
-              className="h-12 w-12 bg-primary/20 border-2 border-primary/40"
-              style={{ borderRadius: radius }}
-            />
-            <span className="text-[10px] font-mono text-muted-foreground">
-              {label}
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="pt-4 border-t border-dashed">
-        <div className="text-xs text-muted-foreground mb-2">
-          Sharp vs soft defines your brand personality
-        </div>
-        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
-          rounded-lg rounded-full
-        </code>
-      </div>
-    </div>
-  );
-}
-
-function ShadowVisual() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4 py-4">
-        {[
-          { shadow: "none", label: "none" },
-          { shadow: "0 1px 2px rgba(0,0,0,0.05)", label: "sm" },
-          { shadow: "0 4px 6px rgba(0,0,0,0.1)", label: "md" },
-          { shadow: "0 10px 15px rgba(0,0,0,0.15)", label: "lg" },
-          { shadow: "0 20px 25px rgba(0,0,0,0.2)", label: "xl" },
-        ].map(({ shadow, label }) => (
-          <div key={label} className="flex flex-col items-center gap-2">
-            <div
-              className="h-12 w-12 bg-background rounded-lg"
-              style={{ boxShadow: shadow }}
-            />
-            <span className="text-[10px] font-mono text-muted-foreground">
-              {label}
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="pt-4 border-t border-dashed">
-        <div className="text-xs text-muted-foreground mb-2">
-          Shadows create depth and hierarchy
-        </div>
-        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
-          shadow-sm shadow-lg
-        </code>
-      </div>
-    </div>
-  );
-}
+// Import home page components
+import { TokenBadge } from "@/components/home/token-badge";
+import { TokenSection } from "@/components/home/token-section";
+import {
+  ColorVisual,
+  TypographyVisual,
+  SpacingVisual,
+  LayoutVisual,
+  BorderVisual,
+  ShadowVisual,
+} from "@/components/home/token-visuals";
+import { AnimatedTabsList } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@radix-ui/react-tabs";
+import { ArrowDown } from "lucide-react";
+import React from "react";
+import { Card } from "@/components/ui/card";
 
 export default function HomePage() {
+  const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
+
   return (
     <PageLayout showGrid>
       {/* Hero */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl">
-            Why does my AI generated app look like
-            <span
-              className="design-select inline-block pl-3 pr-2 py-0 mx-1 text-purple-700"
-              tabIndex={0}
-            >
-              <span aria-hidden className="handle tl" />
-              <span aria-hidden className="handle tr" />
-              <span aria-hidden className="handle bl" />
-              <span aria-hidden className="handle br" />
-              turd?
-            </span>
+      <section className="py-20 md:pt-28 md:pb-8 relative overflow-hidden">
+        <div className="mx-auto max-w-2xl text-center relative z-10">
+          <h1 className="text-4xl font-black md:text-5xl leading-13">
+            <span className="relative inline-block">
+              Why
+              <TokenBadge
+                className="absolute font-light whitespace-nowrap bottom-full left-1/2 -translate-x-1/2 mb-9"
+                pointer="bottom"
+                pointerLength="1.5rem"
+              >
+                font-size.random
+              </TokenBadge>
+            </span>{" "}
+            does my AI generated app look like turd?
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-            Remember that time you handed designs over to an engineer and got
-            back... something that technically matched the specs but felt
-            totally off? Same energy. You and your AI aren&apos;t speaking the
-            same language yet.
+          <TokenBadge
+            className="absolute mt-[-1rem] ml-[-2rem] inline-block font-light left-full"
+            pointer="left"
+            pointerLength="2rem"
+          >
+            spacing.wtf
+          </TokenBadge>
+
+          <p className="max-w-2xl px-6 text-lg text-muted-foreground mt-6">
+            Most AI-generated apps rely on a standard set of design tokens:{" "}
+            <span className="text-muted-foreground font-normal">colors</span>,{" "}
+            <span className="text-muted-foreground font-normal">
+              typography
+            </span>
+            , <span className="text-muted-foreground font-normal">spacing</span>
+            , <span className="text-muted-foreground font-normal">layout</span>,{" "}
+            <span className="text-muted-foreground font-normal">borders</span>,
+            and{" "}
+            <span className="text-muted-foreground font-normal">shadows</span>.
+            Clearly defining these is the key to taking control and avoiding
+            sloppy design drift.
           </p>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            We&apos;re here to help you learn the lingo—or just give you the
-            shortcuts to generate professional{" "}
-            <Term term="design-tokens">design tokens</Term> that&apos;ll make
-            your AI-generated code actually look good.
-          </p>
-          {/* CTAs */}
-          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button size="lg" asChild className="gap-2">
-              <Link href="/generate">
-                <BoltIcon className="h-4 w-4" />
-                Design Your Tokens
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="gap-2">
-              <a href="#what-are-tokens">
-                Learn More
-                <ArrowDownIcon className="h-4 w-4" />
-              </a>
-            </Button>
-          </div>
-          <TokenShowcase />
         </div>
       </section>
 
-      {/* What are tokens */}
-      <section id="what-are-tokens" className="py-16 lg:py-20 border-t">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl mb-6">
-            So... what are design tokens anyway?
-          </h2>
+      {/* Next Steps */}
+      <section className="pb-12">
+        <div className="mx-auto max-w-2xl text-center">
+          <Tabs
+            value={generatorTab}
+            onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
+          >
+            <div className="flex justify-center">
+              <AnimatedTabsList
+                className="bg-card/70 border border-border/80 p-2 h-12"
+                value={generatorTab}
+                onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
+                items={[
+                  {
+                    value: "web",
+                    label: (
+                      <>
+                        <ComputerDesktopIcon className="h-4 w-4 mr-1.5 text-purple-500" />
+                        Design tokens on the web
+                      </>
+                    ),
+                  },
+                  {
+                    value: "mcp",
+                    label: (
+                      <>
+                        <SparklesIcon className="h-4 w-4 mr-1.5 text-purple-500" />
+                        Show your AI how to create tokens
+                      </>
+                    ),
+                  },
+                ]}
+              />
+            </div>
 
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
-              Design tokens are basically named values—like calling a specific
-              blue &ldquo;primary&rdquo; instead of remembering{" "}
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">
-                #3b82f6
-              </code>{" "}
-              every time. They&apos;re the building blocks that keep your
-              colors, spacing, typography, and other design decisions consistent
-              across your entire app.
-            </p>
+            <TabsContent value="web" className="mt-9 space-y-4 text-left">
+              <Card>
+                <h3 className="text-lg font-semibold">
+                  Design tokens in the web UI
+                </h3>
+                <p className="text-muted-foreground">
+                  Manually craft and fine-tune your tokens using the visual
+                  generator. Perfect when you want exact control over colors,
+                  spacing and typography.
+                </p>
+                <div>
+                  <Button className="shadow-lg shadow-primary/20" asChild>
+                    <Link href="/generate">Open Token Designer</Link>
+                  </Button>
+                </div>
+              </Card>
+            </TabsContent>
 
-            <p>
-              Here&apos;s the thing: when you vibe code with AI, it&apos;s
-              probably using <Term term="tailwind">Tailwind CSS</Term> with{" "}
-              <Term term="shadcn">shadcn/ui</Term> and{" "}
-              <Term term="radix">Radix</Term> components. These are great! But
-              they come with default design tokens that make every app look...
-              the same. That generic, &ldquo;I definitely used a starter
-              template&rdquo; vibe.
-            </p>
+            <TabsContent value="mcp" className="mt-9 space-y-4 text-left">
+              <Card>
+                <h3 className="text-lg font-semibold">Automate with the MCP</h3>
+                <p className="text-muted-foreground">
+                  Integrate tokens into your AI workflows so generators produce
+                  consistent, token-driven UI. Use the MCP to programmatically
+                  generate token sets.
+                </p>
+                <div>
+                  <Button className="shadow-lg shadow-primary/20" asChild>
+                    <Link href="/docs">Read the MCP docs</Link>
+                  </Button>
+                </div>
+              </Card>
+            </TabsContent>
+          </Tabs>
 
-            <p className="text-foreground font-medium">
-              The fix? Give your AI better tokens to work with. Once you
-              understand how they work (or just generate good ones), you can
-              tell your AI exactly what you want—and it&apos;ll actually
-              understand.
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <p className="text-sm font-medium text-foreground">
+              Or continue reading to learn more
             </p>
+            <Link href="#spacing" className="-mb-2">
+              <ArrowDown className="h-6 w-6 text-purple-500 animate-bounce" />
+            </Link>
           </div>
         </div>
+      </section>
+
+      <section className="flex flex-col items-center text-center border-t pt-12 pb-0">
+        {/* Token Type Visual Indicator */}
+
+        <div className="mb-4 inline-flex items-center gap-1 rounded-full bg-muted/50 p-1.5 shadow-lg ring-1 ring-border/50">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <SwatchIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <DocumentTextIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowsPointingOutIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <StopIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <Square3Stack3DIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <ViewColumnsIcon className="h-5 w-5" />
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
+            <Squares2X2Icon className="h-5 w-5" />
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-center mb-4">
+          You and your AI aren't speaking the same design language
+        </h2>
+
+        <p className="max-w-3xl text-lg text-primary/70 relative">
+          When you generate a web app with AI, it&apos;s probably using{" "}
+          <Term term="tailwind">Tailwind CSS</Term> with{" "}
+          <Term term="shadcn">shadcn/ui</Term> components. This gives us a solid
+          start, but unless you are describing what you want in terms of design
+          tokens and being explicit about following a coherant design language,
+          the more you prompt, the more inconsistent your app will look.
+        </p>
       </section>
 
       {/* Token type sections */}
       <TokenSection
+        id="spacing"
+        title="Spacing Tokens"
+        description="In Tailwind, spacing uses a scale where the number × 4 = pixels. So p-4 is 16px padding, gap-6 is 24px gap. When you tell your AI 'add some space,' it picks randomly. Use specific tokens like p-6 or gap-4 instead."
+        visual={<SpacingVisual />}
+        prompt="Add consistent spacing between these cards using gap-6, and use padding of p-8 inside each card"
+      />
+
+      <TokenSection
         id="colors"
         title="Color Tokens"
-        description="Colors are organized into scales (50-950) that go from light to dark. Each scale has 10-11 shades, and semantic tokens like 'primary' or 'destructive' point to specific shades. This is why telling AI 'make the button blue' gives you different blues everywhere—it doesn't know which blue you mean."
+        description="Colors are organized in layers with semantic names. bg-background is your base, bg-card sits on top, bg-popover floats above. Each has a matching text color (text-foreground, text-card-foreground). Tell your AI which layer, not which hex code."
         visual={<ColorVisual />}
-        prompts={[
-          "Change the primary color to use the blue-600 shade from Tailwind",
-          "Make the destructive/error color less aggressive, use red-500 instead of red-600",
-          "Update the muted-foreground to slate-500 for better contrast",
-        ]}
+        prompt="Use bg-card with text-card-foreground for this section, and bg-primary with text-primary-foreground for the button"
       />
 
       <TokenSection
         id="typography"
         title="Typography Tokens"
-        description="Font sizes, weights, line heights, and letter spacing are all tokens. Most frameworks use a scale from 'xs' to '4xl' or similar. When your AI generates inconsistent text sizes, it's because it's picking random values instead of using the system."
+        description="Font sizes use names like text-sm, text-base, text-lg, text-xl. Weights are font-normal, font-medium, font-semibold, font-bold. Combine them: text-lg font-semibold. Your AI understands these better than '18px bold'."
         visual={<TypographyVisual />}
-        prompts={[
-          "Use text-sm with font-medium for all button labels",
-          "Set headings to use tracking-tight for that modern feel",
-          "Make body text text-base with leading-relaxed for better readability",
-        ]}
-      />
-
-      <TokenSection
-        id="spacing"
-        title="Spacing Tokens"
-        description="Spacing in Tailwind uses a scale where 1 = 4px. So p-4 is 16px of padding. Consistent spacing creates visual rhythm—when elements have random gaps, your design feels off even if you can't explain why."
-        visual={<SpacingVisual />}
-        prompts={[
-          "Use consistent gap-4 between form fields",
-          "Set card padding to p-6 throughout the app",
-          "Use space-y-8 between major page sections",
-        ]}
-      />
-
-      <TokenSection
-        id="radius"
-        title="Border Radius Tokens"
-        description="Border radius defines how rounded your corners are. Sharp corners (radius-none) feel professional and serious. Rounded corners (radius-lg, radius-full) feel friendly and approachable. Mixing different radii randomly makes your app look inconsistent."
-        visual={<RadiusVisual />}
-        prompts={[
-          "Use rounded-lg consistently for all cards and buttons",
-          "Make avatar images use rounded-full",
-          "Set the global --radius variable to 0.5rem for slightly softer corners",
-        ]}
+        prompt="Make all headings text-2xl font-bold, body text should be text-base, and captions text-sm text-muted-foreground"
       />
 
       <TokenSection
         id="shadows"
         title="Shadow Tokens"
-        description="Shadows create depth and help users understand what's clickable or elevated. Too many different shadows = visual chaos. Most apps only need 2-3 shadow levels: subtle (sm), medium (md), and pronounced (lg)."
+        description="Shadows use preset levels: shadow-sm (subtle), shadow-md (medium), shadow-lg (pronounced). Don't tell your AI 'add a shadow'—specify which level. Cards usually get shadow-sm, modals get shadow-lg."
         visual={<ShadowVisual />}
-        prompts={[
-          "Use shadow-sm for cards and shadow-lg for modals/dropdowns",
-          "Remove shadows from buttons, just use background color changes on hover",
-          "Add shadow-md to the navbar when scrolled",
-        ]}
+        prompt="Add shadow-sm to cards in their default state, and shadow-md on hover to show interactivity"
+      />
+
+      <TokenSection
+        id="layout"
+        title="Layout Tokens"
+        description="Responsive design uses breakpoint prefixes: sm: (640px), md: (768px), lg: (1024px). Tell your AI 'stack on mobile, two columns on md:' instead of writing media queries. The prefix applies the style at that screen size and up."
+        visual={<LayoutVisual />}
+        prompt="Make this grid grid-cols-1 by default, md:grid-cols-2 on tablet, and lg:grid-cols-3 on desktop"
+      />
+
+      <TokenSection
+        id="borders"
+        title="Border Tokens"
+        description="Borders use border (1px), border-2 (2px), border-4 (4px). Styles are border-solid, border-dashed, border-dotted. Color is usually border (the default). Tell your AI 'border-2 border-dashed' instead of 'add a dashed border'."
+        visual={<BorderVisual />}
+        prompt="Add border to all cards, and border-2 border-primary to the active card to highlight it"
       />
 
       {/* CTA */}
       <section className="border-t py-16 lg:py-20">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Ready to level up your vibe code?
+            Ready to level up your AI generated code?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Generate a complete set of design tokens from your brand colors.
-            Then give them to your AI and watch it finally understand what you
-            actually want.
+            Design a complete set of tokens then give them to your AI and watch
+            it finally understand what you actually want.
           </p>
           <div className="mt-8">
             <Button size="lg" asChild className="gap-2">

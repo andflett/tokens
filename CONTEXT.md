@@ -15,7 +15,21 @@
 2. **MCP Server** — AI-accessible tools at `/mcp` for Claude, Copilot, Cursor, etc.
 3. **Documentation** — Educational docs with jargon popovers at `/docs`
 
-The target audience is **non-technical designers** who are starting to code with AI assistants and LLMs. Every technical term has tooltip explanations.
+The target audience is **non-technical designers and product managers** who are starting to code with AI assistants and LLMs. Every technical term has tooltip explanations.
+
+### Audience & Tone
+
+**Target Audience:**
+- Non-technical people (designers, product managers, etc.)
+- Just getting into AI coding (Claude, Cursor, Copilot, etc.)
+- Unfamiliar with underlying tech (Tailwind, React, Next.js, design tokens, etc.)
+
+**Tone Guidelines:**
+- Friendly and approachable, not patronizing
+- Use dry humour where appropriate
+- Avoid jargon or explain technical terms inline
+- Focus on "why" and practical benefits, not just "what"
+- Speak in terms of design outcomes, not implementation details
 
 ---
 

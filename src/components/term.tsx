@@ -21,45 +21,38 @@ interface TermProps {
 /**
  * Term component displays glossary terms with an informative popover.
  * Designed for non-technical users who may not know programming jargon.
- * 
+ *
  * @example
  * <Term term="mcp">MCP</Term>
  * <Term term="tailwind" />
  */
 export function Term({ term, children, className }: TermProps) {
   const definition = glossary[term] as GlossaryTerm | undefined;
-  
+
   if (!definition) {
     // If term not found, just render children or term as-is
     return <span className={className}>{children || term}</span>;
   }
-  
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button
+        <span
           className={cn(
-            "inline-flex items-center gap-1 border-b border-dashed border-muted-foreground/50",
+            "cursor-pointer inline-flex items-center border-b-2 border-purple-300",
             "hover:border-primary hover:text-primary transition-colors",
-            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm",
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
             className
           )}
         >
           {children || definition.term}
-          <span className="text-xs opacity-50">ⓘ</span>
-        </button>
+        </span>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="start">
         <div className="space-y-2">
           <h4 className="font-semibold">{definition.term}</h4>
-          <p className="text-sm text-muted-foreground">
-            {definition.short}
-          </p>
-          {definition.full && (
-            <p className="text-sm">
-              {definition.full}
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground">{definition.short}</p>
+          {definition.full && <p className="text-sm">{definition.full}</p>}
           {definition.learnMoreUrl && (
             <a
               href={definition.learnMoreUrl}
