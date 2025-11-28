@@ -1,23 +1,29 @@
+"use client";
+
 import { SparkleIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { AnimatedTokenVisual } from "./animated-token-visual";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
 
 export function TokenSection({
   id,
   title,
   description,
   visual,
+  tokenList,
   prompt,
 }: {
   id: string;
   title: string;
   description: string;
   visual: React.ReactNode;
+  tokenList?: React.ReactNode;
   prompt: string;
 }) {
   return (
-    <section id={id} className="py-16 lg:py-20">
-      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+    <section id={id} className="py-10 md:py-16 lg:py-20">
+      <div className="grid gap-6 md:gap-8 lg:grid-cols-2 lg:gap-12 items-start">
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{title}</h2>
           <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -86,8 +92,29 @@ export function TokenSection({
         </div>
 
         <AnimatedTokenVisual>
-          <div className="rounded-xl relative border bg-card/50 p-6 backdrop-blur-sm">
-            {visual}
+          <div className="rounded-xl relative border bg-card/50 backdrop-blur-sm overflow-hidden">
+            {tokenList ? (
+              <Tabs defaultValue="visual" className="w-full">
+                <div className="border-b bg-muted/30 px-4 py-2">
+                  <TabsList className="h-8">
+                    <TabsTrigger value="visual" className="text-xs">
+                      Visual
+                    </TabsTrigger>
+                    <TabsTrigger value="tokens" className="text-xs">
+                      Tokens
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="visual" className="p-6 mt-0">
+                  {visual}
+                </TabsContent>
+                <TabsContent value="tokens" className="p-6 mt-0">
+                  {tokenList}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <div className="p-6">{visual}</div>
+            )}
           </div>
         </AnimatedTokenVisual>
       </div>

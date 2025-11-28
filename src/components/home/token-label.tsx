@@ -4,7 +4,7 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cn } from "@/lib/utils";
 
-// Token label using Radix Tooltip for better positioning
+// Token label using Radix Tooltip for positioning with collision avoidance
 export function TokenLabel({
   children,
   label,
@@ -22,7 +22,6 @@ export function TokenLabel({
 }) {
   // Calculate line position based on side
   const getLineStyles = (side: string) => {
-    const lineLength = 12;
     switch (side) {
       case "top":
         return {
@@ -66,6 +65,8 @@ export function TokenLabel({
           <TooltipPrimitive.Content
             side={side}
             sideOffset={sideOffset + 16}
+            collisionPadding={12}
+            avoidCollisions={true}
             className="z-50 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
           >
             <div className="relative">
@@ -135,16 +136,12 @@ export function SpacingIndicator({
   active,
   side = "top",
   padding,
-  gap,
-  margin,
 }: {
   children: React.ReactNode;
   label: string;
   active: boolean;
   side?: "top" | "bottom" | "left" | "right";
   padding?: string;
-  gap?: string;
-  margin?: string;
 }) {
   return (
     <TokenLabel label={label} side={side} open={active} sideOffset={12}>

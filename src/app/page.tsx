@@ -6,9 +6,7 @@ import { PageLayout } from "@/components/page-layout";
 import TurdLogo from "@/components/turd-logo";
 import Link from "next/link";
 import {
-  ArrowDownCircleIcon,
   BoltIcon,
-  CommandLineIcon,
   ComputerDesktopIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
@@ -32,13 +30,18 @@ import {
   LayoutVisual,
   BorderVisual,
   ShadowVisual,
+  SpacingTokenList,
+  ColorTokenList,
+  TypographyTokenList,
+  ShadowTokenList,
+  LayoutTokenList,
+  BorderTokenList,
 } from "@/components/home/token-visuals";
 import { AnimatedTabsList } from "@/components/ui/tabs";
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
-import { ArrowDown, MoveDownIcon } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 export default function HomePage() {
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
@@ -59,7 +62,7 @@ export default function HomePage() {
                 font-size.random
               </TokenBadge>
             </span>{" "}
-            does my AI generated app look like turd?
+            does my AI generated site look like turd?
           </h1>
           <TokenBadge
             className="absolute mt-[-1rem] ml-[-2rem] inline-block font-light left-full"
@@ -70,7 +73,7 @@ export default function HomePage() {
           </TokenBadge>
 
           <p className="max-w-2xl px-6 text-lg text-muted-foreground mt-6">
-            Most AI-generated apps rely on a standard set of design tokens:{" "}
+            Most AI-generated sites rely on a standard set of design tokens:{" "}
             <span className="text-muted-foreground font-normal">colors</span>,{" "}
             <span className="text-muted-foreground font-normal">
               typography
@@ -196,16 +199,17 @@ export default function HomePage() {
         </div>
 
         <h2 className="text-2xl font-bold text-center mb-6">
-          You and your AI aren't speaking the same design language
+          You and your AI aren&apos;t speaking the same design language
         </h2>
 
         <p className="max-w-3xl text-lg text-primary/70 relative">
-          When you generate a web app with AI, it&apos;s probably using{" "}
-          <Term term="tailwind">Tailwind CSS</Term> with{" "}
-          <Term term="shadcn">shadcn/ui</Term> components. This gives us a solid
+          When you generate a web site with AI, it&apos;s probably using{" "}
+          <Term term="tailwind">Tailwind CSS</Term> and a component library like{" "}
+          <Term term="shadcn">shadcn/ui</Term>, depending on the underlying{" "}
+          <Term term="framework">framework</Term>. This gives us a solid
           start, but it only holds together if you explicitly direct the model
           to use your design tokens and follow a coherent design language.
-          Without that, the more you prompt, the more of a sloppy mess your app
+          Without that, the more you prompt, the more of a sloppy mess your site
           will become.
         </p>
       </section>
@@ -216,6 +220,7 @@ export default function HomePage() {
         title="Spacing Tokens"
         description="Spacing uses a scale where each step is 4 pixels. When you tell your AI 'add some space,' it picks randomly. Be specific about your spacing values and stick to the scale."
         visual={<SpacingVisual />}
+        tokenList={<SpacingTokenList />}
         prompt="Add consistent spacing between these cards using our spacing scale (6 units), and set padding inside each card to 8 units"
       />
 
@@ -224,6 +229,7 @@ export default function HomePage() {
         title="Color Tokens"
         description="Colors are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code."
         visual={<ColorVisual />}
+        tokenList={<ColorTokenList />}
         prompt="Use the card background color with its foreground for this section, and primary with primary-foreground for the button"
       />
 
@@ -232,6 +238,7 @@ export default function HomePage() {
         title="Typography Tokens"
         description="Font sizes use a named scale from extra-small to extra-large. Weights range from normal to bold. Your AI understands these token names better than raw pixel values."
         visual={<TypographyVisual />}
+        tokenList={<TypographyTokenList />}
         prompt="Make all headings extra-large and bold, body text should be the base size, and captions should be small with muted color"
       />
 
@@ -240,6 +247,7 @@ export default function HomePage() {
         title="Shadow Tokens"
         description="Shadows use preset levels: small (subtle), medium, and large (pronounced). Don't tell your AI 'add a shadow'—specify which level. Cards usually get small shadows, modals get large."
         visual={<ShadowVisual />}
+        tokenList={<ShadowTokenList />}
         prompt="Add a small shadow to cards in their default state, and increase to medium on hover to show interactivity"
       />
 
@@ -248,6 +256,7 @@ export default function HomePage() {
         title="Layout Tokens"
         description="Layout tokens define breakpoints for different screen sizes and container widths. Tell your AI which container size to use and when layouts should change, instead of writing custom media queries or arbitrary widths."
         visual={<LayoutVisual />}
+        tokenList={<LayoutTokenList />}
         prompt="Set the main content container to our 4xl width token and center it. On tablet and larger, add more horizontal padding"
       />
 
@@ -256,6 +265,7 @@ export default function HomePage() {
         title="Border Tokens"
         description="Borders use preset widths (1px, 2px, 4px) and styles (solid, dashed, dotted). Tell your AI which width and style from our token system, not arbitrary values."
         visual={<BorderVisual />}
+        tokenList={<BorderTokenList />}
         prompt="Add a default border to all cards, and use a thicker border with the primary color on the active card to highlight it"
       />
 

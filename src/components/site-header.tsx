@@ -10,7 +10,6 @@ import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
-  SwatchIcon,
 } from "@heroicons/react/24/outline";
 import {
   DropdownMenu,
@@ -106,12 +105,6 @@ export function SiteHeader() {
 
         {/* Mobile Navigation */}
         <div className="flex md:hidden items-center gap-2">
-          <Button asChild size="sm" className="gap-1.5">
-            <Link href="/generate">
-              <SwatchIcon className="h-4 w-4" />
-              Design Your Tokens
-            </Link>
-          </Button>
           <Button
             variant="ghost"
             size="sm"
