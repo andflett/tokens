@@ -6,13 +6,6 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, AnimatedTabsList } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { BrandColorPickers } from "@/components/color-picker";
 import { PalettePreviewEditable, SemanticColorPreview, SemanticColorEditable } from "@/components/color-preview";
 import { ExportDialog } from "@/components/export-dialog";
@@ -34,7 +27,7 @@ import {
 } from "@/components/token-editors";
 import { generateTokens, generateSpacingScale, generateRadiiScale, generateShadowsWithSettings, generateLayoutTokens } from "@/lib/tokens";
 import { config } from "@/lib/config";
-import type { BrandColors, TokenSystem, ColorFormat, ShadowSettings, BorderColors, LayoutTokens } from "@/lib/types";
+import type { BrandColors, TokenSystem, ShadowSettings, BorderColors, LayoutTokens } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   SwatchIcon,
@@ -82,11 +75,10 @@ export function TokenGenerator({
   const [brandColors, setBrandColors] = React.useState<BrandColors>(
     initialColors || config.defaultBrandColors
   );
-  const [mode, setMode] = React.useState<"light" | "dark" | "both">("both");
+  const [mode] = React.useState<"light" | "dark" | "both">("both");
   const [tokens, setTokens] = React.useState<TokenSystem | null>(null);
   const [previewMode, setPreviewMode] = React.useState<"light" | "dark">("light");
   const [exportOpen, setExportOpen] = React.useState(false);
-  const [colorFormat, setColorFormat] = React.useState<ColorFormat>("oklch");
   const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
   const [tokenTab, setTokenTab] = React.useState<string>("colors");
   const [colorSubTab, setColorSubTab] = React.useState<string>("primitives");
@@ -302,15 +294,6 @@ export function TokenGenerator({
         />
 
         <TabsContent value="web" className="mt-6 space-y-6">
-          {/* Export Button at Top */}
-          {tokens && (
-            <div className="flex justify-end">
-              <Button size="lg" onClick={() => setExportOpen(true)}>
-                Export Tokens
-              </Button>
-            </div>
-          )}
-
           {/* Color Inputs */}
           <Card>
             <CardHeader>
@@ -334,76 +317,41 @@ export function TokenGenerator({
                 accent={brandColors.accent}
                 onChange={setBrandColors}
               />
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" onClick={handleRandomize}>
-                    🎲 Randomize
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleReset}>
-                    Reset All
-                  </Button>
-                </div>
-                
-                {/* Color Format Selector */}
-                <div className="flex items-center gap-2 ml-auto">
-                  <span className="text-sm text-muted-foreground">Format:</span>
-                  <Select value={colorFormat} onValueChange={(v) => setColorFormat(v as ColorFormat)}>
-                    <SelectTrigger className="w-28">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="oklch">OKLCH</SelectItem>
-                      <SelectItem value="rgb">RGB</SelectItem>
-                      <SelectItem value="hsl">HSL</SelectItem>
-                      <SelectItem value="hex">Hex</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" onClick={handleRandomize}>
+                  🎲 Randomize
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleReset}>
+                  Reset All
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Mode Selection */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Output Mode</CardTitle>
-              <CardDescription>
-                Choose which color modes to include in your token output.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Select value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
-                <SelectTrigger className="w-48">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="both">Both (Light & Dark)</SelectItem>
-                  <SelectItem value="light">Light Only</SelectItem>
-                  <SelectItem value="dark">Dark Only</SelectItem>
-                </SelectContent>
-              </Select>
             </CardContent>
           </Card>
 
           {/* Token Tabs */}
           {tokens && (
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
+              <CardHeader className="flex flex-row items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
                   <CardTitle>Token System</CardTitle>
                   <CardDescription>
                     Configure and preview all your design tokens
                   </CardDescription>
                 </div>
-                {/* Light/Dark Toggle - sets app theme */}
-                <AnimatedTabsList
-                  value={previewMode}
-                  onValueChange={(v) => handlePreviewModeChange(v as "light" | "dark")}
-                  items={[
-                    { value: "light", label: <><SunIcon className="h-4 w-4" /></> },
-                    { value: "dark", label: <><MoonIcon className="h-4 w-4" /></> },
-                  ]}
-                />
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* Light/Dark Toggle - sets app theme */}
+                  <AnimatedTabsList
+                    value={previewMode}
+                    onValueChange={(v) => handlePreviewModeChange(v as "light" | "dark")}
+                    items={[
+                      { value: "light", label: <><SunIcon className="h-4 w-4" /></> },
+                      { value: "dark", label: <><MoonIcon className="h-4 w-4" /></> },
+                    ]}
+                  />
+                  <Button size="sm" onClick={() => setExportOpen(true)}>
+                    Export
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <Tabs value={tokenTab} onValueChange={setTokenTab} className="space-y-6">
@@ -437,7 +385,7 @@ export function TokenGenerator({
                       <TabsContent value="primitives" className="mt-4">
                         <PalettePreviewEditable 
                           palette={tokens.primitives}
-                          colorFormat={colorFormat}
+                          colorFormat="oklch"
                           onColorEdit={handleColorEdit}
                           onColorReset={handleColorReset}
                           isColorEdited={isColorEdited}
@@ -620,7 +568,6 @@ export function TokenGenerator({
               onOpenChange={setExportOpen}
               tokens={tokens}
               mode={mode}
-              colorFormat={colorFormat}
             />
           )}
         </TabsContent>
@@ -650,57 +597,117 @@ export function TokenGenerator({
                   AI assistant to generate design tokens for you directly!
                 </p>
               </div>
+
+              {/* Installation Options */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl border p-4">
+                  <h4 className="font-medium mb-2">🌐 Hosted Server</h4>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Use our hosted MCP server - no installation required. Always up-to-date.
+                  </p>
+                  <code className="text-xs bg-muted px-2 py-1 rounded block">
+                    https://tokens.flett.cc/mcp
+                  </code>
+                </div>
+                <div className="rounded-xl border p-4">
+                  <h4 className="font-medium mb-2">📦 NPM Package</h4>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Install locally via npm for offline use and privacy.
+                  </p>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                  >
+                    <a
+                      href="https://www.npmjs.com/package/tokens-mcp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View on NPM →
+                    </a>
+                  </Button>
+                </div>
+              </div>
               
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Setup Instructions</h3>
-                <ol className="list-decimal list-inside space-y-3 text-muted-foreground">
-                  <li>
-                    <span className="font-medium text-foreground">Open your AI assistant&apos;s settings</span>
-                    <br />
-                    <span className="text-sm">Look for MCP or tool configuration options</span>
-                  </li>
-                  <li>
-                    <span className="font-medium text-foreground">Add the Vibe Themes MCP server</span>
-                    <br />
-                    <span className="text-sm">Use the configuration below</span>
-                  </li>
-                  <li>
-                    <span className="font-medium text-foreground">Start using it!</span>
-                    <br />
-                    <span className="text-sm">Ask your AI to &quot;generate tokens for my brand&quot;</span>
-                  </li>
-                </ol>
-              </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">MCP Configuration</h4>
-                <div className="rounded-lg bg-muted p-4">
-                  <pre className="text-sm font-mono overflow-x-auto">
+                
+                {/* Claude Desktop */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">Claude Desktop</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Add to ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Option 1: Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-3">
+                      <pre className="text-xs font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
-      "url": "https://vibethemes.flett.cc/mcp"
+    "tokens": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://tokens.flett.cc/mcp"]
     }
   }
 }`}
-                  </pre>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    navigator.clipboard.writeText(`{
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                    <p className="text-xs text-muted-foreground">
+                      First: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code>
+                    </p>
+                    <div className="rounded-lg bg-muted p-3">
+                      <pre className="text-xs font-mono overflow-x-auto">
+{`{
   "mcpServers": {
-    "vibe-themes": {
-      "url": "https://vibethemes.flett.cc/mcp"
+    "tokens": {
+      "command": "tokens-mcp"
     }
   }
-}`);
-                    toast.success("Copied to clipboard!");
-                  }}
-                >
-                  📋 Copy Configuration
-                </Button>
+}`}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VS Code */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">VS Code + GitHub Copilot</h4>
+                  <p className="text-xs text-muted-foreground">Add to settings.json:</p>
+                  <div className="rounded-lg bg-muted p-3">
+                    <pre className="text-xs font-mono overflow-x-auto">
+{`{
+  "github.copilot.chat.mcp": {
+    "servers": {
+      "tokens": {
+        "url": "https://tokens.flett.cc/mcp"
+      }
+    }
+  }
+}`}
+                    </pre>
+                  </div>
+                </div>
+
+                {/* Cursor */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <h4 className="font-medium">Cursor</h4>
+                  <p className="text-xs text-muted-foreground">Add to ~/.cursor/mcp.json:</p>
+                  <div className="rounded-lg bg-muted p-3">
+                    <pre className="text-xs font-mono overflow-x-auto">
+{`{
+  "tokens": {
+    "url": "https://tokens.flett.cc/mcp"
+  }
+}`}
+                    </pre>
+                  </div>
+                </div>
               </div>
               
               <div className="space-y-4">

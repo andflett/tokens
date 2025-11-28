@@ -1,4 +1,4 @@
-# Vibe Themes
+# Tokens
 
 A design token generator with web UI and MCP server, built for designers learning to code with AI.
 
@@ -46,7 +46,7 @@ The MCP server is available at `/mcp`. Connect with:
 
 ```json
 {
-  "vibe-themes": {
+  "tokens": {
     "url": "http://localhost:3000/mcp"
   }
 }

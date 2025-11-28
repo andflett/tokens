@@ -17,22 +17,22 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vibe Themes - Design Token Generator",
-    template: "%s | Vibe Themes",
+    default: "Tokens - Design Token Generator",
+    template: "%s | Tokens",
   },
   description:
     "Generate beautiful, accessible design tokens from your brand colors. Perfect for designers learning to code with AI assistants.",
   metadataBase: new URL(config.appUrl),
   openGraph: {
-    title: "Vibe Themes",
+    title: "Tokens",
     description:
       "Generate beautiful, accessible design tokens from your brand colors",
-    siteName: "Vibe Themes",
+    siteName: "Tokens",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vibe Themes",
+    title: "Tokens",
     description:
       "Generate beautiful, accessible design tokens from your brand colors",
   },

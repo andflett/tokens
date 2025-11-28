@@ -291,7 +291,112 @@ export function exportToScss(tokens: TokenSystem, colorFormat: ColorFormat = 'he
   return lines.join('\n');
 }
 
-export type ExportFormat = 'css' | 'tailwind-v3' | 'tailwind-v4' | 'json' | 'scss';
+/**
+ * Export tokens as Lovable theme format
+ * Lovable uses shadcn/ui compatible CSS variables
+ */
+export function exportToLovable(tokens: TokenSystem, colorFormat: ColorFormat = 'hsl'): string {
+  const lines: string[] = [];
+  
+  // Get primary, secondary colors for Lovable format
+  const lightPrimary = tokens.semantic.light.primary;
+  const lightSecondary = tokens.semantic.light.secondary;
+  const darkPrimary = tokens.semantic.dark.primary;
+  const darkSecondary = tokens.semantic.dark.secondary;
+  
+  // Get neutral colors for backgrounds, foregrounds
+  const neutralScale = tokens.primitives.neutral || tokens.primitives.primary;
+  
+  lines.push('@layer base {');
+  lines.push('  :root {');
+  lines.push('    /* Lovable Theme - Light Mode */');
+  lines.push(`    --background: ${formatColor(neutralScale[100] || '#ffffff', colorFormat)};`);
+  lines.push(`    --foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --card: ${formatColor(neutralScale[100] || '#ffffff', colorFormat)};`);
+  lines.push(`    --card-foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --popover: ${formatColor(neutralScale[100] || '#ffffff', colorFormat)};`);
+  lines.push(`    --popover-foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --primary: ${formatColor(lightPrimary.base, colorFormat)};`);
+  lines.push(`    --primary-foreground: ${formatColor(lightPrimary.onBase, colorFormat)};`);
+  lines.push('');
+  lines.push(`    --secondary: ${formatColor(lightSecondary.base, colorFormat)};`);
+  lines.push(`    --secondary-foreground: ${formatColor(lightSecondary.onBase, colorFormat)};`);
+  lines.push('');
+  lines.push(`    --muted: ${formatColor(neutralScale[90] || '#f4f4f5', colorFormat)};`);
+  lines.push(`    --muted-foreground: ${formatColor(neutralScale[50] || '#71717a', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --accent: ${formatColor(lightPrimary.muted, colorFormat)};`);
+  lines.push(`    --accent-foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --destructive: ${formatColor(tokens.semantic.light.danger?.base || '#ef4444', colorFormat)};`);
+  lines.push(`    --destructive-foreground: ${formatColor(tokens.semantic.light.danger?.onBase || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --border: ${formatColor(neutralScale[80] || '#e4e4e7', colorFormat)};`);
+  lines.push(`    --input: ${formatColor(neutralScale[80] || '#e4e4e7', colorFormat)};`);
+  lines.push(`    --ring: ${formatColor(lightPrimary.base, colorFormat)};`);
+  lines.push('');
+  lines.push(`    --radius: ${tokens.radii?.lg || tokens.radii?.md || '0.5rem'};`);
+  lines.push('');
+  lines.push('    /* Sidebar */');
+  lines.push(`    --sidebar-background: ${formatColor(neutralScale[100] || '#ffffff', colorFormat)};`);
+  lines.push(`    --sidebar-foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --sidebar-primary: ${formatColor(lightPrimary.base, colorFormat)};`);
+  lines.push(`    --sidebar-primary-foreground: ${formatColor(lightPrimary.onBase, colorFormat)};`);
+  lines.push(`    --sidebar-accent: ${formatColor(lightPrimary.muted, colorFormat)};`);
+  lines.push(`    --sidebar-accent-foreground: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --sidebar-border: ${formatColor(neutralScale[80] || '#e4e4e7', colorFormat)};`);
+  lines.push(`    --sidebar-ring: ${formatColor(lightPrimary.base, colorFormat)};`);
+  lines.push('  }');
+  lines.push('');
+  lines.push('  .dark {');
+  lines.push('    /* Lovable Theme - Dark Mode */');
+  lines.push(`    --background: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --card: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --card-foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --popover: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --popover-foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --primary: ${formatColor(darkPrimary.base, colorFormat)};`);
+  lines.push(`    --primary-foreground: ${formatColor(darkPrimary.onBase, colorFormat)};`);
+  lines.push('');
+  lines.push(`    --secondary: ${formatColor(darkSecondary.base, colorFormat)};`);
+  lines.push(`    --secondary-foreground: ${formatColor(darkSecondary.onBase, colorFormat)};`);
+  lines.push('');
+  lines.push(`    --muted: ${formatColor(neutralScale[20] || '#27272a', colorFormat)};`);
+  lines.push(`    --muted-foreground: ${formatColor(neutralScale[60] || '#a1a1aa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --accent: ${formatColor(darkPrimary.muted, colorFormat)};`);
+  lines.push(`    --accent-foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --destructive: ${formatColor(tokens.semantic.dark.danger?.base || '#ef4444', colorFormat)};`);
+  lines.push(`    --destructive-foreground: ${formatColor(tokens.semantic.dark.danger?.onBase || '#fafafa', colorFormat)};`);
+  lines.push('');
+  lines.push(`    --border: ${formatColor(neutralScale[30] || '#27272a', colorFormat)};`);
+  lines.push(`    --input: ${formatColor(neutralScale[30] || '#27272a', colorFormat)};`);
+  lines.push(`    --ring: ${formatColor(darkPrimary.base, colorFormat)};`);
+  lines.push('');
+  lines.push('    /* Sidebar */');
+  lines.push(`    --sidebar-background: ${formatColor(neutralScale[10] || '#0a0a0a', colorFormat)};`);
+  lines.push(`    --sidebar-foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push(`    --sidebar-primary: ${formatColor(darkPrimary.base, colorFormat)};`);
+  lines.push(`    --sidebar-primary-foreground: ${formatColor(darkPrimary.onBase, colorFormat)};`);
+  lines.push(`    --sidebar-accent: ${formatColor(darkPrimary.muted, colorFormat)};`);
+  lines.push(`    --sidebar-accent-foreground: ${formatColor(neutralScale[100] || '#fafafa', colorFormat)};`);
+  lines.push(`    --sidebar-border: ${formatColor(neutralScale[30] || '#27272a', colorFormat)};`);
+  lines.push(`    --sidebar-ring: ${formatColor(darkPrimary.base, colorFormat)};`);
+  lines.push('  }');
+  lines.push('}');
+  
+  return lines.join('\n');
+}
+
+export type ExportFormat = 'css' | 'tailwind-v3' | 'tailwind-v4' | 'json' | 'scss' | 'lovable';
 
 /**
  * Export tokens in the specified format
@@ -313,6 +418,8 @@ export function exportTokens(
       return exportToJson(tokens);
     case 'scss':
       return exportToScss(tokens, colorFormat);
+    case 'lovable':
+      return exportToLovable(tokens, colorFormat);
     default:
       throw new Error(`Unknown export format: ${format}`);
   }
@@ -325,6 +432,7 @@ export function getFileExtension(format: ExportFormat): string {
   switch (format) {
     case 'css':
     case 'tailwind-v4':
+    case 'lovable':
       return 'css';
     case 'tailwind-v3':
       return 'js';
@@ -354,6 +462,8 @@ export function getSuggestedFilename(format: ExportFormat, themeName?: string): 
       return `${base}.json`;
     case 'scss':
       return `_${base}.scss`;
+    case 'lovable':
+      return `${base}-lovable-theme.css`;
     default:
       return `${base}.txt`;
   }

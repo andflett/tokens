@@ -1,5 +1,5 @@
 /**
- * Core type definitions for Vibe Themes
+ * Core type definitions for Tokens
  */
 
 export interface BrandColors {

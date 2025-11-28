@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Term } from "@/components/term";
 import { PageLayout } from "@/components/page-layout";
+import TurdLogo from "@/components/turd-logo";
 import Link from "next/link";
 import { ArrowDownIcon, BoltIcon } from "@heroicons/react/24/outline";
 
@@ -394,7 +395,7 @@ export default function HomePage() {
             <Button size="lg" asChild className="gap-2">
               <Link href="/generate">
                 <BoltIcon className="h-4 w-4" />
-                Generate Tokens
+                Design Your Tokens
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="gap-2">
@@ -523,7 +524,7 @@ export default function HomePage() {
             <Button size="lg" asChild className="gap-2">
               <Link href="/generate">
                 <BoltIcon className="h-4 w-4" />
-                Generate Your Tokens
+                Design Your Tokens
               </Link>
             </Button>
           </div>
@@ -534,14 +535,32 @@ export default function HomePage() {
       <footer className="border-t py-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <div className="flex h-5 w-5 items-center justify-center rounded bg-foreground text-[10px] font-bold text-background">
-              V
-            </div>
+            <TurdLogo
+              width={20}
+              height={20}
+              background="var(--foreground)"
+              foreground="var(--background)"
+              className="shrink-0"
+            />
             <span className="text-sm text-muted-foreground">
-              © 2025 Vibe Themes. Open source under MIT.
+              © 2025{" "}
+              <Link
+                href="https://flett.cc"
+                className="hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Andrew Flett
+              </Link>
             </span>
           </div>
           <div className="flex items-center gap-6">
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              About
+            </Link>
             <Link
               href="/docs"
               className="text-sm text-muted-foreground hover:text-foreground"
@@ -555,12 +574,18 @@ export default function HomePage() {
               Generator
             </Link>
             <Link
-              href="https://github.com/andflett/design-tokens-mcp"
+              href="https://www.npmjs.com/package/tokens-mcp"
               className="text-sm text-muted-foreground hover:text-foreground"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
-              GitHub
+              NPM
+            </Link>
+            <Link
+              href="/legal"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Legal
             </Link>
           </div>
         </div>

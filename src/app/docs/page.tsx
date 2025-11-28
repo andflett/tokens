@@ -16,7 +16,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Documentation",
-  description: "Learn how to use Vibe Themes with your AI assistant",
+  description: "Learn how to use Tokens with your AI assistant",
 };
 
 export default function DocsPage() {
@@ -27,7 +27,7 @@ export default function DocsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
           <p className="text-muted-foreground">
-            Learn how to use Vibe Themes with your AI assistant
+            Learn how to use Tokens with your AI assistant
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function DocsPage() {
           <section id="getting-started">
             <h2 className="text-2xl font-bold mb-4">Getting Started</h2>
             <p className="text-muted-foreground mb-6">
-              Vibe Themes helps you create professional <Term term="design-tokens">design tokens</Term> from
+              Tokens helps you create professional <Term term="design-tokens">design tokens</Term> from
               your brand colors. You can use it directly in your browser, or connect it to
               your <Term term="llm">AI assistant</Term> for a more conversational experience.
             </p>
@@ -123,7 +123,7 @@ export default function DocsPage() {
 
             <h3 className="font-semibold mb-2">Token Types</h3>
             <p className="text-muted-foreground mb-4">
-              Vibe Themes generates several types of tokens:
+              Tokens generates several types of tokens:
             </p>
 
             <div className="space-y-3">
@@ -159,8 +159,51 @@ export default function DocsPage() {
             <h2 className="text-2xl font-bold mb-4">MCP Setup</h2>
             <p className="text-muted-foreground mb-6">
               The <Term term="mcp">Model Context Protocol</Term> allows AI assistants to use
-              external tools. Here&apos;s how to connect Vibe Themes to your favorite assistant.
+              external tools. There are two ways to use Tokens with MCP:
             </p>
+
+            {/* Installation Options */}
+            <div className="grid gap-4 sm:grid-cols-2 mb-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">🌐 Hosted Server</CardTitle>
+                  <CardDescription>
+                    Use our hosted MCP server - no installation required
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Connect directly to our server. Best for quick setup and always up-to-date.
+                  </p>
+                  <code className="text-xs bg-muted px-2 py-1 rounded block">
+                    https://tokens.flett.cc/mcp
+                  </code>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📦 NPM Package</CardTitle>
+                  <CardDescription>
+                    Install locally via npm for offline use
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Run locally using stdio. Best for privacy and offline access.
+                  </p>
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      href="https://www.npmjs.com/package/tokens-mcp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View on NPM →
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
 
             <div className="space-y-6">
               {/* Claude Desktop */}
@@ -173,23 +216,44 @@ export default function DocsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    Add this to your <Term term="claude">Claude Desktop</Term> configuration file:
+                    Add to your <Term term="claude">Claude Desktop</Term> config file:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <p className="text-xs text-muted-foreground mb-2">
-                      macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
-                    </p>
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  <p className="text-xs text-muted-foreground">
+                    macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Option 1: Hosted Server (Recommended)</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "mcpServers": {
-    "vibe-themes": {
+    "tokens": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vibethemes.flett.cc/mcp"]
+      "args": ["-y", "mcp-remote", "https://tokens.flett.cc/mcp"]
     }
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                    <p className="text-xs text-muted-foreground">First install: <code className="bg-muted px-1 rounded">npm install -g tokens-mcp</code></p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
+{`{
+  "mcpServers": {
+    "tokens": {
+      "command": "tokens-mcp"
+    }
+  }
+}`}
+                      </pre>
+                    </div>
+                  </div>
+                  
                   <p className="text-sm text-muted-foreground">
                     Restart Claude Desktop and look for the hammer icon in the bottom right.
                   </p>
@@ -208,19 +272,24 @@ export default function DocsPage() {
                   <p className="text-sm text-muted-foreground">
                     Add this to your <Term term="vs-code">VS Code</Term> settings.json:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
   "github.copilot.chat.mcp": {
     "servers": {
-      "vibe-themes": {
-        "url": "https://vibethemes.flett.cc/mcp"
+      "tokens": {
+        "url": "https://tokens.flett.cc/mcp"
       }
     }
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
+                  
                   <p className="text-sm text-muted-foreground">
                     Then ask <Term term="copilot">Copilot</Term>: &quot;Generate design tokens for a calm, professional brand with blue as the primary color&quot;
                   </p>
@@ -239,14 +308,18 @@ export default function DocsPage() {
                   <p className="text-sm text-muted-foreground">
                     Add to ~/.cursor/mcp.json:
                   </p>
-                  <div className="rounded-lg bg-muted p-4">
-                    <pre className="text-sm font-mono overflow-x-auto">
+                  
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Hosted Server</p>
+                    <div className="rounded-lg bg-muted p-4">
+                      <pre className="text-sm font-mono overflow-x-auto">
 {`{
-  "vibe-themes": {
-    "url": "https://vibethemes.flett.cc/mcp"
+  "tokens": {
+    "url": "https://tokens.flett.cc/mcp"
   }
 }`}
-                    </pre>
+                      </pre>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -259,7 +332,7 @@ export default function DocsPage() {
           <section id="tools">
             <h2 className="text-2xl font-bold mb-4">Available Tools</h2>
             <p className="text-muted-foreground mb-6">
-              These are the tools your AI assistant can use when connected to Vibe Themes:
+              These are the tools your AI assistant can use when connected to Tokens:
             </p>
 
             <div className="space-y-4">
