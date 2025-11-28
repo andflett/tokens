@@ -280,103 +280,87 @@ export function LayoutVisual() {
   }, []);
 
   const breakpoints = [
-    { name: "sm", width: "40rem", pixels: "640px", containerWidth: "100%" },
-    {
-      name: "md",
-      width: "48rem",
-      pixels: "768px",
-      containerWidth: "max-w-3xl",
-    },
-    {
-      name: "lg",
-      width: "64rem",
-      pixels: "1024px",
-      containerWidth: "max-w-5xl",
-    },
+    { name: "sm", pixels: "640px", widthPercent: 40, color: "bg-blue-400/40", emoji: "📱", label: "Mobile" },
+    { name: "md", pixels: "768px", widthPercent: 55, color: "bg-purple-400/40", emoji: "📟", label: "Tablet" },
+    { name: "lg", pixels: "1024px", widthPercent: 75, color: "bg-green-400/40", emoji: "🖥️", label: "Desktop" },
   ];
 
   return (
-    <div className="relative min-h-[300px]">
+    <div className="relative min-h-[320px]">
       <div className="rounded-xl border bg-background p-4 space-y-4">
-        {/* Browser chrome mockup */}
-        <div className="flex items-center gap-2 pb-3 border-b">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-400" />
-            <div className="w-3 h-3 rounded-full bg-yellow-400" />
-            <div className="w-3 h-3 rounded-full bg-green-400" />
-          </div>
-          <div className="flex-1 h-6 rounded bg-muted flex items-center px-3">
-            <span className="text-[10px] text-muted-foreground font-mono">
-              myapp.com
-            </span>
-          </div>
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-xs font-medium text-muted-foreground">
+            Responsive breakpoints at different screen widths
+          </p>
         </div>
 
-        {/* Viewport visualization */}
-        <div className="relative">
+        {/* All viewports shown simultaneously */}
+        <div className="space-y-4">
           {breakpoints.map((bp, i) => (
-            <div
-              key={bp.name}
-              className={`transition-all duration-700 ${
-                i === activeBreakpoint
-                  ? "opacity-100"
-                  : "opacity-0 absolute inset-0"
-              }`}
-              style={{ display: i === activeBreakpoint ? "block" : "none" }}
-            >
-              {/* Breakpoint indicator */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-muted-foreground">
-                    Viewport:
-                  </span>
-                  <span className="text-sm font-semibold">{bp.pixels}</span>
+            <div key={bp.name} className="relative">
+              {/* Viewport mockup */}
+              <div 
+                className={`relative mx-auto transition-all duration-500 ${
+                  activeBreakpoint === i ? "scale-[1.02]" : "scale-100 opacity-70"
+                }`}
+                style={{ width: `${bp.widthPercent}%` }}
+              >
+                {/* Browser chrome mini */}
+                <div className={`rounded-t-lg border border-b-0 px-2 py-1.5 flex items-center gap-1.5 ${
+                  activeBreakpoint === i ? "bg-muted" : "bg-muted/50"
+                }`}>
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 rounded-full bg-red-400/60" />
+                    <div className="w-2 h-2 rounded-full bg-yellow-400/60" />
+                    <div className="w-2 h-2 rounded-full bg-green-400/60" />
+                  </div>
+                  <div className="flex-1 h-4 rounded bg-background/50 flex items-center justify-center">
+                    <span className="text-[8px] text-muted-foreground font-mono">
+                      {bp.pixels}
+                    </span>
+                  </div>
                 </div>
-                <div className="border border-purple-300 border-dashed inline-flex items-center rounded-full bg-purple-200 px-3 py-1 text-xs font-mono whitespace-nowrap text-foreground shadow-lg">
-                  --breakpoint-{bp.name}: {bp.width}
-                </div>
-              </div>
 
-              {/* Container visualization */}
-              <div className="relative h-32 bg-muted/30 rounded-lg border border-dashed border-muted-foreground/30 flex items-center justify-center">
-                <TokenLabel
-                  label={`--container-${
-                    i === 0 ? "full" : i === 1 ? "3xl" : "5xl"
-                  }`}
-                  side="bottom"
-                  open={i === activeBreakpoint}
-                  sideOffset={8}
-                >
-                  <div
-                    className={`h-24 bg-card border rounded-lg shadow-sm flex items-center justify-center transition-all duration-500 ${
-                      i === 0 ? "w-full" : i === 1 ? "w-4/5" : "w-3/5"
-                    }`}
-                  >
+                {/* Viewport content */}
+                <div className={`rounded-b-lg border p-3 ${bp.color} transition-all duration-300`}>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-sm">{bp.emoji}</span>
                     <div className="text-center">
-                      <p className="text-xs font-medium">Content Container</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        {bp.containerWidth}
-                      </p>
+                      <p className="text-[10px] font-semibold">{bp.label}</p>
+                      <p className="text-[8px] text-foreground/60 font-mono">@{bp.name}</p>
                     </div>
                   </div>
-                </TokenLabel>
-              </div>
+                </div>
 
-              {/* Screen size label */}
-              <div className="mt-3 text-center">
-                <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-                    i === 0
-                      ? "bg-blue-100 text-blue-700"
-                      : i === 1
-                      ? "bg-purple-100 text-purple-700"
-                      : "bg-green-100 text-green-700"
-                  }`}
-                >
-                  {i === 0 ? "📱 Mobile" : i === 1 ? "📟 Tablet" : "🖥️ Desktop"}
-                </span>
+                {/* Token label for active */}
+                {activeBreakpoint === i && (
+                  <div className="absolute -right-2 top-1/2 -translate-y-1/2 translate-x-full">
+                    <div className="border border-purple-300 border-dashed inline-flex items-center rounded-full bg-purple-200 px-2 py-0.5 text-[10px] font-mono whitespace-nowrap text-foreground shadow-lg">
+                      --breakpoint-{bp.name}: {bp.pixels}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div className="flex justify-center gap-4 pt-2 border-t">
+          {breakpoints.map((bp, i) => (
+            <button
+              key={bp.name}
+              onClick={() => setActiveBreakpoint(i)}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                activeBreakpoint === i
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span>{bp.emoji}</span>
+              <span>{bp.name}</span>
+            </button>
           ))}
         </div>
       </div>
@@ -521,6 +505,196 @@ export function ShadowVisual() {
           More elevation
         </span>
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// TOKEN LIST COMPONENTS - For the "Tokens" tab showing actual token values
+// ============================================================================
+
+// Spacing token list with scaled bars
+export function SpacingTokenList() {
+  const spacingTokens = [
+    { name: "1", value: "0.25rem", px: 4 },
+    { name: "2", value: "0.5rem", px: 8 },
+    { name: "3", value: "0.75rem", px: 12 },
+    { name: "4", value: "1rem", px: 16 },
+    { name: "6", value: "1.5rem", px: 24 },
+    { name: "8", value: "2rem", px: 32 },
+    { name: "12", value: "3rem", px: 48 },
+    { name: "16", value: "4rem", px: 64 },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {spacingTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div className="w-8 font-mono text-xs text-muted-foreground">
+            {token.name}
+          </div>
+          <div
+            className="h-5 bg-primary/30 rounded-sm"
+            style={{ width: `${Math.min(token.px * 2, 160)}px` }}
+          />
+          <div className="font-mono text-xs text-muted-foreground">
+            {token.value}{" "}
+            <span className="text-muted-foreground/50">({token.px}px)</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Color token list showing semantic colors
+export function ColorTokenList() {
+  const colorTokens = [
+    { name: "background", desc: "Base layer", color: "bg-background" },
+    { name: "foreground", desc: "Text on background", color: "bg-foreground" },
+    { name: "card", desc: "Card backgrounds", color: "bg-card" },
+    { name: "primary", desc: "Brand color", color: "bg-primary" },
+    { name: "secondary", desc: "Supporting color", color: "bg-secondary" },
+    { name: "muted", desc: "Subtle backgrounds", color: "bg-muted" },
+    { name: "accent", desc: "Highlight color", color: "bg-accent" },
+    { name: "destructive", desc: "Error/danger", color: "bg-destructive" },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {colorTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div className={`w-6 h-6 rounded-md border ${token.color}`} />
+          <div className="flex-1">
+            <div className="font-mono text-xs">{token.name}</div>
+            <div className="text-[10px] text-muted-foreground">{token.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Typography token list
+export function TypographyTokenList() {
+  const typographyTokens = [
+    { name: "text-xs", size: "0.75rem", sample: "Aa" },
+    { name: "text-sm", size: "0.875rem", sample: "Aa" },
+    { name: "text-base", size: "1rem", sample: "Aa" },
+    { name: "text-lg", size: "1.125rem", sample: "Aa" },
+    { name: "text-xl", size: "1.25rem", sample: "Aa" },
+    { name: "text-2xl", size: "1.5rem", sample: "Aa" },
+    { name: "text-3xl", size: "1.875rem", sample: "Aa" },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {typographyTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div className="w-16 font-mono text-xs text-muted-foreground">
+            {token.name.replace("text-", "")}
+          </div>
+          <div style={{ fontSize: token.size }} className="w-12 font-medium">
+            {token.sample}
+          </div>
+          <div className="font-mono text-xs text-muted-foreground">
+            {token.size}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Shadow token list
+export function ShadowTokenList() {
+  const shadowTokens = [
+    { name: "shadow-sm", value: "0 1px 2px 0 rgb(0 0 0 / 0.05)" },
+    { name: "shadow", value: "0 1px 3px 0 rgb(0 0 0 / 0.1)" },
+    { name: "shadow-md", value: "0 4px 6px -1px rgb(0 0 0 / 0.1)" },
+    { name: "shadow-lg", value: "0 10px 15px -3px rgb(0 0 0 / 0.1)" },
+    { name: "shadow-xl", value: "0 20px 25px -5px rgb(0 0 0 / 0.1)" },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {shadowTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-md bg-card border"
+            style={{ boxShadow: token.value }}
+          />
+          <div className="flex-1">
+            <div className="font-mono text-xs">{token.name}</div>
+            <div className="text-[10px] text-muted-foreground truncate max-w-[150px]">
+              {token.value}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Layout token list showing breakpoints
+export function LayoutTokenList() {
+  const layoutTokens = [
+    { name: "sm", value: "640px", desc: "Small devices" },
+    { name: "md", value: "768px", desc: "Tablets" },
+    { name: "lg", value: "1024px", desc: "Laptops" },
+    { name: "xl", value: "1280px", desc: "Desktops" },
+    { name: "2xl", value: "1536px", desc: "Large screens" },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {layoutTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div className="w-8 font-mono text-xs font-medium">{token.name}</div>
+          <div className="flex-1">
+            <div
+              className="h-4 bg-primary/30 rounded-sm"
+              style={{ width: `${(parseInt(token.value) / 1536) * 100}%` }}
+            />
+          </div>
+          <div className="font-mono text-xs text-muted-foreground w-16 text-right">
+            {token.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Border token list
+export function BorderTokenList() {
+  const borderTokens = [
+    { name: "border", value: "1px", style: "solid" },
+    { name: "border-2", value: "2px", style: "solid" },
+    { name: "border-4", value: "4px", style: "solid" },
+    { name: "border-dashed", value: "1px", style: "dashed" },
+    { name: "border-dotted", value: "1px", style: "dotted" },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {borderTokens.map((token) => (
+        <div key={token.name} className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-md bg-card"
+            style={{
+              border: `${token.value} ${token.style} currentColor`,
+              opacity: 0.5,
+            }}
+          />
+          <div className="flex-1">
+            <div className="font-mono text-xs">{token.name}</div>
+            <div className="text-[10px] text-muted-foreground">
+              {token.value} {token.style}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

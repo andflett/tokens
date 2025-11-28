@@ -104,6 +104,12 @@ export const glossary: Record<string, GlossaryTerm> = {
     short: "Building software by describing what you want to AI",
     full: "Vibe coding is a term for building software by describing what you want in natural language to an AI assistant, rather than writing code directly. The AI generates the code based on your description. Having a design system ready makes vibe coding much more effective.",
   },
+  framework: {
+    term: "Framework",
+    short: "A foundation that structures how your site is built",
+    full: "A framework provides the structure and tools for building web applications. Popular ones include React (used by Lovable, v0, and many others), Vue, Svelte, and Angular. Build tools like Vite are often used alongside these to compile and bundle your code. Most AI coding tools generate code for React by default.",
+    learnMoreUrl: "https://react.dev",
+  },
 };
 
 export function getTerm(key: string): GlossaryTerm | undefined {
