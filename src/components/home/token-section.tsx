@@ -4,6 +4,8 @@ import { SparkleIcon } from "lucide-react";
 import { CopyButton } from "./copy-button";
 import { AnimatedTokenVisual } from "./animated-token-visual";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import React from "react";
 
 export function TokenSection({
@@ -13,6 +15,7 @@ export function TokenSection({
   visual,
   tokenList,
   prompt,
+  generateTab,
 }: {
   id: string;
   title: string;
@@ -20,15 +23,30 @@ export function TokenSection({
   visual: React.ReactNode;
   tokenList?: React.ReactNode;
   prompt: string;
+  /** The tab name to link to on the generate page */
+  generateTab?: string;
 }) {
+  // Extract the token type from the title (e.g., "Spacing Tokens" -> "spacing")
+  const tokenType = title.toLowerCase().replace(" tokens", "");
+  const tabLink = generateTab || id;
+
   return (
     <section id={id} className="py-10 md:py-16 lg:py-20">
       <div className="grid gap-6 md:gap-8 lg:grid-cols-2 lg:gap-12 items-start">
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{title}</h2>
-          <p className="text-muted-foreground mb-6 leading-relaxed">
+          <p className="text-muted-foreground mb-4 leading-relaxed">
             {description}
           </p>
+
+          {/* Customize link */}
+          <Link
+            href={`/generate?tab=${tabLink}`}
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-6"
+          >
+            Customise and use {tokenType} tokens for my AI
+            <ArrowLongRightIcon className="h-5 w-5" />
+          </Link>
 
           <div className="space-y-4">
             {/* ChatGPT-style conversation */}
