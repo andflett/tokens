@@ -1,0 +1,55 @@
+{
+  "name": "@flett/design-tokens-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for generating design tokens from brand colors using OKLCH color space",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "design-tokens",
+    "oklch",
+    "color",
+    "tailwind",
+    "css"
+  ],
+  "license": "MIT",
+  "author": "Andrew Flett",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andflett/toke"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "toke-mcp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "culori": "^4.0.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.0.0",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

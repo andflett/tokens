@@ -6,7 +6,7 @@ A design token generator with web UI and MCP server, built for designers learnin
 
 - 🎨 **OKLCH Color Generation** — Perceptually uniform color scales that look balanced
 - ♿ **Accessible by Default** — Every color combination meets WCAG contrast requirements
-- 🤖 **MCP Ready** — Use directly from Claude, Copilot, or other AI assistants
+- 🤖 **MCP Ready** — Use directly from Claude, Copilot, or other AI assistants ([npm package](./mcp-server))
 - 📦 **Multiple Exports** — CSS, Tailwind v3/v4, JSON, SCSS
 - 🌗 **Light & Dark** — Generate both modes from the same brand colors
 - 📚 **Beginner Friendly** — Jargon popovers explain every technical term
@@ -42,7 +42,27 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## MCP Integration
 
-The MCP server is available at `/mcp`. Connect with:
+### Standalone MCP Server (for Claude Desktop, Cursor, VS Code, etc.)
+
+Install the npm package:
+
+```bash
+npm install -g @flett/design-tokens-mcp-server
+```
+
+See [MCP Server README](./mcp-server/README.md) for detailed setup instructions for:
+
+- Claude Desktop
+- VS Code with GitHub Copilot
+- Cursor
+- Windsurf
+- Zed Editor
+- Cline
+- Continue
+
+### Web-based MCP Server (SSE/HTTP)
+
+The MCP server is also available at `/mcp` when running the Next.js app. Connect with:
 
 ```json
 {
@@ -54,13 +74,13 @@ The MCP server is available at `/mcp`. Connect with:
 
 ### Available Tools
 
-| Tool | Description |
-|------|-------------|
-| `generate_tokens` | Generate design tokens from brand colors (OKLCH) |
-| `generate_tokens_ai` | Generate AI prompt for creative token creation |
-| `analyze_vibe` | Analyze a vibe description and suggest colors |
-| `export_tokens` | Export tokens to CSS, Tailwind, JSON, or SCSS |
-| `generate_component` | Generate AI prompt for shadcn/ui components |
+| Tool                 | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `generate_tokens`    | Generate design tokens from brand colors (OKLCH) |
+| `generate_tokens_ai` | Generate AI prompt for creative token creation   |
+| `analyze_vibe`       | Analyze a vibe description and suggest colors    |
+| `export_tokens`      | Export tokens to CSS, Tailwind, JSON, or SCSS    |
+| `generate_component` | Generate AI prompt for shadcn/ui components      |
 
 ## Database Setup
 
@@ -78,6 +98,26 @@ Run the migration in your Supabase SQL editor:
 - **Auth/DB:** Supabase
 - **MCP:** Vercel mcp-handler + Upstash Redis
 - **Colors:** culori (OKLCH)
+
+## Development
+
+### Build MCP Server Package
+
+```bash
+# Build the standalone MCP server
+npm run package:mcp
+
+# Test locally
+cd mcp-server
+npm link
+toke-mcp
+
+# Publish to npm
+cd mcp-server
+npm publish --access public
+```
+
+See [mcp-server/PUBLISHING.md](./mcp-server/PUBLISHING.md) for detailed publishing instructions.
 
 ## License
 
