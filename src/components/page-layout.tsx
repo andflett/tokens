@@ -35,7 +35,7 @@ export function PageLayout({
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle, var(--color-gray-100) 1px, transparent 1px)`,
+              backgroundImage: `radial-gradient(circle, var(--color-neutral-200) 1px, transparent 1px)`,
               backgroundSize: "10px 10px",
               maskImage:
                 "linear-gradient(to bottom, black 0%, transparent 25%)",

@@ -88,6 +88,38 @@ const SEMANTIC_SCALE_MAPPING: Record<string, string> = {
   destructive: "destructive",
 };
 
+// LocalStorage keys
+const STORAGE_KEYS = {
+  BRAND_COLORS: "toke-brand-colors",
+  SPACING_BASE: "toke-spacing-base",
+  BASE_RADIUS: "toke-base-radius",
+  SHADOW_SETTINGS: "toke-shadow-settings",
+  TYPOGRAPHY: "toke-typography",
+  BORDER_COLORS: "toke-border-colors",
+  LAYOUT_TOKENS: "toke-layout-tokens",
+  COLOR_EDITS: "toke-color-edits",
+};
+
+// Safe localStorage helpers
+const loadFromStorage = <T,>(key: string, fallback: T): T => {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const saveToStorage = <T,>(key: string, value: T): void => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error("Failed to save to localStorage:", error);
+  }
+};
+
 /**
  * Main token generator component
  * Create a complete, professional design token system for your web applications
@@ -100,7 +132,9 @@ export function TokenGenerator({
 }: TokenGeneratorProps) {
   const { setTheme, resolvedTheme } = useTheme();
   const [brandColors, setBrandColors] = React.useState<BrandColors>(
-    initialColors || config.defaultBrandColors
+    () =>
+      initialColors ||
+      loadFromStorage(STORAGE_KEYS.BRAND_COLORS, config.defaultBrandColors)
   );
   const [mode] = React.useState<"light" | "dark" | "both">("both");
   const [tokens, setTokens] = React.useState<TokenSystem | null>(null);
@@ -124,65 +158,108 @@ export function TokenGenerator({
   const [colorSubTab, setColorSubTab] = React.useState<string>("primitives");
 
   // Token customization state
-  const [spacingBaseUnit, setSpacingBaseUnit] = React.useState(4);
-  const [baseRadius, setBaseRadius] = React.useState(0.25);
-  const [shadowSettings, setShadowSettings] = React.useState<ShadowSettings>({
-    offsetX: 0,
-    offsetY: 4,
-    blur: 6,
-    spread: 0,
-    opacity: 0.1,
-  });
+  const [spacingBaseUnit, setSpacingBaseUnit] = React.useState(() =>
+    loadFromStorage(STORAGE_KEYS.SPACING_BASE, 4)
+  );
+  const [baseRadius, setBaseRadius] = React.useState(() =>
+    loadFromStorage(STORAGE_KEYS.BASE_RADIUS, 0.25)
+  );
+  const [shadowSettings, setShadowSettings] = React.useState<ShadowSettings>(
+    () =>
+      loadFromStorage(STORAGE_KEYS.SHADOW_SETTINGS, {
+        offsetX: 0,
+        offsetY: 4,
+        blur: 6,
+        spread: 0,
+        opacity: 0.1,
+      })
+  );
   const [typography, setTypography] = React.useState<TokenSystem["typography"]>(
-    {
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-      },
-      fontSize: {
-        xs: ["0.75rem", { lineHeight: "1rem" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem" }],
-        base: ["1rem", { lineHeight: "1.5rem" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
-        "5xl": ["3rem", { lineHeight: "1" }],
-        "6xl": ["3.75rem", { lineHeight: "1" }],
-      },
-      fontWeight: {
-        thin: 100,
-        extralight: 200,
-        light: 300,
-        normal: 400,
-        medium: 500,
-        semibold: 600,
-        bold: 700,
-        extrabold: 800,
-        black: 900,
-      },
-    }
+    () =>
+      loadFromStorage(STORAGE_KEYS.TYPOGRAPHY, {
+        fontFamily: {
+          sans: ["Inter", "system-ui", "sans-serif"],
+          mono: ["JetBrains Mono", "monospace"],
+        },
+        fontSize: {
+          xs: ["0.75rem", { lineHeight: "1rem" }],
+          sm: ["0.875rem", { lineHeight: "1.25rem" }],
+          base: ["1rem", { lineHeight: "1.5rem" }],
+          lg: ["1.125rem", { lineHeight: "1.75rem" }],
+          xl: ["1.25rem", { lineHeight: "1.75rem" }],
+          "2xl": ["1.5rem", { lineHeight: "2rem" }],
+          "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+          "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+          "5xl": ["3rem", { lineHeight: "1" }],
+          "6xl": ["3.75rem", { lineHeight: "1" }],
+        },
+        fontWeight: {
+          thin: 100,
+          extralight: 200,
+          light: 300,
+          normal: 400,
+          medium: 500,
+          semibold: 600,
+          bold: 700,
+          extrabold: 800,
+          black: 900,
+        },
+      })
   );
 
   // Border colors state
   const [borderColors, setBorderColors] = React.useState<{
     light: BorderColors;
     dark: BorderColors;
-  }>({
-    light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
-    dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
-  });
+  }>(() =>
+    loadFromStorage(STORAGE_KEYS.BORDER_COLORS, {
+      light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
+      dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
+    })
+  );
 
   // Layout tokens state
-  const [layoutTokens, setLayoutTokens] = React.useState<LayoutTokens>(
-    generateLayoutTokens()
+  const [layoutTokens, setLayoutTokens] = React.useState<LayoutTokens>(() =>
+    loadFromStorage(STORAGE_KEYS.LAYOUT_TOKENS, generateLayoutTokens())
   );
 
   // Color edits tracking
   const [colorEdits, setColorEdits] = React.useState<
     Record<string, Record<number, string>>
-  >({});
+  >(() => loadFromStorage(STORAGE_KEYS.COLOR_EDITS, {}));
+
+  // Persist state changes to localStorage
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.BRAND_COLORS, brandColors);
+  }, [brandColors]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.SPACING_BASE, spacingBaseUnit);
+  }, [spacingBaseUnit]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.BASE_RADIUS, baseRadius);
+  }, [baseRadius]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.SHADOW_SETTINGS, shadowSettings);
+  }, [shadowSettings]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.TYPOGRAPHY, typography);
+  }, [typography]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.BORDER_COLORS, borderColors);
+  }, [borderColors]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.LAYOUT_TOKENS, layoutTokens);
+  }, [layoutTokens]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.COLOR_EDITS, colorEdits);
+  }, [colorEdits]);
 
   // Sync preview mode with app theme
   React.useEffect(() => {
@@ -205,7 +282,10 @@ export function TokenGenerator({
       // Apply color edits to primitives
       const editedPrimitives = { ...baseTokens.primitives } as PrimitivePalette;
       for (const [colorName, edits] of Object.entries(colorEdits)) {
-        if (editedPrimitives[colorName] && typeof editedPrimitives[colorName] !== 'string') {
+        if (
+          editedPrimitives[colorName] &&
+          typeof editedPrimitives[colorName] !== "string"
+        ) {
           const scale = { ...(editedPrimitives[colorName] as ColorScale) };
           for (const [shade, color] of Object.entries(edits)) {
             const shadeNum = Number(shade) as keyof typeof scale;
@@ -282,73 +362,6 @@ export function TokenGenerator({
     return colorEdits[colorName]?.[shade] !== undefined;
   };
 
-  const handleReset = () => {
-    setBrandColors(config.defaultBrandColors);
-    setSpacingBaseUnit(4);
-    setBaseRadius(0.25);
-    setShadowSettings({
-      offsetX: 0,
-      offsetY: 4,
-      blur: 6,
-      spread: 0,
-      opacity: 0.1,
-    });
-    setColorEdits({});
-    setBorderColors({
-      light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
-      dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
-    });
-    setLayoutTokens(generateLayoutTokens());
-    setTypography({
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-      },
-      fontSize: {
-        xs: ["0.75rem", { lineHeight: "1rem" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem" }],
-        base: ["1rem", { lineHeight: "1.5rem" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
-        "5xl": ["3rem", { lineHeight: "1" }],
-        "6xl": ["3.75rem", { lineHeight: "1" }],
-      },
-      fontWeight: {
-        thin: 100,
-        extralight: 200,
-        light: 300,
-        normal: 400,
-        medium: 500,
-        semibold: 600,
-        bold: 700,
-        extrabold: 800,
-        black: 900,
-      },
-    });
-    toast.success("All tokens reset to defaults");
-  };
-
-  const handleRandomize = () => {
-    const randomColor = () => {
-      const letters = "0123456789ABCDEF";
-      let color = "#";
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    };
-
-    setBrandColors({
-      primary: randomColor(),
-      secondary: randomColor(),
-    });
-    setColorEdits({});
-    toast.success("Colors randomized!");
-  };
-
   return (
     <div className={cn("space-y-6", className)}>
       {/* Main Generator Tab (Web vs MCP) */}
@@ -382,39 +395,6 @@ export function TokenGenerator({
         />
 
         <TabsContent value="web" className="mt-6 space-y-6">
-          {/* Color Inputs */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                  <SwatchIcon className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <div>
-                  <CardTitle>Colors</CardTitle>
-                  <CardDescription>
-                    Choose your primary, secondary, and accent colors. The
-                    generator will create a complete color palette from these.
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <BrandColorPickers
-                primary={brandColors.primary}
-                secondary={brandColors.secondary}
-                onChange={setBrandColors}
-              />
-              <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" onClick={handleRandomize}>
-                  🎲 Randomize
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleReset}>
-                  Reset All
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Token Tabs */}
           {tokens && (
             <Card>
@@ -549,6 +529,34 @@ export function TokenGenerator({
 
                   {/* Colors Tab */}
                   <TabsContent value="colors" className="space-y-6">
+                    {/* Brand Color Inputs */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <h3 className="text-base font-semibold">
+                          Set Your Brand Colors
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          Choose your primary and secondary colors. Our smart
+                          algorithms will automatically generate complete
+                          11-shade color scales and complementary palettes
+                          (neutral, success, warning, destructive) using OKLCH
+                          color space for perceptually uniform results.
+                        </p>
+                      </div>
+                      <BrandColorPickers
+                        primary={brandColors.primary}
+                        secondary={brandColors.secondary}
+                        onChange={setBrandColors}
+                      />
+                      <div className="rounded-lg border bg-muted/50 p-3">
+                        <p className="text-xs text-muted-foreground">
+                          💡 <strong>Tip:</strong> You can fine-tune any color
+                          in the scales below, or let the algorithms handle
+                          everything for a harmonious design system.
+                        </p>
+                      </div>
+                    </div>
+
                     <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
                       <AnimatedTabsList
                         value={colorSubTab}
@@ -589,7 +597,10 @@ export function TokenGenerator({
                                 const relevantScale =
                                   tokens.primitives[scaleName];
 
-                                if (relevantScale && typeof relevantScale !== 'string') {
+                                if (
+                                  relevantScale &&
+                                  typeof relevantScale !== "string"
+                                ) {
                                   return (
                                     <SemanticColorEditable
                                       key={name}

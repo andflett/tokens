@@ -136,21 +136,42 @@ export function generateColorScale(baseColor: string): ColorScale {
   // Special handling for achromatic colors (grays/neutrals)
   const isAchromatic = baseChroma < 0.01;
 
-  // Use simple relative lightness steps from the base
-  // This ensures 500 matches exactly and others are distributed around it
-  const lightnessSteps: Record<number, number> = {
-    50: baseLightness + 0.33, // Much lighter
-    100: baseLightness + 0.28,
-    200: baseLightness + 0.22,
-    300: baseLightness + 0.15,
-    400: baseLightness + 0.07,
-    500: baseLightness, // Exact match
-    600: baseLightness - 0.1,
-    700: baseLightness - 0.2,
-    800: baseLightness - 0.28,
-    900: baseLightness - 0.34,
-    950: baseLightness - 0.38,
-  };
+  // Neutrals use a different lightness distribution than chromatic colors
+  // Based on Tailwind's neutral scale: very light at top, huge drops in middle range
+  let lightnessSteps: Record<number, number>;
+
+  if (isAchromatic) {
+    // For neutrals: match Tailwind's distribution pattern
+    // Small steps at light end, massive drops 300-500, medium steps at dark end
+    lightnessSteps = {
+      50: baseLightness + 0.429, // Very close to white
+      100: baseLightness + 0.414, // Tiny step from 50
+      200: baseLightness + 0.366, // Small step
+      300: baseLightness + 0.314, // Small step
+      400: baseLightness + 0.152, // HUGE drop
+      500: baseLightness, // Exact match (around 0.556 for neutral-500)
+      600: baseLightness - 0.117, // Large drop
+      700: baseLightness - 0.185, // Medium step
+      800: baseLightness - 0.287, // Large drop
+      900: baseLightness - 0.351, // Medium step
+      950: baseLightness - 0.411, // Medium step
+    };
+  } else {
+    // For chromatic colors: smooth, more even distribution
+    lightnessSteps = {
+      50: baseLightness + 0.33, // Much lighter
+      100: baseLightness + 0.28,
+      200: baseLightness + 0.22,
+      300: baseLightness + 0.15,
+      400: baseLightness + 0.07,
+      500: baseLightness, // Exact match
+      600: baseLightness - 0.1,
+      700: baseLightness - 0.2,
+      800: baseLightness - 0.28,
+      900: baseLightness - 0.34,
+      950: baseLightness - 0.38,
+    };
+  }
 
   const scale: Record<number, string> = {};
 

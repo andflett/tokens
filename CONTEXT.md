@@ -20,11 +20,13 @@ The target audience is **non-technical designers and product managers** who are 
 ### Audience & Tone
 
 **Target Audience:**
+
 - Non-technical people (designers, product managers, etc.)
 - Just getting into AI coding (Claude, Cursor, Copilot, etc.)
 - Unfamiliar with underlying tech (Tailwind, React, Next.js, design tokens, etc.)
 
 **Tone Guidelines:**
+
 - Friendly and approachable, not patronizing
 - Use dry humour where appropriate
 - Avoid jargon or explain technical terms inline
@@ -72,17 +74,17 @@ design-tokens-mcp/
 
 ### Key Architectural Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| **Next.js App Router** | Modern React patterns, server components, API routes in same deploy |
-| **MCP in Next.js API route** | Single deployment to Vercel, no separate server to manage |
-| **Vercel `mcp-handler`** | Official Vercel MCP package handles SSE on serverless (with Redis) |
-| **Upstash Redis** | Required for SSE connections on Vercel's serverless functions |
-| **OKLCH color space** | Perceptually uniform—each step in a scale looks equally different |
-| **culori library** | Best-in-class color manipulation, great OKLCH support |
-| **Supabase** | Magic link auth (no passwords for beginners), PostgreSQL for themes |
-| **shadcn/ui + Radix** | Accessible, customizable components that match our token system |
-| **Tailwind v4** | Native CSS layers, OKLCH support, modern approach |
+| Decision                     | Rationale                                                           |
+| ---------------------------- | ------------------------------------------------------------------- |
+| **Next.js App Router**       | Modern React patterns, server components, API routes in same deploy |
+| **MCP in Next.js API route** | Single deployment to Vercel, no separate server to manage           |
+| **Vercel `mcp-handler`**     | Official Vercel MCP package handles SSE on serverless (with Redis)  |
+| **Upstash Redis**            | Required for SSE connections on Vercel's serverless functions       |
+| **OKLCH color space**        | Perceptually uniform—each step in a scale looks equally different   |
+| **culori library**           | Best-in-class color manipulation, great OKLCH support               |
+| **Supabase**                 | Magic link auth (no passwords for beginners), PostgreSQL for themes |
+| **shadcn/ui + Radix**        | Accessible, customizable components that match our token system     |
+| **Tailwind v4**              | Native CSS layers, OKLCH support, modern approach                   |
 
 ---
 
@@ -94,16 +96,16 @@ We generate **10-step color scales** (10-100) for each brand color:
 
 ```typescript
 interface ColorScale {
-  10: string;   // Lightest
+  10: string; // Lightest
   20: string;
   30: string;
   40: string;
-  50: string;   // Base (often the input color)
+  50: string; // Base (often the input color)
   60: string;
   70: string;
   80: string;
   90: string;
-  100: string;  // Darkest
+  100: string; // Darkest
 }
 ```
 
@@ -126,11 +128,11 @@ Semantic tokens map primitives to UI purposes and adapt to light/dark:
 
 ```typescript
 interface SemanticColor {
-  base: string;     // Background or main use
-  muted: string;    // Subtle variant
-  accent: string;   // Emphasis
-  onBase: string;   // Text on base
-  onMuted: string;  // Text on muted
+  base: string; // Background or main use
+  muted: string; // Subtle variant
+  accent: string; // Emphasis
+  onBase: string; // Text on base
+  onMuted: string; // Text on muted
   onAccent: string; // Text on accent
 }
 ```
@@ -142,6 +144,66 @@ HSL color scales look uneven—yellow appears brighter than blue at the same lig
 - Same lightness value = same perceived brightness
 - Chroma adjusts naturally at extremes (very light/dark colors can't be as saturated)
 - Modern browsers support `oklch()` natively
+
+### Color Scale Algorithm
+
+**Dual-Algorithm Approach:** We use different algorithms for chromatic and achromatic colors.
+
+#### Chromatic Colors (Hues)
+
+For colors with chroma ≥ 0.01, we use a three-part algorithm inspired by Matt Ström's WCAG-driven approach:
+
+1. **Smooth Lightness Distribution**
+
+   - Fixed steps relative to base (shade 500): ±0.07 to ±0.38
+   - Optimized for UI elements (buttons, cards, badges)
+   - Maintains perceptual evenness across the scale
+
+2. **Parabolic Chroma Curve**
+
+   - Formula: `C(n) = -4(max-min)n² + 4(max-min)n + min`
+   - Peaks at shade 500 (110% of base chroma)
+   - Reduces to 30% at extremes (50, 950)
+   - Creates vibrant mid-tones while preventing oversaturation in backgrounds
+
+3. **Bezold-Brücke Hue Shift Compensation**
+   - Formula: `H(n) = H_base + 5(1 - n)`
+   - Compensates for perceptual hue shifts in lighter colors
+   - ±5° rotation prevents "muddy" appearance
+   - Keeps colors looking consistent across the scale
+
+**Benefits:** Vibrant, natural-looking color scales with excellent perceptual uniformity.
+
+**Reference:** [Matt Ström - Generating Color Palettes](https://mattstromawn.com/writing/generating-color-palettes/)
+
+#### Achromatic Colors (Neutrals/Grays)
+
+For colors with chroma < 0.01, we use Tailwind CSS's distribution pattern:
+
+- **Light shades (50-300):** Very subtle, close to white
+
+  - Tiny steps: +0.429, +0.414, +0.366, +0.314 from base
+  - Perfect for card backgrounds and subtle UI elements
+
+- **Mid-range (400-500):** Aggressive contrast drops
+
+  - Massive step at 400: +0.152 (vs +0.314 at 300)
+  - Creates excellent text contrast on light backgrounds
+
+- **Dark shades (600-950):** Medium, balanced steps
+  - -0.117 to -0.411 from base
+  - Readable text in dark mode, deep backgrounds
+
+**Benefits:** Exceptional readability, subtle UI backgrounds, high contrast for text.
+
+**Reference:** [Building a Tailwind-Ready Color System](https://designerup.co/blog/how-to-build-a-tailwind-ready-color-system-in-figma-that-developers-love/)
+
+#### Implementation Details
+
+- **Detection threshold:** `baseChroma < 0.01` switches to neutral algorithm
+- **Constraint preservation:** Shade 500 always exactly matches input color
+- **Source code:** `web/src/lib/tokens/oklch.ts` (lines 133-180)
+- **Documentation:** `/docs/color-algorithm` page with full technical details
 
 ---
 
@@ -155,13 +217,13 @@ Uses Vercel's `mcp-handler` package with dynamic route segment for transport typ
 
 ### Available Tools
 
-| Tool | Purpose |
-|------|---------|
-| `generate_tokens` | Deterministic token generation from brand colors |
+| Tool                 | Purpose                                               |
+| -------------------- | ----------------------------------------------------- |
+| `generate_tokens`    | Deterministic token generation from brand colors      |
 | `generate_tokens_ai` | Generates prompt for AI to create tokens with context |
-| `generate_component` | Generates prompt for creating shadcn/ui components |
-| `export_tokens` | Converts tokens to CSS, Tailwind v3/v4, JSON, SCSS |
-| `analyze_vibe` | Takes a vibe description, suggests brand colors |
+| `generate_component` | Generates prompt for creating shadcn/ui components    |
+| `export_tokens`      | Converts tokens to CSS, Tailwind v3/v4, JSON, SCSS    |
+| `analyze_vibe`       | Takes a vibe description, suggests brand colors       |
 
 ### SSE on Vercel
 
@@ -200,13 +262,13 @@ Row Level Security ensures users can only access their own themes.
 
 The export system (`web/src/lib/export/index.ts`) supports:
 
-| Format | Output |
-|--------|--------|
-| `css` | CSS custom properties (`:root` and `.dark`) |
-| `tailwind-v3` | `tailwind.config.js` theme extension |
-| `tailwind-v4` | `@theme` block with CSS variable mappings |
-| `json` | Raw JSON of token system |
-| `scss` | SCSS variables with maps |
+| Format        | Output                                      |
+| ------------- | ------------------------------------------- |
+| `css`         | CSS custom properties (`:root` and `.dark`) |
+| `tailwind-v3` | `tailwind.config.js` theme extension        |
+| `tailwind-v4` | `@theme` block with CSS variable mappings   |
+| `json`        | Raw JSON of token system                    |
+| `scss`        | SCSS variables with maps                    |
 
 ---
 
@@ -215,12 +277,14 @@ The export system (`web/src/lib/export/index.ts`) supports:
 ### Why combine MCP + Web UI in one app?
 
 **Pros:**
+
 - Single deployment to Vercel
 - Shared token generation logic
 - No CORS issues
 - Simpler infrastructure
 
 **Cons:**
+
 - Heavier Next.js bundle includes MCP deps
 - Can't scale MCP independently
 - Cold starts affect MCP response time
@@ -267,6 +331,7 @@ The export system (`web/src/lib/export/index.ts`) supports:
 **Problem:** MCP server is bundled with Next.js, adding latency and complexity.
 
 **Solution:** Deploy MCP server separately:
+
 - Option A: Cloudflare Workers (fast cold starts, global edge)
 - Option B: Fly.io (persistent connections, no Redis needed)
 - Option C: Railway/Render (simple Node.js hosting)
@@ -276,6 +341,7 @@ Keep web UI on Vercel, MCP on separate service.
 #### 2. Theme Marketplace
 
 Allow users to:
+
 - Publish themes publicly
 - Browse community themes
 - Fork and customize others' themes
@@ -284,6 +350,7 @@ Allow users to:
 #### 3. Figma Plugin
 
 Export tokens directly to Figma variables:
+
 - Sync brand colors from Figma
 - Push generated tokens back as Figma variables
 - Real-time preview in Figma
@@ -368,6 +435,7 @@ npm run lint     # ESLint
 ### MCP Testing
 
 Connect Claude Desktop or VS Code Copilot to:
+
 ```json
 {
   "tokens": {
@@ -380,16 +448,16 @@ Connect Claude Desktop or VS Code Copilot to:
 
 ## 📚 Key Files Reference
 
-| File | Purpose |
-|------|---------|
-| `web/src/lib/types.ts` | Core TypeScript interfaces |
-| `web/src/lib/tokens/oklch.ts` | OKLCH color utilities |
-| `web/src/lib/tokens/generate.ts` | Main token generation |
-| `web/src/lib/export/index.ts` | Multi-format exporters |
-| `web/src/app/mcp/[transport]/route.ts` | MCP API handler |
-| `web/src/components/token-generator.tsx` | Main UI component |
-| `web/src/lib/glossary.ts` | Jargon definitions for Term component |
-| `web/src/lib/supabase/themes.ts` | Database queries |
+| File                                     | Purpose                                             |
+| ---------------------------------------- | --------------------------------------------------- |
+| `web/src/lib/types.ts`                   | Core TypeScript interfaces                          |
+| `web/src/lib/tokens/oklch.ts`            | OKLCH color utilities & scale generation algorithms |
+| `web/src/lib/tokens/generate.ts`         | Main token generation                               |
+| `web/src/lib/export/index.ts`            | Multi-format exporters                              |
+| `web/src/app/mcp/[transport]/route.ts`   | MCP API handler                                     |
+| `web/src/components/token-generator.tsx` | Main UI component                                   |
+| `web/src/lib/glossary.ts`                | Jargon definitions for Term component               |
+| `web/src/lib/supabase/themes.ts`         | Database queries                                    |
 
 ---
 
@@ -436,18 +504,21 @@ When working on this codebase:
 ### Common Tasks
 
 **Add a new MCP tool:**
+
 1. Add to `web/src/app/mcp/[transport]/route.ts`
 2. Define Zod schema for inputs
 3. Implement handler function
 4. Add to docs page
 
 **Add a new export format:**
+
 1. Add to `ExportFormat` type in `lib/export/index.ts`
 2. Implement `toNewFormat()` function
 3. Add case to `exportTokens()` switch
 4. Update UI select options
 
 **Add a glossary term:**
+
 1. Add to `glossary` object in `lib/glossary.ts`
 2. Use `<Term term="key">text</Term>` in content
 
@@ -464,7 +535,12 @@ This project was built collaboratively across sessions covering:
 5. **UI implementation** — shadcn/ui, color pickers, export dialog
 6. **Documentation** — Docs page with Term components
 7. **Homepage redesign** — Figma-style aesthetic with grids, badges
+8. **Color algorithm refinement** — Dual-algorithm approach for chromatic vs achromatic colors
+   - Analyzed Tailwind CSS color scales in OKLCH
+   - Implemented parabolic chroma curves and Bezold-Brücke hue shift
+   - Created Tailwind-inspired neutral distribution for better readability
+   - Documented approach with references to Matt Ström and Tailwind methodologies
 
 ---
 
-*This document should be included in context for future LLM sessions working on this codebase.*
+_This document should be included in context for future LLM sessions working on this codebase._

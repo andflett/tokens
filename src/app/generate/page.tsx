@@ -16,9 +16,12 @@ function GeneratorContent() {
         <div className="mb-8 space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Token Generator</h1>
           <p className="text-muted-foreground">
-            Create a complete, professional <Term term="design-tokens">design token system</Term> for
-            your web applications. Generate colors, typography, spacing, shadows, borders, and
-            responsive layout tokens all in one place.
+            Create a complete, professional{" "}
+            <Term term="design-tokens">design token system</Term> for your web
+            applications. Colors are generated using our{" "}
+            <Term term="color-algorithm">dual-algorithm approach</Term> with{" "}
+            <Term term="oklch">OKLCH</Term> color space for perceptually
+            balanced, professional results.
           </p>
         </div>
 

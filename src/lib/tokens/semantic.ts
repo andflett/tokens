@@ -16,6 +16,7 @@ import type {
 
 /**
  * Find the best contrasting text color for a background
+ * Prefers light text unless dark text is significantly better
  */
 function findContrastingColor(
   background: string,
@@ -25,7 +26,15 @@ function findContrastingColor(
   const lightContrast = getContrastRatio(background, lightColor);
   const darkContrast = getContrastRatio(background, darkColor);
 
-  return lightContrast > darkContrast ? lightColor : darkColor;
+  // Prefer light text unless dark text is SIGNIFICANTLY better
+  // Dark text must have at least 1.5x better contrast ratio AND meet WCAG AA
+  if (darkContrast >= 4.5 && darkContrast > lightContrast * 1.5) {
+    // Only use dark text if it's much better and accessible
+    return darkColor;
+  } else {
+    // Default to light text (better for vibrant/mid-tone colors)
+    return lightColor;
+  }
 }
 
 /**
@@ -35,42 +44,44 @@ function findContrastingColor(
 function createExtendedSemanticColor(
   scale: ColorScale,
   neutral: ColorScale,
+  white: string,
+  black: string,
   mode: "light" | "dark"
 ): ExtendedSemanticColor {
   if (mode === "light") {
     // Light mode: DEFAULT uses mid tone, subdued darker, highlight lighter
     const DEFAULT = scale[500];
-    const subdued = scale[600];
-    const highlight = scale[400];
+    const subdued = scale[300];
+    const highlight = scale[700];
 
     return {
       DEFAULT,
-      foreground: findContrastingColor(DEFAULT, neutral[50], neutral[950]),
+      foreground: findContrastingColor(DEFAULT, white, scale[900]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, neutral[50], neutral[950]),
+      "subdued-foreground": findContrastingColor(subdued, white, scale[950]),
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
-        neutral[50],
-        neutral[950]
+        white,
+        scale[900]
       ),
     };
   } else {
     // Dark mode: adjust for dark backgrounds
     const DEFAULT = scale[500];
-    const subdued = scale[400];
-    const highlight = scale[600];
+    const subdued = scale[100];
+    const highlight = scale[300];
 
     return {
       DEFAULT,
-      foreground: findContrastingColor(DEFAULT, neutral[50], neutral[950]),
+      foreground: findContrastingColor(DEFAULT, white, scale[900]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, neutral[50], neutral[950]),
+      "subdued-foreground": findContrastingColor(subdued, white, scale[900]),
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
-        neutral[50],
-        neutral[950]
+        white,
+        scale[950]
       ),
     };
   }
@@ -126,12 +137,24 @@ export function generateSemanticTokens(
         };
 
   return {
-    primary: createExtendedSemanticColor(primary, neutral, mode),
-    secondary: createExtendedSemanticColor(secondary, neutral, mode),
-    neutral: createExtendedSemanticColor(neutral, neutral, mode),
-    success: createExtendedSemanticColor(success, neutral, mode),
-    destructive: createExtendedSemanticColor(destructive, neutral, mode),
-    warning: createExtendedSemanticColor(warning, neutral, mode),
+    primary: createExtendedSemanticColor(primary, neutral, white, black, mode),
+    secondary: createExtendedSemanticColor(
+      secondary,
+      neutral,
+      white,
+      black,
+      mode
+    ),
+    neutral: createExtendedSemanticColor(neutral, neutral, white, black, mode),
+    success: createExtendedSemanticColor(success, neutral, white, black, mode),
+    destructive: createExtendedSemanticColor(
+      destructive,
+      neutral,
+      white,
+      black,
+      mode
+    ),
+    warning: createExtendedSemanticColor(warning, neutral, white, black, mode),
     muted,
     accent,
   };
@@ -155,11 +178,11 @@ export function generateSurfaceTokens(
   if (mode === "light") {
     return {
       background: white,
-      foreground: black,
+      foreground: neutral[950],
       card: white,
-      "card-foreground": black,
+      "card-foreground": neutral[950],
       popover: white,
-      "popover-foreground": black,
+      "popover-foreground": neutral[950],
     };
   } else {
     return {
@@ -189,9 +212,9 @@ export function generateUtilityTokens(
 
   if (mode === "light") {
     return {
-      border: neutral[100],
-      input: neutral[100],
-      ring: primary[500],
+      border: neutral[200],
+      input: neutral[200],
+      ring: primary[400],
     };
   } else {
     return {

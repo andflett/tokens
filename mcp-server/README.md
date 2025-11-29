@@ -268,6 +268,34 @@ OKLCH provides perceptually uniform color manipulation:
 - Chroma adjusts naturally at extremes
 - Modern browsers support `oklch()` natively
 
+## Color Scale Algorithm
+
+Tokens uses a sophisticated approach to generate professional color scales:
+
+### For Chromatic Colors (Hues)
+
+- **Smooth lightness distribution**: Even steps from light to dark, optimized for UI use
+- **Parabolic chroma curve**: Vibrant mid-tones (around shade 500) with reduced saturation at extremes
+- **Bezold-Brücke hue shift compensation**: Subtle hue rotation to compensate for perceptual shifts in lighter colors
+
+### For Achromatic Colors (Neutrals/Grays)
+
+- **Tailwind-inspired distribution**: Very light tones stay close to white (50-300) for subtle backgrounds
+- **Aggressive mid-range contrast**: Large lightness drops between 300-500 for better text contrast
+- **Balanced dark tones**: Medium steps in darker shades for depth without muddiness
+
+This dual approach ensures:
+
+- Chromatic colors remain vibrant and perceptually balanced
+- Neutrals provide excellent readability and subtle UI backgrounds
+- All scales work harmoniously together
+
+### References
+
+- **OKLCH Color Space**: [oklch.com](https://oklch.com)
+- **Matt Ström's WCAG-driven approach**: [Generating Color Palettes](https://mattstromawn.com/writing/generating-color-palettes/)
+- **Tailwind CSS methodology**: [Building a Tailwind-Ready Color System](https://designerup.co/blog/how-to-build-a-tailwind-ready-color-system-in-figma-that-developers-love/)
+
 ## Contributing
 
 See the [main repository](https://github.com/andflett/toke) for contribution guidelines.
