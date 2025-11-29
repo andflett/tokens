@@ -34,7 +34,7 @@ function findContrastingColor(
  */
 function createExtendedSemanticColor(
   scale: ColorScale,
-  gray: ColorScale,
+  neutral: ColorScale,
   mode: "light" | "dark"
 ): ExtendedSemanticColor {
   if (mode === "light") {
@@ -45,14 +45,14 @@ function createExtendedSemanticColor(
 
     return {
       DEFAULT,
-      foreground: findContrastingColor(DEFAULT, gray[50], gray[950]),
+      foreground: findContrastingColor(DEFAULT, neutral[50], neutral[950]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, gray[50], gray[950]),
+      "subdued-foreground": findContrastingColor(subdued, neutral[50], neutral[950]),
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
-        gray[50],
-        gray[950]
+        neutral[50],
+        neutral[950]
       ),
     };
   } else {
@@ -63,14 +63,14 @@ function createExtendedSemanticColor(
 
     return {
       DEFAULT,
-      foreground: findContrastingColor(DEFAULT, gray[50], gray[950]),
+      foreground: findContrastingColor(DEFAULT, neutral[50], neutral[950]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, gray[50], gray[950]),
+      "subdued-foreground": findContrastingColor(subdued, neutral[50], neutral[950]),
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
-        gray[50],
-        gray[950]
+        neutral[50],
+        neutral[950]
       ),
     };
   }
@@ -83,86 +83,92 @@ export function generateSemanticTokens(
   palette: PrimitivePalette,
   mode: "light" | "dark"
 ): SemanticTokens {
-  const gray = palette.gray;
-  if (!gray) {
-    throw new Error("Gray palette not found");
+  const neutral = palette.neutral as ColorScale;
+  if (!neutral) {
+    throw new Error("Neutral palette not found");
   }
 
-  const primary = palette.primary;
-  const secondary = palette.secondary;
-  const success = palette.success;
-  const destructive = palette.destructive;
-  const warning = palette.warning;
+  const black = palette.black;
+  const white = palette.white;
+
+  const primary = palette.primary as ColorScale;
+  const secondary = palette.secondary as ColorScale;
+  const success = palette.success as ColorScale;
+  const destructive = palette.destructive as ColorScale;
+  const warning = palette.warning as ColorScale;
 
   if (!primary || !secondary || !success || !destructive || !warning) {
     throw new Error("Required color palettes not found");
   }
 
-  // Create muted color pair from gray
+  // Create muted color pair from neutral
   const muted: SemanticColorPair =
     mode === "light"
       ? {
-          DEFAULT: gray[100],
-          foreground: gray[500],
+          DEFAULT: neutral[100],
+          foreground: neutral[500],
         }
       : {
-          DEFAULT: gray[800],
-          foreground: gray[400],
+          DEFAULT: neutral[800],
+          foreground: neutral[400],
         };
 
   // Create accent color pair from primary (lighter/softer variant)
   const accent: SemanticColorPair =
     mode === "light"
       ? {
-          DEFAULT: primary[100],
-          foreground: primary[500],
+          DEFAULT: neutral[100],
+          foreground: neutral[500],
         }
       : {
-          DEFAULT: primary[800],
-          foreground: primary[400],
+          DEFAULT: neutral[800],
+          foreground: neutral[400],
         };
 
   return {
-    primary: createExtendedSemanticColor(primary, gray, mode),
-    secondary: createExtendedSemanticColor(secondary, gray, mode),
-    gray: createExtendedSemanticColor(gray, gray, mode),
-    success: createExtendedSemanticColor(success, gray, mode),
-    destructive: createExtendedSemanticColor(destructive, gray, mode),
-    warning: createExtendedSemanticColor(warning, gray, mode),
+    primary: createExtendedSemanticColor(primary, neutral, mode),
+    secondary: createExtendedSemanticColor(secondary, neutral, mode),
+    neutral: createExtendedSemanticColor(neutral, neutral, mode),
+    success: createExtendedSemanticColor(success, neutral, mode),
+    destructive: createExtendedSemanticColor(destructive, neutral, mode),
+    warning: createExtendedSemanticColor(warning, neutral, mode),
     muted,
     accent,
   };
 }
 
 /**
- * Generate surface tokens (shadcn-style) from gray palette
+ * Generate surface tokens (shadcn-style) from neutral palette
  */
 export function generateSurfaceTokens(
   palette: PrimitivePalette,
   mode: "light" | "dark"
 ): SurfaceTokens {
-  const gray = palette.gray;
-  if (!gray) {
-    throw new Error("Gray palette not found");
+  const neutral = palette.neutral as ColorScale;
+  if (!neutral) {
+    throw new Error("Neutral palette not found");
   }
+
+  const black = palette.black;
+  const white = palette.white;
 
   if (mode === "light") {
     return {
-      background: gray[50],
-      foreground: gray[950],
-      card: gray[50],
-      "card-foreground": gray[950],
-      popover: gray[50],
-      "popover-foreground": gray[950],
+      background: white,
+      foreground: black,
+      card: white,
+      "card-foreground": black,
+      popover: white,
+      "popover-foreground": black,
     };
   } else {
     return {
-      background: gray[950],
-      foreground: gray[50],
-      card: gray[900],
-      "card-foreground": gray[50],
-      popover: gray[900],
-      "popover-foreground": gray[50],
+      background: black,
+      foreground: white,
+      card: neutral[900],
+      "card-foreground": white,
+      popover: neutral[900],
+      "popover-foreground": white,
     };
   }
 }
@@ -174,23 +180,23 @@ export function generateUtilityTokens(
   palette: PrimitivePalette,
   mode: "light" | "dark"
 ): UtilityTokens {
-  const gray = palette.gray;
-  const primary = palette.primary;
+  const neutral = palette.neutral as ColorScale;
+  const primary = palette.primary as ColorScale;
 
-  if (!gray || !primary) {
+  if (!neutral || !primary) {
     throw new Error("Required palettes not found");
   }
 
   if (mode === "light") {
     return {
-      border: gray[200],
-      input: gray[200],
+      border: neutral[100],
+      input: neutral[100],
       ring: primary[500],
     };
   } else {
     return {
-      border: gray[700],
-      input: gray[700],
+      border: neutral[700],
+      input: neutral[700],
       ring: primary[500],
     };
   }
@@ -211,7 +217,7 @@ export function checkSemanticContrast(
   const extendedColors = [
     "primary",
     "secondary",
-    "gray",
+    "neutral",
     "success",
     "destructive",
     "warning",

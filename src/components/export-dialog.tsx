@@ -64,9 +64,9 @@ export function ExportDialog({
   onOpenChange,
   tokens,
   mode,
-  colorFormat: initialColorFormat = "hex",
+  colorFormat: initialColorFormat = "oklch",
 }: ExportDialogProps) {
-  const [format, setFormat] = React.useState<ExportFormat>("css");
+  const [format, setFormat] = React.useState<ExportFormat>("tailwind-v4");
   const [colorFormat, setColorFormat] =
     React.useState<ColorFormat>(initialColorFormat);
   const [output, setOutput] = React.useState("");

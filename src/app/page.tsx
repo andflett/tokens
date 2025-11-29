@@ -202,7 +202,7 @@ export default function HomePage() {
           You and your AI aren&apos;t speaking the same design language
         </h2>
 
-        <p className="max-w-3xl text-lg text-primary/70 relative">
+        <p className="max-w-3xl text-lg text-muted-foreground relative">
           When you generate a web site with AI, it&apos;s probably using{" "}
           <Term term="tailwind">Tailwind CSS</Term> and a component library like{" "}
           <Term term="shadcn">shadcn/ui</Term>, depending on the underlying{" "}

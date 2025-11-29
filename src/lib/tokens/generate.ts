@@ -38,10 +38,7 @@ export function generateSpacingScale(
   return spacing;
 }
 
-/**
- * Default spacing scale following a 4px base
- */
-const defaultSpacing: Record<string, string> = generateSpacingScale(4);
+
 
 /**
  * Default typography scale
@@ -101,15 +98,14 @@ const defaultTypography = {
  * Default border radius scale
  */
 const defaultRadii: Record<string, string> = {
-  none: "0",
-  sm: "0.125rem",
-  DEFAULT: "0.25rem",
+  xs: "0.125rem",
+  sm: "0.25rem",
   md: "0.375rem",
   lg: "0.5rem",
   xl: "0.75rem",
   "2xl": "1rem",
   "3xl": "1.5rem",
-  full: "9999px",
+  "4xl": "2rem",
 };
 
 /**
@@ -118,17 +114,16 @@ const defaultRadii: Record<string, string> = {
 export function generateRadiiScale(
   baseRadius: number = 0.25
 ): Record<string, string> {
-  const round = (value: number) => Math.round(value * 100) / 100;
+  const round = (value: number) => Math.round(value * 1000) / 1000;
   return {
-    none: "0",
-    sm: `${round(baseRadius * 0.5)}rem`,
-    DEFAULT: `${round(baseRadius)}rem`,
+    xs: `${round(baseRadius * 0.5)}rem`,
+    sm: `${round(baseRadius)}rem`,
     md: `${round(baseRadius * 1.5)}rem`,
     lg: `${round(baseRadius * 2)}rem`,
     xl: `${round(baseRadius * 3)}rem`,
     "2xl": `${round(baseRadius * 4)}rem`,
     "3xl": `${round(baseRadius * 6)}rem`,
-    full: "9999px",
+    "4xl": `${round(baseRadius * 8)}rem`,
   };
 }
 
@@ -140,22 +135,22 @@ function generateShadows(
 ): TokenSystem["shadows"] {
   return {
     light: {
-      sm: `0 1px 2px 0 rgba(0, 0, 0, 0.05)`,
-      DEFAULT: `0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)`,
-      md: `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)`,
-      lg: `0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)`,
-      xl: `0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)`,
-      "2xl": `0 25px 50px -12px rgba(0, 0, 0, 0.25)`,
-      inner: `inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)`,
+      "2xs": `0 1px rgb(0 0 0 / 0.05)`,
+      xs: `0 1px 2px 0 rgb(0 0 0 / 0.05)`,
+      sm: `0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`,
+      md: `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`,
+      lg: `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`,
+      xl: `0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)`,
+      "2xl": `0 25px 50px -12px rgb(0 0 0 / 0.25)`,
     },
     dark: {
-      sm: `0 1px 2px 0 rgba(0, 0, 0, 0.3)`,
-      DEFAULT: `0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)`,
-      md: `0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)`,
-      lg: `0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4)`,
-      xl: `0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)`,
-      "2xl": `0 25px 50px -12px rgba(0, 0, 0, 0.5)`,
-      inner: `inset 0 2px 4px 0 rgba(0, 0, 0, 0.3)`,
+      "2xs": `0 1px rgb(0 0 0 / 0.05)`,
+      xs: `0 1px 2px 0 rgb(0 0 0 / 0.05)`,
+      sm: `0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`,
+      md: `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`,
+      lg: `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`,
+      xl: `0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)`,
+      "2xl": `0 25px 50px -12px rgb(0 0 0 / 0.25)`,
     },
   };
 }
@@ -172,9 +167,6 @@ export function generateShadowsWithIntensity(
   return {
     light: {
       sm: `0 1px 2px 0 rgba(0, 0, 0, ${(0.05 * intensity).toFixed(2)})`,
-      DEFAULT: `0 1px 3px 0 rgba(0, 0, 0, ${lightBase.toFixed(
-        2
-      )}), 0 1px 2px -1px rgba(0, 0, 0, ${lightBase.toFixed(2)})`,
       md: `0 4px 6px -1px rgba(0, 0, 0, ${lightBase.toFixed(
         2
       )}), 0 2px 4px -2px rgba(0, 0, 0, ${lightBase.toFixed(2)})`,
@@ -193,9 +185,6 @@ export function generateShadowsWithIntensity(
     },
     dark: {
       sm: `0 1px 2px 0 rgba(0, 0, 0, ${(0.3 * intensity).toFixed(2)})`,
-      DEFAULT: `0 1px 3px 0 rgba(0, 0, 0, ${darkBase.toFixed(
-        2
-      )}), 0 1px 2px -1px rgba(0, 0, 0, ${darkBase.toFixed(2)})`,
       md: `0 4px 6px -1px rgba(0, 0, 0, ${darkBase.toFixed(
         2
       )}), 0 2px 4px -2px rgba(0, 0, 0, ${darkBase.toFixed(2)})`,
@@ -222,7 +211,6 @@ export function generateShadowsWithSettings(
   // Scale values for each shadow size
   const scales = {
     sm: { y: 0.25, blur: 0.5, spread: 0 },
-    DEFAULT: { y: 0.5, blur: 0.75, spread: 0 },
     md: { y: 1, blur: 1.5, spread: -0.25 },
     lg: { y: 2.5, blur: 3.75, spread: -0.75 },
     xl: { y: 5, blur: 6.25, spread: -1.25 },
@@ -246,7 +234,6 @@ export function generateShadowsWithSettings(
   return {
     light: {
       sm: createShadow(scales.sm, "light"),
-      DEFAULT: createShadow(scales.DEFAULT, "light"),
       md: createShadow(scales.md, "light"),
       lg: createShadow(scales.lg, "light"),
       xl: createShadow(scales.xl, "light"),
@@ -257,7 +244,6 @@ export function generateShadowsWithSettings(
     },
     dark: {
       sm: createShadow(scales.sm, "dark"),
-      DEFAULT: createShadow(scales.DEFAULT, "dark"),
       md: createShadow(scales.md, "dark"),
       lg: createShadow(scales.lg, "dark"),
       xl: createShadow(scales.xl, "dark"),
@@ -275,18 +261,18 @@ export function generateShadowsWithSettings(
 export function generateBorderColors(
   primitives: TokenSystem["primitives"]
 ): TokenSystem["borderColors"] {
-  const gray = primitives.gray;
+  const neutral = primitives.neutral;
 
   return {
     light: {
-      default: gray[200],
-      input: gray[300],
-      ring: gray[500],
+      default: neutral[200],
+      input: neutral[300],
+      ring: neutral[500],
     },
     dark: {
-      default: gray[700],
-      input: gray[600],
-      ring: gray[500],
+      default: neutral[700],
+      input: neutral[600],
+      ring: neutral[500],
     },
   };
 }
@@ -350,7 +336,7 @@ export function generateTokens(
       light: lightUtility,
       dark: darkUtility,
     },
-    spacing: defaultSpacing,
+    spacing: {}, // Empty - Tailwind handles spacing
     typography: defaultTypography,
     radii: defaultRadii,
     shadows: generateShadows(primitives),

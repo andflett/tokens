@@ -42,7 +42,9 @@ export interface LayoutTokens {
 
 export interface TokenSystem {
   primitives: {
-    [colorName: string]: ColorScale;
+    black: string;
+    white: string;
+    [colorName: string]: ColorScale | string;
   };
   semantic: {
     light: SemanticTokens;
@@ -79,7 +81,7 @@ export type ColorFormat = "oklch" | "rgb" | "hsl" | "hex";
 export interface SemanticTokens {
   primary: ExtendedSemanticColor;
   secondary: ExtendedSemanticColor;
-  gray: ExtendedSemanticColor;
+  neutral: ExtendedSemanticColor;
   success: ExtendedSemanticColor;
   destructive: ExtendedSemanticColor;
   warning: ExtendedSemanticColor;
@@ -108,7 +110,7 @@ export interface SemanticColorPair {
 }
 
 /**
- * Surface tokens derived from gray palette (shadcn-style)
+ * Surface tokens derived from neutral palette (shadcn-style)
  */
 export interface SurfaceTokens {
   background: string;

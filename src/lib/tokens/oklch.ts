@@ -32,24 +32,26 @@ export function oklchToHex(color: Oklch): string {
 /**
  * Generate a color scale from a base color using OKLCH
  * Creates 11 shades (50,100,200,...,900,950) with perceptually uniform lightness
+ * Shade 500 exactly matches the baseColor, with proportional scaling to lighter/darker shades
  */
 export function generateColorScale(baseColor: string): ColorScale {
   const base = parseToOklch(baseColor);
+  const baseLightness = base.l;
 
-  // Define target lightness values for each shade
-  // These are perceptually uniform steps (50 = lightest, 950 = darkest)
+  // Calculate lightness values relative to the base color (shade 500)
+  // We scale proportionally from the base lightness
   const lightnessMap: Record<number, number> = {
-    50: 0.97, // Very light (extra pale)
-    100: 0.92,
-    200: 0.85,
-    300: 0.75,
-    400: 0.65,
-    500: 0.55,
-    600: 0.45,
-    700: 0.35,
-    800: 0.25,
-    900: 0.15,
-    950: 0.05, // Very dark (extra deep)
+    50: Math.min(0.98, baseLightness + (0.98 - baseLightness) * 1.0), // Lightest
+    100: Math.min(0.96, baseLightness + (0.96 - baseLightness) * 0.9),
+    200: Math.min(0.92, baseLightness + (0.92 - baseLightness) * 0.8),
+    300: Math.min(0.88, baseLightness + (0.88 - baseLightness) * 0.6),
+    400: baseLightness + (Math.min(0.98, baseLightness + 0.1) - baseLightness) * 0.3,
+    500: baseLightness, // Exactly matches the base color
+    600: baseLightness - (baseLightness - Math.max(0.05, baseLightness - 0.15)) * 0.3,
+    700: baseLightness - (baseLightness - Math.max(0.05, baseLightness - 0.25)) * 0.5,
+    800: baseLightness - (baseLightness - Math.max(0.05, baseLightness - 0.35)) * 0.7,
+    900: baseLightness - (baseLightness - Math.max(0.05, baseLightness - 0.45)) * 0.85,
+    950: Math.max(0.05, baseLightness - 0.5), // Darkest
   };
 
   const scale: Record<number, string> = {};
@@ -57,9 +59,15 @@ export function generateColorScale(baseColor: string): ColorScale {
   for (const [shade, targetLightness] of Object.entries(lightnessMap)) {
     const shadeNum = parseInt(shade);
 
+    // For shade 500, use the exact base color to preserve user intent
+    if (shadeNum === 500) {
+      scale[500] = getOklchString(baseColor);
+      continue;
+    }
+
     // Adjust chroma for very light and very dark shades
     // to maintain color vibrancy
-    let chroma = base.c || 0.1;
+    let chroma = base.c || 0;
 
     if (targetLightness > 0.9) {
       // Very light shades (50, 100) need reduced chroma
@@ -76,7 +84,11 @@ export function generateColorScale(baseColor: string): ColorScale {
       h: base.h || 0,
     };
 
-    scale[shadeNum] = oklchToHex(shadeColor);
+    // Store as OKLCH string
+    const l = (shadeColor.l * 100).toFixed(2) + "%";
+    const c = shadeColor.c.toFixed(4);
+    const h = (shadeColor.h || 0).toFixed(2);
+    scale[shadeNum] = `oklch(${l} ${c} ${h})`;
   }
 
   // Type assertion is safe because we generate all required shades for the scale
@@ -181,10 +193,10 @@ export function meetsWCAG_AAA(
  */
 export function getOklchString(color: string): string {
   const oklch = parseToOklch(color);
-  const l = (oklch.l * 100).toFixed(1);
-  const c = (oklch.c * 100).toFixed(1);
-  const h = (oklch.h || 0).toFixed(0);
-  return `oklch(${l}% ${c}% ${h})`;
+  const l = (oklch.l * 100).toFixed(2) + "%";
+  const c = oklch.c.toFixed(4);
+  const h = (oklch.h || 0).toFixed(2);
+  return `oklch(${l} ${c} ${h})`;
 }
 
 /**

@@ -57,7 +57,11 @@ export function exportToCss(
   lines.push("  /* Primitive Colors */");
 
   for (const [name, scale] of Object.entries(tokens.primitives)) {
-    lines.push(...colorScaleToCssVars(name, scale, colorFormat));
+    if (typeof scale === "string") {
+      lines.push(`  --color-${name}: ${formatColor(scale, colorFormat)};`);
+    } else {
+      lines.push(...colorScaleToCssVars(name, scale, colorFormat));
+    }
   }
 
   lines.push("");
@@ -139,7 +143,9 @@ export function exportToCss(
     lines.push("");
     lines.push("  /* Semantic Colors */");
     for (const [name, color] of Object.entries(tokens.semantic.light)) {
-      if (isExtendedSemanticColor(color)) {
+      if (typeof color === "string") {
+        lines.push(`  --${name}: ${formatColor(color, colorFormat)};`);
+      } else if (isExtendedSemanticColor(color)) {
         lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
         lines.push(
           `  --${name}-foreground: ${formatColor(
@@ -243,7 +249,9 @@ export function exportToCss(
     lines.push("");
     lines.push("  /* Semantic Colors */");
     for (const [name, color] of Object.entries(tokens.semantic.dark)) {
-      if (isExtendedSemanticColor(color)) {
+      if (typeof color === "string") {
+        lines.push(`  --${name}: ${formatColor(color, colorFormat)};`);
+      } else if (isExtendedSemanticColor(color)) {
         lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
         lines.push(
           `  --${name}-foreground: ${formatColor(
@@ -342,7 +350,11 @@ export function exportToCss(
 
     // Semantic colors
     for (const [name, color] of Object.entries(tokens.semantic.dark)) {
-      if (isExtendedSemanticColor(color)) {
+      if (typeof color === "string") {
+        lines.push(
+          `    --${name}: ${formatColor(color, colorFormat)};`
+        );
+      } else if (isExtendedSemanticColor(color)) {
         lines.push(
           `    --${name}: ${formatColor(color.DEFAULT, colorFormat)};`
         );
@@ -421,10 +433,14 @@ export function exportToTailwindV3(
 
   // Add primitive colors
   for (const [name, scale] of Object.entries(tokens.primitives)) {
-    config.theme.extend.colors[name] = {};
-    for (const [shade, color] of Object.entries(scale)) {
-      (config.theme.extend.colors[name] as Record<string, string>)[shade] =
-        formatColor(color, colorFormat);
+    if (typeof scale === "string") {
+      config.theme.extend.colors[name] = formatColor(scale, colorFormat);
+    } else {
+      config.theme.extend.colors[name] = {};
+      for (const [shade, color] of Object.entries(scale)) {
+        (config.theme.extend.colors[name] as Record<string, string>)[shade] =
+          formatColor(color, colorFormat);
+      }
     }
   }
 
@@ -433,7 +449,7 @@ export function exportToTailwindV3(
   const extendedSemanticColors = [
     "primary",
     "secondary",
-    "gray",
+    "neutral",
     "success",
     "destructive",
     "warning",
@@ -466,6 +482,8 @@ export function exportToTailwindV3(
     DEFAULT: `var(--accent)`,
     foreground: `var(--accent-foreground)`,
   };
+  config.theme.extend.colors["black"] = `var(--black)`;
+  config.theme.extend.colors["white"] = `var(--white)`;
 
   // Add surface colors
   config.theme.extend.colors["background"] = `var(--background)`;
@@ -503,15 +521,20 @@ export function exportToTailwindV4(
 ): string {
   const lines: string[] = [];
 
+  // @theme block - ONLY var() references, NO actual values
   lines.push("@theme {");
   lines.push("  /* Colors */");
 
-  // Primitive colors
+  // Primitive colors - reference CSS variables
   for (const [name, scale] of Object.entries(tokens.primitives)) {
-    for (const [shade, color] of Object.entries(scale)) {
-      lines.push(
-        `  --color-${name}-${shade}: ${formatColor(color, colorFormat)};`
-      );
+    if (typeof scale === "string") {
+      lines.push(`  --color-${name}: var(--${name});`);
+    } else {
+      for (const shade of Object.keys(scale)) {
+        lines.push(
+          `  --color-${name}-${shade}: var(--${name}-${shade});`
+        );
+      }
     }
   }
 
@@ -520,60 +543,81 @@ export function exportToTailwindV4(
   const extendedSemanticNames = [
     "primary",
     "secondary",
-    "gray",
+    "neutral",
     "success",
     "destructive",
     "warning",
   ];
   for (const name of extendedSemanticNames) {
-    lines.push(`  --${name}: var(--${name});`);
-    lines.push(`  --${name}-foreground: var(--${name}-foreground);`);
-    lines.push(`  --${name}-subdued: var(--${name}-subdued);`);
+    lines.push(`  --color-${name}: var(--${name});`);
+    lines.push(`  --color-${name}-foreground: var(--${name}-foreground);`);
+    lines.push(`  --color-${name}-subdued: var(--${name}-subdued);`);
     lines.push(
-      `  --${name}-subdued-foreground: var(--${name}-subdued-foreground);`
+      `  --color-${name}-subdued-foreground: var(--${name}-subdued-foreground);`
     );
-    lines.push(`  --${name}-highlight: var(--${name}-highlight);`);
+    lines.push(`  --color-${name}-highlight: var(--${name}-highlight);`);
     lines.push(
-      `  --${name}-highlight-foreground: var(--${name}-highlight-foreground);`
+      `  --color-${name}-highlight-foreground: var(--${name}-highlight-foreground);`
     );
   }
 
   // Simple color pairs
   lines.push("");
   lines.push("  /* Muted and Accent */");
-  lines.push(`  --muted: var(--muted);`);
-  lines.push(`  --muted-foreground: var(--muted-foreground);`);
-  lines.push(`  --accent: var(--accent);`);
-  lines.push(`  --accent-foreground: var(--accent-foreground);`);
+  lines.push(`  --color-muted: var(--muted);`);
+  lines.push(`  --color-muted-foreground: var(--muted-foreground);`);
+  lines.push(`  --color-accent: var(--accent);`);
+  lines.push(`  --color-accent-foreground: var(--accent-foreground);`);
+  lines.push(`  --color-black: var(--black);`);
+  lines.push(`  --color-white: var(--white);`);
 
   // Surface colors
   lines.push("");
   lines.push("  /* Surface Colors */");
-  lines.push(`  --background: var(--background);`);
-  lines.push(`  --foreground: var(--foreground);`);
-  lines.push(`  --card: var(--card);`);
-  lines.push(`  --card-foreground: var(--card-foreground);`);
-  lines.push(`  --popover: var(--popover);`);
-  lines.push(`  --popover-foreground: var(--popover-foreground);`);
+  lines.push(`  --color-background: var(--background);`);
+  lines.push(`  --color-foreground: var(--foreground);`);
+  lines.push(`  --color-card: var(--card);`);
+  lines.push(`  --color-card-foreground: var(--card-foreground);`);
+  lines.push(`  --color-popover: var(--popover);`);
+  lines.push(`  --color-popover-foreground: var(--popover-foreground);`);
 
   // Utility colors
   lines.push("");
   lines.push("  /* Utility Colors */");
-  lines.push(`  --border: var(--border);`);
-  lines.push(`  --input: var(--input);`);
-  lines.push(`  --ring: var(--ring);`);
+  lines.push(`  --color-border: var(--border);`);
+  lines.push(`  --color-input: var(--input);`);
+  lines.push(`  --color-ring: var(--ring);`);
 
+  // Chart colors
+  lines.push("");
+  lines.push("  /* Chart Colors */");
+  lines.push("  --color-chart-1: var(--chart-1);");
+  lines.push("  --color-chart-2: var(--chart-2);");
+  lines.push("  --color-chart-3: var(--chart-3);");
+  lines.push("  --color-chart-4: var(--chart-4);");
+  lines.push("  --color-chart-5: var(--chart-5);");
+
+  // Sidebar colors
+  lines.push("");
+  lines.push("  /* Sidebar Colors */");
+  lines.push("  --color-sidebar: var(--sidebar);");
+  lines.push("  --color-sidebar-foreground: var(--sidebar-foreground);");
+  lines.push("  --color-sidebar-primary: var(--sidebar-primary);");
+  lines.push("  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);");
+  lines.push("  --color-sidebar-accent: var(--sidebar-accent);");
+  lines.push("  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);");
+  lines.push("  --color-sidebar-border: var(--sidebar-border);");
+  lines.push("  --color-sidebar-ring: var(--sidebar-ring);");
+
+  // Non-color values with ACTUAL values (not var() references)
   lines.push("");
   lines.push("  /* Spacing */");
-  for (const [name, value] of Object.entries(tokens.spacing)) {
-    lines.push(`  --spacing-${name}: ${value};`);
-  }
-
+  lines.push("  --spacing: 0.25rem;");
+  
   lines.push("");
   lines.push("  /* Border Radius */");
   for (const [name, value] of Object.entries(tokens.radii)) {
-    const varName = name === "DEFAULT" ? "radius" : `radius-${name}`;
-    lines.push(`  --${varName}: ${value};`);
+    lines.push(`  --radius-${name}: ${value};`);
   }
 
   lines.push("");
@@ -585,10 +629,146 @@ export function exportToTailwindV4(
   lines.push("");
   lines.push("  /* Shadows */");
   for (const [name, value] of Object.entries(tokens.shadows.light)) {
-    const varName = name === "DEFAULT" ? "shadow" : `shadow-${name}`;
-    lines.push(`  --${varName}: ${value};`);
+    lines.push(`  --shadow-${name}: ${value};`);
   }
 
+  lines.push("}");
+  lines.push("");
+
+  // :root block with ALL actual light mode values
+  lines.push(":root {");
+  
+  // Primitive colors - actual values
+  for (const [name, scale] of Object.entries(tokens.primitives)) {
+    if (typeof scale === "string") {
+      lines.push(`  --${name}: ${formatColor(scale, colorFormat)};`);
+    } else {
+      for (const [shade, color] of Object.entries(scale)) {
+        lines.push(
+          `  --${name}-${shade}: ${formatColor(color, colorFormat)};`
+        );
+      }
+    }
+  }
+  
+  // Surface tokens
+  lines.push(
+    `  --background: ${formatColor(tokens.surface.light.background, colorFormat)};`
+  );
+  lines.push(
+    `  --foreground: ${formatColor(tokens.surface.light.foreground, colorFormat)};`
+  );
+  lines.push(
+    `  --card: ${formatColor(tokens.surface.light.card, colorFormat)};`
+  );
+  lines.push(
+    `  --card-foreground: ${formatColor(tokens.surface.light["card-foreground"], colorFormat)};`
+  );
+  lines.push(
+    `  --popover: ${formatColor(tokens.surface.light.popover, colorFormat)};`
+  );
+  lines.push(
+    `  --popover-foreground: ${formatColor(tokens.surface.light["popover-foreground"], colorFormat)};`
+  );
+  
+  // Semantic colors
+  for (const [name, color] of Object.entries(tokens.semantic.light)) {
+    if (typeof color === "string") {
+      lines.push(`  --${name}: ${formatColor(color, colorFormat)};`);
+    } else if (isExtendedSemanticColor(color)) {
+      lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
+      lines.push(
+        `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
+      );
+      lines.push(`  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`);
+      lines.push(
+        `  --${name}-subdued-foreground: ${formatColor(color["subdued-foreground"], colorFormat)};`
+      );
+      lines.push(`  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`);
+      lines.push(
+        `  --${name}-highlight-foreground: ${formatColor(color["highlight-foreground"], colorFormat)};`
+      );
+    } else {
+      lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
+      lines.push(
+        `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
+      );
+    }
+  }
+  
+  // Utility tokens
+  lines.push(
+    `  --border: ${formatColor(tokens.utility.light.border, colorFormat)};`
+  );
+  lines.push(
+    `  --input: ${formatColor(tokens.utility.light.input, colorFormat)};`
+  );
+  lines.push(
+    `  --ring: ${formatColor(tokens.utility.light.ring, colorFormat)};`
+  );
+  
+  lines.push("}");
+  lines.push("");
+
+  // .dark block with ALL actual dark mode values
+  lines.push(".dark {");
+  
+  // Surface tokens
+  lines.push(
+    `  --background: ${formatColor(tokens.surface.dark.background, colorFormat)};`
+  );
+  lines.push(
+    `  --foreground: ${formatColor(tokens.surface.dark.foreground, colorFormat)};`
+  );
+  lines.push(
+    `  --card: ${formatColor(tokens.surface.dark.card, colorFormat)};`
+  );
+  lines.push(
+    `  --card-foreground: ${formatColor(tokens.surface.dark["card-foreground"], colorFormat)};`
+  );
+  lines.push(
+    `  --popover: ${formatColor(tokens.surface.dark.popover, colorFormat)};`
+  );
+  lines.push(
+    `  --popover-foreground: ${formatColor(tokens.surface.dark["popover-foreground"], colorFormat)};`
+  );
+  
+  // Semantic colors
+  for (const [name, color] of Object.entries(tokens.semantic.dark)) {
+    if (typeof color === "string") {
+      lines.push(`  --${name}: ${formatColor(color, colorFormat)};`);
+    } else if (isExtendedSemanticColor(color)) {
+      lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
+      lines.push(
+        `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
+      );
+      lines.push(`  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`);
+      lines.push(
+        `  --${name}-subdued-foreground: ${formatColor(color["subdued-foreground"], colorFormat)};`
+      );
+      lines.push(`  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`);
+      lines.push(
+        `  --${name}-highlight-foreground: ${formatColor(color["highlight-foreground"], colorFormat)};`
+      );
+    } else {
+      lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
+      lines.push(
+        `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
+      );
+    }
+  }
+  
+  // Utility tokens
+  lines.push(
+    `  --border: ${formatColor(tokens.utility.dark.border, colorFormat)};`
+  );
+  lines.push(
+    `  --input: ${formatColor(tokens.utility.dark.input, colorFormat)};`
+  );
+  lines.push(
+    `  --ring: ${formatColor(tokens.utility.dark.ring, colorFormat)};`
+  );
+  
   lines.push("}");
 
   return lines.join("\n");

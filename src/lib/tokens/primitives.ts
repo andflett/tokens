@@ -7,7 +7,9 @@ import type { BrandColors, ColorScale } from "../types";
 import type { Oklch } from "culori";
 
 export type PrimitivePalette = {
-  [colorName: string]: ColorScale;
+  black: string;
+  white: string;
+  [colorName: string]: ColorScale | string;
 };
 
 /**
@@ -94,12 +96,13 @@ function deriveWarningColor(primaryColor: string): string {
 }
 
 /**
- * Generate a gray scale
- * Slightly cool/slate-toned for a modern feel
+ * Generate a neutral scale
+ * Based on oklch(0.1 0 0) as the darkest shade
  */
-function generateGrayScale(): ColorScale {
-  // Slate gray with very slight blue undertone
-  return generateColorScale("#64748b");
+function generateNeutralScale(): ColorScale {
+  // Use oklch(0.1 0 0) as the base - this will be used to derive all shades
+  // This creates a neutral scale
+  return generateColorScale("oklch(0.56 0 0)");
 }
 
 /**
@@ -110,14 +113,18 @@ export function generatePrimitivePalette(
   brandColors: BrandColors,
   additionalColors: string[] = []
 ): PrimitivePalette {
-  const palette: PrimitivePalette = {};
+  const palette: Partial<PrimitivePalette> = {};
+
+  // Add absolute black and white
+  palette.black = "oklch(0 0 0)";
+  palette.white = "oklch(1 0 0)";
 
   // Generate scales for brand colors
   palette.primary = generateColorScale(brandColors.primary);
   palette.secondary = generateColorScale(brandColors.secondary);
 
-  // Generate gray scale (slate/cool gray by default)
-  palette.gray = generateGrayScale();
+  // Generate neutral scale (slate/cool neutral by default)
+  palette.neutral = generateNeutralScale();
 
   // Generate derived semantic color scales
   const successScale = generateColorScale(
@@ -145,7 +152,7 @@ export function generatePrimitivePalette(
     palette[`custom${index + 1}`] = generateColorScale(color);
   });
 
-  return palette;
+  return palette as PrimitivePalette;
 }
 
 /**

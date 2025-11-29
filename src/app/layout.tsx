@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Tokens - Design Token Generator",
+    default: "Design Token Generator",
     template: "%s | Tokens",
   },
   description:

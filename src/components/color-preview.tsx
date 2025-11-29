@@ -288,7 +288,7 @@ export function ColorScalePreviewEditable({
 
 interface PalettePreviewProps {
   /** Palette object with named color scales */
-  palette: Record<string, ColorScale>;
+  palette: Record<string, ColorScale | string>;
   /** Additional CSS classes */
   className?: string;
 }
@@ -299,15 +299,16 @@ interface PalettePreviewProps {
 export function PalettePreview({ palette, className }: PalettePreviewProps) {
   return (
     <div className={cn("space-y-6", className)}>
-      {Object.entries(palette).map(([name, scale]) => (
-        <ColorScalePreview key={name} name={name} scale={scale} />
-      ))}
+      {Object.entries(palette).map(([name, scale]) => {
+        if (typeof scale === "string") return null;
+        return <ColorScalePreview key={name} name={name} scale={scale} />;
+      })}
     </div>
   );
 }
 
 interface PalettePreviewEditableProps {
-  palette: Record<string, ColorScale>;
+  palette: Record<string, ColorScale | string>;
   colorFormat: ColorFormat;
   onColorEdit: (colorName: string, shade: number, color: string) => void;
   onColorReset: (colorName: string, shade: number) => void;
@@ -328,17 +329,20 @@ export function PalettePreviewEditable({
 }: PalettePreviewEditableProps) {
   return (
     <div className={cn("space-y-6", className)}>
-      {Object.entries(palette).map(([name, scale]) => (
-        <ColorScalePreviewEditable
-          key={name}
-          name={name}
-          scale={scale}
-          colorFormat={colorFormat}
-          onColorEdit={(shade, color) => onColorEdit(name, shade, color)}
-          onColorReset={(shade) => onColorReset(name, shade)}
-          isColorEdited={(shade) => isColorEdited(name, shade)}
-        />
-      ))}
+      {Object.entries(palette).map(([name, scale]) => {
+        if (typeof scale === "string") return null;
+        return (
+          <ColorScalePreviewEditable
+            key={name}
+            name={name}
+            scale={scale}
+            colorFormat={colorFormat}
+            onColorEdit={(shade, color) => onColorEdit(name, shade, color)}
+            onColorReset={(shade) => onColorReset(name, shade)}
+            isColorEdited={(shade) => isColorEdited(name, shade)}
+          />
+        );
+      })}
     </div>
   );
 }

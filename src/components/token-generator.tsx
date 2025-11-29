@@ -49,7 +49,9 @@ import type {
   ShadowSettings,
   BorderColors,
   LayoutTokens,
+  ColorScale,
 } from "@/lib/types";
+import type { PrimitivePalette } from "@/lib/tokens/primitives";
 import { cn } from "@/lib/utils";
 import {
   SwatchIcon,
@@ -201,10 +203,10 @@ export function TokenGenerator({
       const baseTokens = generateTokens(brandColors, mode);
 
       // Apply color edits to primitives
-      const editedPrimitives = { ...baseTokens.primitives };
+      const editedPrimitives = { ...baseTokens.primitives } as PrimitivePalette;
       for (const [colorName, edits] of Object.entries(colorEdits)) {
-        if (editedPrimitives[colorName]) {
-          const scale = { ...editedPrimitives[colorName] };
+        if (editedPrimitives[colorName] && typeof editedPrimitives[colorName] !== 'string') {
+          const scale = { ...(editedPrimitives[colorName] as ColorScale) };
           for (const [shade, color] of Object.entries(edits)) {
             const shadeNum = Number(shade) as keyof typeof scale;
             if (shadeNum in scale) {
@@ -587,7 +589,7 @@ export function TokenGenerator({
                                 const relevantScale =
                                   tokens.primitives[scaleName];
 
-                                if (relevantScale) {
+                                if (relevantScale && typeof relevantScale !== 'string') {
                                   return (
                                     <SemanticColorEditable
                                       key={name}
