@@ -1,5 +1,5 @@
 /**
- * Main exports for @toke/mcp-server package
+ * Main exports for @flett/design-tokens-mcp-server package
  * Re-exports from the Next.js app's lib directory
  */
 

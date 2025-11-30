@@ -831,7 +831,7 @@ export function TokenGenerator({
                   </p>
                   <Button asChild variant="outline" size="sm">
                     <a
-                      href="https://www.npmjs.com/package/tokens-mcp"
+                      href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -877,7 +877,7 @@ export function TokenGenerator({
                     <p className="text-xs text-muted-foreground">
                       First:{" "}
                       <code className="bg-muted px-1 rounded">
-                        npm install -g tokens-mcp
+                        npm install -g @flett/design-tokens-mcp-server
                       </code>
                     </p>
                     <div className="rounded-lg bg-muted p-3">
@@ -885,7 +885,7 @@ export function TokenGenerator({
                         {`{
   "mcpServers": {
     "tokens": {
-      "command": "tokens-mcp"
+      "command": "toke-mcp"
     }
   }
 }`}

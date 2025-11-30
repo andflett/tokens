@@ -226,7 +226,7 @@ export default function DocsPage() {
                   </p>
                   <Button asChild variant="outline" size="sm">
                     <Link
-                      href="https://www.npmjs.com/package/tokens-mcp"
+                      href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -281,7 +281,7 @@ export default function DocsPage() {
                     <p className="text-xs text-muted-foreground">
                       First install:{" "}
                       <code className="bg-muted px-1 rounded">
-                        npm install -g tokens-mcp
+                        npm install -g @flett/design-tokens-mcp-server
                       </code>
                     </p>
                     <div className="rounded-lg bg-muted p-4">
@@ -289,7 +289,7 @@ export default function DocsPage() {
                         {`{
   "mcpServers": {
     "tokens": {
-      "command": "tokens-mcp"
+      "command": "toke-mcp"
     }
   }
 }`}
