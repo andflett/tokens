@@ -15,11 +15,11 @@ export default function DocsLayout({
 
           {/* Main Content - full width within container */}
           <main className="flex-1 min-w-0">{children}</main>
+
+          {/* Right TOC - Desktop only, in flex row */}
+          <TableOfContents />
         </div>
       </div>
-      
-      {/* Right TOC - positioned outside container */}
-      <TableOfContents />
     </div>
   );
 }

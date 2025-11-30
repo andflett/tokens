@@ -25,10 +25,10 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:block w-56 flex-shrink-0">
+    <aside className="hidden lg:block w-48 flex-shrink-0">
       <div className="sticky top-20">
         <Card className="p-4">
-          <h4 className="text-sm font-semibold">Documentation</h4>
+          <h4 className="text-sm font-semibold px-2">Documentation</h4>
           <nav className="space-y-1">
             {docPages.map((page) => (
               <Link

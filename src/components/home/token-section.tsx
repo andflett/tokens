@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React from "react";
+import { Card } from "../ui/card";
 
 export function TokenSection({
   id,
@@ -110,7 +111,7 @@ export function TokenSection({
         </div>
 
         <AnimatedTokenVisual>
-          <div className="rounded-xl relative border bg-card/50 backdrop-blur-sm overflow-hidden">
+          <Card className="relative overflow-hidden p-0">
             {tokenList ? (
               <Tabs defaultValue="visual" className="w-full">
                 <div className="border-b bg-muted/30 px-4 py-2">
@@ -133,7 +134,7 @@ export function TokenSection({
             ) : (
               <div className="p-6">{visual}</div>
             )}
-          </div>
+          </Card>
         </AnimatedTokenVisual>
       </div>
     </section>

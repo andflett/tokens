@@ -32,35 +32,36 @@ export function TableOfContents() {
 
   const tocContent = (
     <nav className="space-y-1">
-      {headings.map((heading) => (
-        <button
-          key={heading.id}
-          onClick={() => scrollToHeading(heading.id)}
-          className={cn(
-            "block w-full text-left text-sm transition-colors hover:text-foreground",
-            heading.level === 3 && "pl-4",
-            activeId === heading.id
-              ? "text-foreground font-medium"
-              : "text-muted-foreground"
-          )}
-        >
-          {heading.text}
-        </button>
-      ))}
+      {headings
+        .filter((heading) => heading.level === 2)
+        .map((heading) => (
+          <button
+            key={heading.id}
+            onClick={() => scrollToHeading(heading.id)}
+            className={cn(
+              "cursor-pointer block w-full text-left text-xs transition-colors hover:text-foreground",
+              activeId === heading.id
+                ? "text-foreground font-medium"
+                : "text-muted-foreground"
+            )}
+          >
+            {heading.text}
+          </button>
+        ))}
     </nav>
   );
 
   return (
     <>
-      {/* Desktop: Fixed position on right side of viewport */}
-      <div className="hidden xl:block fixed right-8 top-20 w-56 max-h-[calc(100vh-6rem)] overflow-y-auto">
+      {/* Desktop: Static position in flex row */}
+      <aside className="hidden xl:block w-56 flex-shrink-0 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
         <div className="sticky top-20">
-          <Card className="p-4">
-            <h4 className="text-sm font-semibold mb-3">On This Page</h4>
+          <Card className="py-4 px-6">
+            <h4 className="text-sm font-semibold">On This Page</h4>
             {tocContent}
           </Card>
         </div>
-      </div>
+      </aside>
 
       {/* Mobile: Floating button with popover */}
       <div className="xl:hidden fixed bottom-6 right-6 z-40">
