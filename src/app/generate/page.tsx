@@ -2,7 +2,7 @@
 
 import { TokenGenerator } from "@/components/token-generator";
 import { Term } from "@/components/term";
-import { PageLayout } from "@/components/page-layout";
+
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -11,7 +11,7 @@ function GeneratorContent() {
   const tab = searchParams.get("tab") as string | undefined;
 
   return (
-    <PageLayout showGrid>
+    <div className="mx-auto w-full max-w-5xl px-6">
       <div className="py-10">
         <div className="mb-8 space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Token Generator</h1>
@@ -27,7 +27,7 @@ function GeneratorContent() {
 
         <TokenGenerator initialTab={tab} />
       </div>
-    </PageLayout>
+    </div>
   );
 }
 

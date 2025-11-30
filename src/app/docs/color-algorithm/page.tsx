@@ -1,10 +1,7 @@
 import { Metadata } from "next";
-import { PageLayout } from "@/components/page-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Term } from "@/components/term";
-import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
   title: "Color Algorithm - Documentation",
@@ -14,29 +11,19 @@ export const metadata: Metadata = {
 
 export default function ColorAlgorithmPage() {
   return (
-    <PageLayout showGrid>
-      <div className="py-10">
-        {/* Back button */}
-        <Link
-          href="/docs"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8"
-        >
-          <ArrowLeftIcon className="h-4 w-4" />
-          Back to Documentation
-        </Link>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          Color Scale Algorithm
+        </h1>
+        <p className="text-muted-foreground">
+          How Tokens generates professional, perceptually balanced color
+          scales
+        </p>
+      </div>
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Color Scale Algorithm
-          </h1>
-          <p className="text-muted-foreground">
-            How Tokens generates professional, perceptually balanced color
-            scales
-          </p>
-        </div>
-
-        <div className="space-y-12">
+      <div className="space-y-12">
           {/* Overview */}
           <section>
             <h2 className="text-2xl font-bold mb-4">Overview</h2>
@@ -484,6 +471,6 @@ Our algorithm at base 0.556:
           </section>
         </div>
       </div>
-    </PageLayout>
+
   );
 }

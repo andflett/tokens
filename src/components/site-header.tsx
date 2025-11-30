@@ -166,6 +166,37 @@ export function SiteHeader() {
             >
               Documentation
             </Link>
+            
+            {/* Docs sub-navigation - only show when on docs pages */}
+            {pathname.startsWith("/docs") && (
+              <div className="ml-4 mt-1 space-y-1 border-l-2 border-border/50 pl-4">
+                <Link
+                  href="/docs"
+                  className={cn(
+                    "block py-2 text-sm transition-colors",
+                    pathname === "/docs"
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Documentation
+                </Link>
+                <Link
+                  href="/docs/color-algorithm"
+                  className={cn(
+                    "block py-2 text-sm transition-colors",
+                    pathname === "/docs/color-algorithm"
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Color Algorithm
+                </Link>
+              </div>
+            )}
+            
             <Link
               href="/generate"
               className={mobileNavLinkClass("/generate")}

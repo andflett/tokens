@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PageLayout } from "@/components/page-layout";
 import Link from "next/link";
 import {
   ComputerDesktopIcon,
@@ -27,17 +26,16 @@ export const metadata: Metadata = {
 
 export default function DocsPage() {
   return (
-    <PageLayout showGrid>
-      <div className="py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
-          <p className="text-muted-foreground">
-            Learn how to use Tokens with your AI assistant
-          </p>
-        </div>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
+        <p className="text-muted-foreground">
+          Learn how to use Tokens with your AI assistant
+        </p>
+      </div>
 
-        <div className="space-y-12">
+      <div className="space-y-12">
           {/* Getting Started */}
           <section id="getting-started">
             <h2 className="text-2xl font-bold mb-4">Getting Started</h2>
@@ -544,6 +542,6 @@ export default function DocsPage() {
           </section>
         </div>
       </div>
-    </PageLayout>
+
   );
 }

@@ -3,11 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageLayout } from "@/components/page-layout";
+
 
 export default function LoginPage() {
   return (
-    <PageLayout showGrid>
       <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center py-10">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
@@ -23,6 +22,5 @@ export default function LoginPage() {
           </CardHeader>
         </Card>
       </div>
-    </PageLayout>
   );
 }

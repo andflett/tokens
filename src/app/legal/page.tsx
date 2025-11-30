@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { PageLayout } from "@/components/page-layout";
+
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <PageLayout showGrid>
+    <div className="mx-auto w-full max-w-5xl px-6">
       <div className="py-10">
         {/* Header */}
         <div className="mb-8">
@@ -130,6 +130,6 @@ export default function LegalPage() {
           </section>
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }

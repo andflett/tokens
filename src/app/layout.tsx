@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Mulish, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { config } from "@/lib/config";
 import "./globals.css";
 
@@ -55,7 +57,42 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="relative flex min-h-screen flex-col">
+            {/* Grid background */}
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              {/* Grid lines */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)
+                  `,
+                  backgroundSize: "20px 20px",
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, transparent 25%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, transparent 25%)",
+                }}
+              />
+              {/* Intersection dots */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `radial-gradient(circle, var(--color-neutral-200) 1px, transparent 1px)`,
+                  backgroundSize: "10px 10px",
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, transparent 25%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, transparent 25%)",
+                }}
+              />
+            </div>
+
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>
