@@ -333,7 +333,7 @@ export default function HomePage() {
               Generator
             </Link>
             <Link
-              href="https://www.npmjs.com/package/tokens-mcp"
+              href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
               className="text-sm text-muted-foreground hover:text-foreground"
               target="_blank"
               rel="noopener noreferrer"

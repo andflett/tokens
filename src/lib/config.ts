@@ -30,7 +30,7 @@ export const config = {
 
   // Links
   links: {
-    github: "https://github.com/andflett/design-tokens-mcp",
+    github: "https://github.com/andflett/toke",
     docs: "/docs",
     generator: "/generator",
   },
