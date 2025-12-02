@@ -271,7 +271,7 @@ export function PreviewGallery({ className, tokens }: PreviewGalleryProps) {
             onClick={() =>
               setPreviewTheme(previewTheme === "light" ? "dark" : "light")
             }
-            className="flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent transition-colors"
           >
             {previewTheme === "light" ? (
               <>

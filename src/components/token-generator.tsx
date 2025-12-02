@@ -384,7 +384,7 @@ export function TokenGenerator({
               value: "web",
               label: (
                 <>
-                  <ComputerDesktopIcon className="h-4 w-4 mr-1.5" />
+                  <ComputerDesktopIcon className="h-4 w-4" />
                   Web Generator
                 </>
               ),
@@ -393,7 +393,7 @@ export function TokenGenerator({
               value: "preview",
               label: (
                 <>
-                  <ViewColumnsIcon className="h-4 w-4 mr-1.5" />
+                  <ViewColumnsIcon className="h-4 w-4" />
                   Preview
                 </>
               ),
@@ -402,7 +402,7 @@ export function TokenGenerator({
               value: "mcp",
               label: (
                 <>
-                  <CommandLineIcon className="h-4 w-4 mr-1.5" />
+                  <CommandLineIcon className="h-4 w-4" />
                   AI MCP Tool
                 </>
               ),
@@ -447,13 +447,7 @@ export function TokenGenerator({
                       },
                     ]}
                   />
-                  <Button
-                    intent="default"
-                    size="sm"
-                    onClick={() => setExportOpen(true)}
-                  >
-                    Export
-                  </Button>
+                  <Button onClick={() => setExportOpen(true)}>Export</Button>
                 </div>
               </CardHeader>
               <CardContent>
@@ -471,9 +465,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <SwatchIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Colors
-                            </span>
+                            Colors
                           </>
                         ),
                       },
@@ -482,9 +474,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <DocumentTextIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Typography
-                            </span>
+                            Typography
                           </>
                         ),
                       },
@@ -493,9 +483,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <ArrowsPointingOutIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Space
-                            </span>
+                            Space
                           </>
                         ),
                       },
@@ -504,9 +492,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <StopIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Radius
-                            </span>
+                            Radius
                           </>
                         ),
                       },
@@ -515,9 +501,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <Square3Stack3DIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Shadows
-                            </span>
+                            Shadows
                           </>
                         ),
                       },
@@ -526,9 +510,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <ViewColumnsIcon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Borders
-                            </span>
+                            Borders
                           </>
                         ),
                       },
@@ -537,9 +519,7 @@ export function TokenGenerator({
                         label: (
                           <>
                             <Squares2X2Icon className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-1.5">
-                              Layout
-                            </span>
+                            Layout
                           </>
                         ),
                       },

@@ -10,10 +10,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        default: "shadow-lg shadow-primary/20",
+        outline: "border bg-background shadow-xs hover:bg-accent",
+        ghost: "hover:bg-accent",
         link: "underline-offset-4 hover:underline",
       },
       intent: {

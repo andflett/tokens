@@ -32,8 +32,8 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "px-3 py-1 rounded text-sm font-semibold text-foreground hover:bg-neutral-100 transition-colors",
-      pathname === href ? "bg-neutral-100" : ""
+      "px-3 py-1 rounded text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors",
+      pathname === href ? "text-foreground" : ""
     );
 
   const mobileNavLinkClass = (href: string) =>
@@ -62,17 +62,17 @@ export function SiteHeader() {
             <Link href="/" className={navLinkClass("/")}>
               About
             </Link>
+            <Link href="/generate" className={navLinkClass("/generate")}>
+              Theme Designer
+            </Link>
             <Link href="/docs" className={navLinkClass("/docs")}>
               Documentation
-            </Link>
-            <Link href="/generate" className={navLinkClass("/docs")}>
-              Design Your Tokens
             </Link>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                intent="default"
+                intent="secondary"
                 variant="ghost"
                 size="sm"
                 className="h-8 w-8 p-0"

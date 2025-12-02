@@ -13,16 +13,8 @@ function GeneratorContent() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       <div className="py-10">
-        <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Token Generator</h1>
-          <p className="text-muted-foreground">
-            Create a complete, professional{" "}
-            <Term term="design-tokens">design token system</Term> for your web
-            applications. Colors are generated using our{" "}
-            <Term term="color-algorithm">dual-algorithm approach</Term> with{" "}
-            <Term term="oklch">OKLCH</Term> color space for perceptually
-            balanced, professional results.
-          </p>
+        <div className="mb-6 space-y-2">
+          <h1 className="text-3xl font-extrabold">Theme Designer</h1>
         </div>
 
         <TokenGenerator initialTab={tab} />

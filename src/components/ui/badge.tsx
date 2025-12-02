@@ -10,8 +10,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "border-transparent",
-        outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        outline: "text-foreground [a&]:hover:bg-accent",
       },
       intent: {
         default: "",

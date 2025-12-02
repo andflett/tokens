@@ -129,11 +129,11 @@ export function generateSemanticTokens(
     mode === "light"
       ? {
           DEFAULT: neutral[100],
-          foreground: neutral[500],
+          foreground: neutral[950],
         }
       : {
           DEFAULT: neutral[800],
-          foreground: neutral[400],
+          foreground: neutral[50],
         };
 
   return {
