@@ -68,6 +68,7 @@ export function TableOfContents() {
         <Popover>
           <PopoverTrigger asChild>
             <Button
+              intent="default"
               size="icon"
               className="h-12 w-12 rounded-full shadow-lg"
               aria-label="Table of contents"

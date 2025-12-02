@@ -12,6 +12,7 @@ export {
   generateShadowsWithSettings,
   generateBorderColors,
   generateLayoutTokens,
+  generateTypographyScale,
 } from "./generate";
 export {
   generatePrimitivePalette,

@@ -78,9 +78,28 @@ export function exportToCss(
   }
 
   lines.push("");
-  lines.push("  /* Typography */");
-  for (const [name, fonts] of Object.entries(tokens.typography.fontFamily)) {
-    lines.push(`  --font-${name}: ${fonts.join(", ")};`);
+  lines.push("  /* Typography - Font Sizes */");
+  for (const [name, size] of Object.entries(tokens.typography.fontSize)) {
+    const varName = name === "base" ? "text" : `text-${name}`;
+    lines.push(`  --${varName}: ${size};`);
+  }
+
+  lines.push("");
+  lines.push("  /* Typography - Letter Spacing */");
+  for (const [name, value] of Object.entries(tokens.typography.tracking)) {
+    lines.push(`  --tracking-${name}: ${value};`);
+  }
+
+  lines.push("");
+  lines.push("  /* Typography - Line Height */");
+  for (const [name, value] of Object.entries(tokens.typography.leading)) {
+    lines.push(`  --leading-${name}: ${value};`);
+  }
+
+  if (tokens.borderWidth) {
+    lines.push("");
+    lines.push("  /* Border Width */");
+    lines.push(`  --default-border-width: ${tokens.borderWidth};`);
   }
 
   lines.push("}");
@@ -351,9 +370,7 @@ export function exportToCss(
     // Semantic colors
     for (const [name, color] of Object.entries(tokens.semantic.dark)) {
       if (typeof color === "string") {
-        lines.push(
-          `    --${name}: ${formatColor(color, colorFormat)};`
-        );
+        lines.push(`    --${name}: ${formatColor(color, colorFormat)};`);
       } else if (isExtendedSemanticColor(color)) {
         lines.push(
           `    --${name}: ${formatColor(color.DEFAULT, colorFormat)};`
@@ -423,9 +440,10 @@ export function exportToTailwindV3(
         colors: {} as Record<string, string | Record<string, string>>,
         spacing: tokens.spacing,
         borderRadius: tokens.radii,
-        fontFamily: tokens.typography.fontFamily,
         fontSize: tokens.typography.fontSize,
         fontWeight: tokens.typography.fontWeight,
+        letterSpacing: tokens.typography.tracking,
+        lineHeight: tokens.typography.leading,
         boxShadow: {} as Record<string, string>,
       },
     },
@@ -531,9 +549,7 @@ export function exportToTailwindV4(
       lines.push(`  --color-${name}: var(--${name});`);
     } else {
       for (const shade of Object.keys(scale)) {
-        lines.push(
-          `  --color-${name}-${shade}: var(--${name}-${shade});`
-        );
+        lines.push(`  --color-${name}-${shade}: var(--${name}-${shade});`);
       }
     }
   }
@@ -603,9 +619,13 @@ export function exportToTailwindV4(
   lines.push("  --color-sidebar: var(--sidebar);");
   lines.push("  --color-sidebar-foreground: var(--sidebar-foreground);");
   lines.push("  --color-sidebar-primary: var(--sidebar-primary);");
-  lines.push("  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);");
+  lines.push(
+    "  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);"
+  );
   lines.push("  --color-sidebar-accent: var(--sidebar-accent);");
-  lines.push("  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);");
+  lines.push(
+    "  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);"
+  );
   lines.push("  --color-sidebar-border: var(--sidebar-border);");
   lines.push("  --color-sidebar-ring: var(--sidebar-ring);");
 
@@ -613,7 +633,7 @@ export function exportToTailwindV4(
   lines.push("");
   lines.push("  /* Spacing */");
   lines.push("  --spacing: 0.25rem;");
-  
+
   lines.push("");
   lines.push("  /* Border Radius */");
   for (const [name, value] of Object.entries(tokens.radii)) {
@@ -621,9 +641,22 @@ export function exportToTailwindV4(
   }
 
   lines.push("");
-  lines.push("  /* Font Families */");
-  for (const [name, fonts] of Object.entries(tokens.typography.fontFamily)) {
-    lines.push(`  --font-${name}: ${fonts.join(", ")};`);
+  lines.push("  /* Typography */");
+  for (const [name, size] of Object.entries(tokens.typography.fontSize)) {
+    const varName = name === "base" ? "text" : `text-${name}`;
+    lines.push(`  --${varName}: ${size};`);
+  }
+
+  for (const [name, value] of Object.entries(tokens.typography.tracking)) {
+    lines.push(`  --tracking-${name}: ${value};`);
+  }
+
+  for (const [name, value] of Object.entries(tokens.typography.leading)) {
+    lines.push(`  --leading-${name}: ${value};`);
+  }
+
+  if (tokens.borderWidth) {
+    lines.push(`  --default-border-width: ${tokens.borderWidth};`);
   }
 
   lines.push("");
@@ -637,40 +670,50 @@ export function exportToTailwindV4(
 
   // :root block with ALL actual light mode values
   lines.push(":root {");
-  
+
   // Primitive colors - actual values
   for (const [name, scale] of Object.entries(tokens.primitives)) {
     if (typeof scale === "string") {
       lines.push(`  --${name}: ${formatColor(scale, colorFormat)};`);
     } else {
       for (const [shade, color] of Object.entries(scale)) {
-        lines.push(
-          `  --${name}-${shade}: ${formatColor(color, colorFormat)};`
-        );
+        lines.push(`  --${name}-${shade}: ${formatColor(color, colorFormat)};`);
       }
     }
   }
-  
+
   // Surface tokens
   lines.push(
-    `  --background: ${formatColor(tokens.surface.light.background, colorFormat)};`
+    `  --background: ${formatColor(
+      tokens.surface.light.background,
+      colorFormat
+    )};`
   );
   lines.push(
-    `  --foreground: ${formatColor(tokens.surface.light.foreground, colorFormat)};`
+    `  --foreground: ${formatColor(
+      tokens.surface.light.foreground,
+      colorFormat
+    )};`
   );
   lines.push(
     `  --card: ${formatColor(tokens.surface.light.card, colorFormat)};`
   );
   lines.push(
-    `  --card-foreground: ${formatColor(tokens.surface.light["card-foreground"], colorFormat)};`
+    `  --card-foreground: ${formatColor(
+      tokens.surface.light["card-foreground"],
+      colorFormat
+    )};`
   );
   lines.push(
     `  --popover: ${formatColor(tokens.surface.light.popover, colorFormat)};`
   );
   lines.push(
-    `  --popover-foreground: ${formatColor(tokens.surface.light["popover-foreground"], colorFormat)};`
+    `  --popover-foreground: ${formatColor(
+      tokens.surface.light["popover-foreground"],
+      colorFormat
+    )};`
   );
-  
+
   // Semantic colors
   for (const [name, color] of Object.entries(tokens.semantic.light)) {
     if (typeof color === "string") {
@@ -680,13 +723,23 @@ export function exportToTailwindV4(
       lines.push(
         `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
       );
-      lines.push(`  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`);
       lines.push(
-        `  --${name}-subdued-foreground: ${formatColor(color["subdued-foreground"], colorFormat)};`
+        `  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`
       );
-      lines.push(`  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`);
       lines.push(
-        `  --${name}-highlight-foreground: ${formatColor(color["highlight-foreground"], colorFormat)};`
+        `  --${name}-subdued-foreground: ${formatColor(
+          color["subdued-foreground"],
+          colorFormat
+        )};`
+      );
+      lines.push(
+        `  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`
+      );
+      lines.push(
+        `  --${name}-highlight-foreground: ${formatColor(
+          color["highlight-foreground"],
+          colorFormat
+        )};`
       );
     } else {
       lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
@@ -695,7 +748,7 @@ export function exportToTailwindV4(
       );
     }
   }
-  
+
   // Utility tokens
   lines.push(
     `  --border: ${formatColor(tokens.utility.light.border, colorFormat)};`
@@ -706,33 +759,45 @@ export function exportToTailwindV4(
   lines.push(
     `  --ring: ${formatColor(tokens.utility.light.ring, colorFormat)};`
   );
-  
+
   lines.push("}");
   lines.push("");
 
   // .dark block with ALL actual dark mode values
   lines.push(".dark {");
-  
+
   // Surface tokens
   lines.push(
-    `  --background: ${formatColor(tokens.surface.dark.background, colorFormat)};`
+    `  --background: ${formatColor(
+      tokens.surface.dark.background,
+      colorFormat
+    )};`
   );
   lines.push(
-    `  --foreground: ${formatColor(tokens.surface.dark.foreground, colorFormat)};`
+    `  --foreground: ${formatColor(
+      tokens.surface.dark.foreground,
+      colorFormat
+    )};`
   );
   lines.push(
     `  --card: ${formatColor(tokens.surface.dark.card, colorFormat)};`
   );
   lines.push(
-    `  --card-foreground: ${formatColor(tokens.surface.dark["card-foreground"], colorFormat)};`
+    `  --card-foreground: ${formatColor(
+      tokens.surface.dark["card-foreground"],
+      colorFormat
+    )};`
   );
   lines.push(
     `  --popover: ${formatColor(tokens.surface.dark.popover, colorFormat)};`
   );
   lines.push(
-    `  --popover-foreground: ${formatColor(tokens.surface.dark["popover-foreground"], colorFormat)};`
+    `  --popover-foreground: ${formatColor(
+      tokens.surface.dark["popover-foreground"],
+      colorFormat
+    )};`
   );
-  
+
   // Semantic colors
   for (const [name, color] of Object.entries(tokens.semantic.dark)) {
     if (typeof color === "string") {
@@ -742,13 +807,23 @@ export function exportToTailwindV4(
       lines.push(
         `  --${name}-foreground: ${formatColor(color.foreground, colorFormat)};`
       );
-      lines.push(`  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`);
       lines.push(
-        `  --${name}-subdued-foreground: ${formatColor(color["subdued-foreground"], colorFormat)};`
+        `  --${name}-subdued: ${formatColor(color.subdued, colorFormat)};`
       );
-      lines.push(`  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`);
       lines.push(
-        `  --${name}-highlight-foreground: ${formatColor(color["highlight-foreground"], colorFormat)};`
+        `  --${name}-subdued-foreground: ${formatColor(
+          color["subdued-foreground"],
+          colorFormat
+        )};`
+      );
+      lines.push(
+        `  --${name}-highlight: ${formatColor(color.highlight, colorFormat)};`
+      );
+      lines.push(
+        `  --${name}-highlight-foreground: ${formatColor(
+          color["highlight-foreground"],
+          colorFormat
+        )};`
       );
     } else {
       lines.push(`  --${name}: ${formatColor(color.DEFAULT, colorFormat)};`);
@@ -757,7 +832,7 @@ export function exportToTailwindV4(
       );
     }
   }
-  
+
   // Utility tokens
   lines.push(
     `  --border: ${formatColor(tokens.utility.dark.border, colorFormat)};`
@@ -768,7 +843,7 @@ export function exportToTailwindV4(
   lines.push(
     `  --ring: ${formatColor(tokens.utility.dark.ring, colorFormat)};`
   );
-  
+
   lines.push("}");
 
   return lines.join("\n");

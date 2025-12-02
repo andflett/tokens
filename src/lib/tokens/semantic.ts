@@ -51,14 +51,14 @@ function createExtendedSemanticColor(
   if (mode === "light") {
     // Light mode: DEFAULT uses mid tone, subdued darker, highlight lighter
     const DEFAULT = scale[500];
-    const subdued = scale[300];
+    const subdued = scale[50];
     const highlight = scale[700];
 
     return {
       DEFAULT,
       foreground: findContrastingColor(DEFAULT, white, scale[900]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, white, scale[950]),
+      "subdued-foreground": scale[700],
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
@@ -69,14 +69,14 @@ function createExtendedSemanticColor(
   } else {
     // Dark mode: adjust for dark backgrounds
     const DEFAULT = scale[500];
-    const subdued = scale[100];
+    const subdued = scale[50];
     const highlight = scale[300];
 
     return {
       DEFAULT,
       foreground: findContrastingColor(DEFAULT, white, scale[900]),
       subdued,
-      "subdued-foreground": findContrastingColor(subdued, white, scale[900]),
+      "subdued-foreground": scale[700],
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,

@@ -176,6 +176,7 @@ export function EditableColorSwatch({
           </div>
           {isEdited && (
             <Button
+              intent="default"
               variant="ghost"
               size="sm"
               onClick={(e) => {

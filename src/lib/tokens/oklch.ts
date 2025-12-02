@@ -140,6 +140,8 @@ export function generateColorScale(baseColor: string): ColorScale {
   // Based on Tailwind's neutral scale: very light at top, huge drops in middle range
   let lightnessSteps: Record<number, number>;
 
+  console.log({ isAchromatic, baseChroma, base, baseColor });
+
   if (isAchromatic) {
     // For neutrals: match Tailwind's distribution pattern
     // Small steps at light end, massive drops 300-500, medium steps at dark end

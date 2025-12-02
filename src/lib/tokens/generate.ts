@@ -38,61 +38,87 @@ export function generateSpacingScale(
   return spacing;
 }
 
+/**
+ * Font weight constants
+ */
+const fontWeights = {
+  thin: 100,
+  extralight: 200,
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+  black: 900,
+};
 
+/**
+ * Generate typography scale from base font size and multiplier
+ * Also generates tracking and leading scales from normal values
+ */
+export function generateTypographyScale(
+  baseFontSize: number = 1,
+  multiplier: number = 1,
+  normalTracking: number = 0,
+  normalLeading: number = 1.5
+): TokenSystem["typography"] {
+  const round = (value: number) => Math.round(value * 1000) / 1000;
+
+  // Generate font sizes (just the size, no line heights)
+  const scale = (baseSizeRem: number) => {
+    const size = round(baseSizeRem * multiplier);
+    return `${size}rem`;
+  };
+
+  // Generate tracking (letter-spacing) scale based on normal value
+  // Standard steps: tighter (-0.05em), tight (-0.025em), normal (0em), wide (0.025em), wider (0.05em), widest (0.1em)
+  const tracking = {
+    tighter: `${round(normalTracking - 0.05)}em`,
+    tight: `${round(normalTracking - 0.025)}em`,
+    normal: `${round(normalTracking)}em`,
+    wide: `${round(normalTracking + 0.025)}em`,
+    wider: `${round(normalTracking + 0.05)}em`,
+    widest: `${round(normalTracking + 0.1)}em`,
+  };
+
+  // Generate leading (line-height utility) scale based on normal value
+  // These are global line-height values applied via utility classes
+  // Standard steps: tight (normal - 0.25), snug (normal - 0.125), normal, relaxed (normal + 0.125), loose (normal + 0.5)
+  const leading = {
+    tight: round(normalLeading - 0.25),
+    snug: round(normalLeading - 0.125),
+    normal: round(normalLeading),
+    relaxed: round(normalLeading + 0.125),
+    loose: round(normalLeading + 0.5),
+  };
+
+  return {
+    fontSize: {
+      xs: scale(0.75),
+      sm: scale(0.875),
+      base: scale(baseFontSize),
+      lg: scale(1.125),
+      xl: scale(1.25),
+      "2xl": scale(1.5),
+      "3xl": scale(1.875),
+      "4xl": scale(2.25),
+      "5xl": scale(3),
+      "6xl": scale(3.75),
+      "7xl": scale(4.5),
+      "8xl": scale(6),
+      "9xl": scale(8),
+    },
+    fontWeight: fontWeights,
+    tracking,
+    leading,
+  };
+}
 
 /**
  * Default typography scale
  */
-const defaultTypography = {
-  fontFamily: {
-    sans: ["Inter", "system-ui", "sans-serif"],
-    mono: ["JetBrains Mono", "monospace"],
-  },
-  fontSize: {
-    xs: ["0.75rem", { lineHeight: "1rem" }] as [string, { lineHeight: string }],
-    sm: ["0.875rem", { lineHeight: "1.25rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    base: ["1rem", { lineHeight: "1.5rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    lg: ["1.125rem", { lineHeight: "1.75rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    xl: ["1.25rem", { lineHeight: "1.75rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    "2xl": ["1.5rem", { lineHeight: "2rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    "3xl": ["1.875rem", { lineHeight: "2.25rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    "4xl": ["2.25rem", { lineHeight: "2.5rem" }] as [
-      string,
-      { lineHeight: string }
-    ],
-    "5xl": ["3rem", { lineHeight: "1" }] as [string, { lineHeight: string }],
-    "6xl": ["3.75rem", { lineHeight: "1" }] as [string, { lineHeight: string }],
-  },
-  fontWeight: {
-    thin: 100,
-    extralight: 200,
-    light: 300,
-    normal: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
-    extrabold: 800,
-    black: 900,
-  },
-};
+const defaultTypography = generateTypographyScale(1, 1, 0, 1.5);
 
 /**
  * Default border radius scale
@@ -109,21 +135,28 @@ const defaultRadii: Record<string, string> = {
 };
 
 /**
- * Generate radii scale from a base value
+ * Generate radii scale from a base value and multiplier
  */
 export function generateRadiiScale(
-  baseRadius: number = 0.25
+  baseRadius: number = 0.25,
+  multiplier: number = 1
 ): Record<string, string> {
   const round = (value: number) => Math.round(value * 1000) / 1000;
+  const scale = (factor: number) => {
+    const value = round(baseRadius * factor * multiplier);
+    // Cap at 10rem to prevent excessive values
+    return Math.min(value, 10);
+  };
+
   return {
-    xs: `${round(baseRadius * 0.5)}rem`,
-    sm: `${round(baseRadius)}rem`,
-    md: `${round(baseRadius * 1.5)}rem`,
-    lg: `${round(baseRadius * 2)}rem`,
-    xl: `${round(baseRadius * 3)}rem`,
-    "2xl": `${round(baseRadius * 4)}rem`,
-    "3xl": `${round(baseRadius * 6)}rem`,
-    "4xl": `${round(baseRadius * 8)}rem`,
+    xs: `${scale(0.5)}rem`,
+    sm: `${scale(1)}rem`,
+    md: `${scale(1.5)}rem`,
+    lg: `${scale(2)}rem`,
+    xl: `${scale(3)}rem`,
+    "2xl": `${scale(4)}rem`,
+    "3xl": `${scale(6)}rem`,
+    "4xl": `${scale(8)}rem`,
   };
 }
 
@@ -259,20 +292,24 @@ export function generateShadowsWithSettings(
  * Generate default border colors based on primitives
  */
 export function generateBorderColors(
-  primitives: TokenSystem["primitives"]
+  primitives: TokenSystem["primitives"],
+  customColors?: {
+    light?: { default?: string; input?: string; ring?: string };
+    dark?: { default?: string; input?: string; ring?: string };
+  }
 ): TokenSystem["borderColors"] {
   const neutral = primitives.neutral;
 
   return {
     light: {
-      default: neutral[200],
-      input: neutral[300],
-      ring: neutral[500],
+      default: customColors?.light?.default ?? neutral[200],
+      input: customColors?.light?.input ?? neutral[300],
+      ring: customColors?.light?.ring ?? neutral[500],
     },
     dark: {
-      default: neutral[700],
-      input: neutral[600],
-      ring: neutral[500],
+      default: customColors?.dark?.default ?? neutral[700],
+      input: customColors?.dark?.input ?? neutral[600],
+      ring: customColors?.dark?.ring ?? neutral[500],
     },
   };
 }

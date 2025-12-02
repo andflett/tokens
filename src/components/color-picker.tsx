@@ -39,9 +39,10 @@ export function ColorPicker({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            intent="secondary"
             variant="outline"
             className={cn(
-              "w-full justify-start gap-2 font-mono text-sm",
+              "border-border w-full justify-start gap-2 font-mono text-sm",
               !value && "text-muted-foreground"
             )}
           >

@@ -188,13 +188,19 @@ export function ExportDialog({
         </Tabs>
 
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={handleDownloadForLovable}>
+          <Button
+            intent="default"
+            variant="outline"
+            onClick={handleDownloadForLovable}
+          >
             💜 Download for Lovable
           </Button>
-          <Button variant="outline" onClick={handleCopy}>
+          <Button intent="default" variant="outline" onClick={handleCopy}>
             📋 Copy
           </Button>
-          <Button onClick={handleDownload}>⬇️ Download</Button>
+          <Button intent="default" onClick={handleDownload}>
+            ⬇️ Download
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

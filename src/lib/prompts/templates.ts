@@ -74,9 +74,18 @@ ${formatSemanticColors(tokenSystem.semantic.light)}
 ${formatSpacing(tokenSystem.spacing)}
 
 ### Typography
-Font families: ${Object.entries(tokenSystem.typography.fontFamily)
-    .map(([k, v]) => `${k}: ${v.join(", ")}`)
-    .join("; ")}
+Font sizes: ${Object.entries(tokenSystem.typography.fontSize)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join(", ")}
+Font weights: ${Object.entries(tokenSystem.typography.fontWeight)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join(", ")}
+Tracking: ${Object.entries(tokenSystem.typography.tracking)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join(", ")}
+Leading: ${Object.entries(tokenSystem.typography.leading)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join(", ")}
 
 ### Border Radii
 ${Object.entries(tokenSystem.radii)

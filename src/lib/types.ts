@@ -29,6 +29,27 @@ export interface ShadowSettings {
   opacity: number;
 }
 
+export interface RadiiSettings {
+  base: number;
+  multiplier: number;
+}
+
+export interface BorderSettings {
+  width: string;
+  colors: {
+    default?: string;
+    input?: string;
+    ring?: string;
+  };
+}
+
+export interface TypographySettings {
+  baseFontSize: number;
+  multiplier: number;
+  normalTracking: number;
+  normalLeading: number;
+}
+
 export interface BorderColors {
   default: string;
   input: string;
@@ -60,11 +81,13 @@ export interface TokenSystem {
   };
   spacing: Record<string, string>;
   typography: {
-    fontFamily: Record<string, string[]>;
-    fontSize: Record<string, [string, { lineHeight: string }]>;
+    fontSize: Record<string, string>;
     fontWeight: Record<string, number>;
+    tracking: Record<string, string>;
+    leading: Record<string, number>;
   };
   radii: Record<string, string>;
+  borderWidth?: string;
   shadows: {
     light: Record<string, string>;
     dark: Record<string, string>;

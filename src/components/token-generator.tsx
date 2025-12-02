@@ -33,14 +33,16 @@ import {
   LayoutEditor,
   LayoutPreview,
   TailwindUsageExample,
-  ComponentPreview,
 } from "@/components/token-editors";
+import { PreviewGallery } from "@/components/preview-gallery";
 import {
   generateTokens,
   generateSpacingScale,
   generateRadiiScale,
   generateShadowsWithSettings,
   generateLayoutTokens,
+  generateTypographyScale,
+  generateBorderColors,
 } from "@/lib/tokens";
 import { config } from "@/lib/config";
 import type {
@@ -92,12 +94,16 @@ const SEMANTIC_SCALE_MAPPING: Record<string, string> = {
 const STORAGE_KEYS = {
   BRAND_COLORS: "toke-brand-colors",
   SPACING_BASE: "toke-spacing-base",
-  BASE_RADIUS: "toke-base-radius",
+  RADII_SETTINGS: "toke-radii-settings",
+  BORDER_SETTINGS: "toke-border-settings",
+  TYPOGRAPHY_SETTINGS: "toke-typography-settings",
   SHADOW_SETTINGS: "toke-shadow-settings",
-  TYPOGRAPHY: "toke-typography",
-  BORDER_COLORS: "toke-border-colors",
   LAYOUT_TOKENS: "toke-layout-tokens",
   COLOR_EDITS: "toke-color-edits",
+  // Deprecated keys (for migration)
+  BASE_RADIUS: "toke-base-radius",
+  TYPOGRAPHY: "toke-typography",
+  BORDER_COLORS: "toke-border-colors",
 };
 
 // Safe localStorage helpers
@@ -142,7 +148,9 @@ export function TokenGenerator({
     "light"
   );
   const [exportOpen, setExportOpen] = React.useState(false);
-  const [generatorTab, setGeneratorTab] = React.useState<"web" | "mcp">("web");
+  const [generatorTab, setGeneratorTab] = React.useState<
+    "web" | "mcp" | "preview"
+  >("web");
   const validTabs = [
     "colors",
     "typography",
@@ -161,9 +169,30 @@ export function TokenGenerator({
   const [spacingBaseUnit, setSpacingBaseUnit] = React.useState(() =>
     loadFromStorage(STORAGE_KEYS.SPACING_BASE, 4)
   );
-  const [baseRadius, setBaseRadius] = React.useState(() =>
-    loadFromStorage(STORAGE_KEYS.BASE_RADIUS, 0.25)
+
+  const [radiiSettings, setRadiiSettings] = React.useState(() =>
+    loadFromStorage(STORAGE_KEYS.RADII_SETTINGS, {
+      base: loadFromStorage(STORAGE_KEYS.BASE_RADIUS, 0.25),
+      multiplier: 1,
+    })
   );
+
+  const [borderSettings, setBorderSettings] = React.useState(() =>
+    loadFromStorage(STORAGE_KEYS.BORDER_SETTINGS, {
+      width: "1px",
+      colors: {},
+    })
+  );
+
+  const [typographySettings, setTypographySettings] = React.useState(() =>
+    loadFromStorage(STORAGE_KEYS.TYPOGRAPHY_SETTINGS, {
+      baseFontSize: 1,
+      multiplier: 1,
+      normalTracking: 0,
+      normalLeading: 1.5,
+    })
+  );
+
   const [shadowSettings, setShadowSettings] = React.useState<ShadowSettings>(
     () =>
       loadFromStorage(STORAGE_KEYS.SHADOW_SETTINGS, {
@@ -173,49 +202,6 @@ export function TokenGenerator({
         spread: 0,
         opacity: 0.1,
       })
-  );
-  const [typography, setTypography] = React.useState<TokenSystem["typography"]>(
-    () =>
-      loadFromStorage(STORAGE_KEYS.TYPOGRAPHY, {
-        fontFamily: {
-          sans: ["Inter", "system-ui", "sans-serif"],
-          mono: ["JetBrains Mono", "monospace"],
-        },
-        fontSize: {
-          xs: ["0.75rem", { lineHeight: "1rem" }],
-          sm: ["0.875rem", { lineHeight: "1.25rem" }],
-          base: ["1rem", { lineHeight: "1.5rem" }],
-          lg: ["1.125rem", { lineHeight: "1.75rem" }],
-          xl: ["1.25rem", { lineHeight: "1.75rem" }],
-          "2xl": ["1.5rem", { lineHeight: "2rem" }],
-          "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-          "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
-          "5xl": ["3rem", { lineHeight: "1" }],
-          "6xl": ["3.75rem", { lineHeight: "1" }],
-        },
-        fontWeight: {
-          thin: 100,
-          extralight: 200,
-          light: 300,
-          normal: 400,
-          medium: 500,
-          semibold: 600,
-          bold: 700,
-          extrabold: 800,
-          black: 900,
-        },
-      })
-  );
-
-  // Border colors state
-  const [borderColors, setBorderColors] = React.useState<{
-    light: BorderColors;
-    dark: BorderColors;
-  }>(() =>
-    loadFromStorage(STORAGE_KEYS.BORDER_COLORS, {
-      light: { default: "#e5e7eb", input: "#d1d5db", ring: "#9ca3af" },
-      dark: { default: "#374151", input: "#4b5563", ring: "#6b7280" },
-    })
   );
 
   // Layout tokens state
@@ -238,20 +224,20 @@ export function TokenGenerator({
   }, [spacingBaseUnit]);
 
   React.useEffect(() => {
-    saveToStorage(STORAGE_KEYS.BASE_RADIUS, baseRadius);
-  }, [baseRadius]);
+    saveToStorage(STORAGE_KEYS.RADII_SETTINGS, radiiSettings);
+  }, [radiiSettings]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.BORDER_SETTINGS, borderSettings);
+  }, [borderSettings]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.TYPOGRAPHY_SETTINGS, typographySettings);
+  }, [typographySettings]);
 
   React.useEffect(() => {
     saveToStorage(STORAGE_KEYS.SHADOW_SETTINGS, shadowSettings);
   }, [shadowSettings]);
-
-  React.useEffect(() => {
-    saveToStorage(STORAGE_KEYS.TYPOGRAPHY, typography);
-  }, [typography]);
-
-  React.useEffect(() => {
-    saveToStorage(STORAGE_KEYS.BORDER_COLORS, borderColors);
-  }, [borderColors]);
 
   React.useEffect(() => {
     saveToStorage(STORAGE_KEYS.LAYOUT_TOKENS, layoutTokens);
@@ -297,15 +283,34 @@ export function TokenGenerator({
         }
       }
 
+      // Generate tokens from settings
+      const typography = generateTypographyScale(
+        typographySettings.baseFontSize,
+        typographySettings.multiplier,
+        typographySettings.normalTracking,
+        typographySettings.normalLeading
+      );
+
+      const radii = generateRadiiScale(
+        radiiSettings.base,
+        radiiSettings.multiplier
+      );
+
+      const borderColors = generateBorderColors(editedPrimitives, {
+        light: borderSettings.colors,
+        dark: borderSettings.colors,
+      });
+
       // Apply customizations
       const customizedTokens: TokenSystem = {
         ...baseTokens,
         primitives: editedPrimitives,
         spacing: generateSpacingScale(spacingBaseUnit),
         typography,
-        radii: generateRadiiScale(baseRadius),
+        radii,
         shadows: generateShadowsWithSettings(shadowSettings),
         borderColors,
+        borderWidth: borderSettings.width,
         layout: layoutTokens,
       };
 
@@ -319,10 +324,10 @@ export function TokenGenerator({
     brandColors,
     mode,
     spacingBaseUnit,
-    typography,
-    baseRadius,
+    radiiSettings,
+    borderSettings,
+    typographySettings,
     shadowSettings,
-    borderColors,
     layoutTokens,
     colorEdits,
     onGenerate,
@@ -367,11 +372,11 @@ export function TokenGenerator({
       {/* Main Generator Tab (Web vs MCP) */}
       <Tabs
         value={generatorTab}
-        onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
+        onValueChange={(v) => setGeneratorTab(v as "web" | "mcp" | "preview")}
       >
         <AnimatedTabsList
           value={generatorTab}
-          onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
+          onValueChange={(v) => setGeneratorTab(v as "web" | "mcp" | "preview")}
           items={[
             {
               value: "web",
@@ -379,6 +384,15 @@ export function TokenGenerator({
                 <>
                   <ComputerDesktopIcon className="h-4 w-4 mr-1.5" />
                   Web Generator
+                </>
+              ),
+            },
+            {
+              value: "preview",
+              label: (
+                <>
+                  <ViewColumnsIcon className="h-4 w-4 mr-1.5" />
+                  Preview
                 </>
               ),
             },
@@ -431,7 +445,11 @@ export function TokenGenerator({
                       },
                     ]}
                   />
-                  <Button size="sm" onClick={() => setExportOpen(true)}>
+                  <Button
+                    intent="default"
+                    size="sm"
+                    onClick={() => setExportOpen(true)}
+                  >
                     Export
                   </Button>
                 </div>
@@ -463,7 +481,7 @@ export function TokenGenerator({
                           <>
                             <DocumentTextIcon className="h-4 w-4" />
                             <span className="hidden sm:inline ml-1.5">
-                              Type
+                              Typography
                             </span>
                           </>
                         ),
@@ -549,9 +567,9 @@ export function TokenGenerator({
                         onChange={setBrandColors}
                       />
                       <div className="rounded-lg border bg-muted/50 p-3">
-                        <p className="text-xs text-muted-foreground">
-                          💡 <strong>Tip:</strong> You can fine-tune any color
-                          in the scales below, or let the algorithms handle
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Tip:</strong> You can fine-tune any color in
+                          the scales below, or let the algorithms handle
                           everything for a harmonious design system.
                         </p>
                       </div>
@@ -632,12 +650,6 @@ export function TokenGenerator({
                       </TabsContent>
                     </Tabs>
 
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
-                      previewMode={previewMode}
-                    />
-
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="colors" />
                   </TabsContent>
@@ -646,18 +658,38 @@ export function TokenGenerator({
                   <TabsContent value="typography" className="space-y-6">
                     <div className="border-b pb-6">
                       <TypographyEditor
-                        typography={typography}
-                        onTypographyChange={setTypography}
+                        baseFontSize={typographySettings.baseFontSize}
+                        onBaseFontSizeChange={(value) =>
+                          setTypographySettings((prev) => ({
+                            ...prev,
+                            baseFontSize: value,
+                          }))
+                        }
+                        multiplier={typographySettings.multiplier}
+                        onMultiplierChange={(value) =>
+                          setTypographySettings((prev) => ({
+                            ...prev,
+                            multiplier: value,
+                          }))
+                        }
+                        normalTracking={typographySettings.normalTracking}
+                        onNormalTrackingChange={(value) =>
+                          setTypographySettings((prev) => ({
+                            ...prev,
+                            normalTracking: value,
+                          }))
+                        }
+                        normalLeading={typographySettings.normalLeading}
+                        onNormalLeadingChange={(value) =>
+                          setTypographySettings((prev) => ({
+                            ...prev,
+                            normalLeading: value,
+                          }))
+                        }
                       />
                     </div>
                     <TypographyPreview
                       typography={tokens.typography}
-                      previewMode={previewMode}
-                    />
-
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
                       previewMode={previewMode}
                     />
 
@@ -675,12 +707,6 @@ export function TokenGenerator({
                     </div>
                     <SpacingPreview spacing={tokens.spacing} />
 
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
-                      previewMode={previewMode}
-                    />
-
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="spacing" />
                   </TabsContent>
@@ -689,18 +715,21 @@ export function TokenGenerator({
                   <TabsContent value="radii" className="space-y-6">
                     <div className="border-b pb-6">
                       <RadiiEditor
-                        baseRadius={baseRadius}
-                        onBaseRadiusChange={setBaseRadius}
+                        baseRadius={radiiSettings.base}
+                        onBaseRadiusChange={(value) =>
+                          setRadiiSettings((prev) => ({ ...prev, base: value }))
+                        }
+                        multiplier={radiiSettings.multiplier}
+                        onMultiplierChange={(value) =>
+                          setRadiiSettings((prev) => ({
+                            ...prev,
+                            multiplier: value,
+                          }))
+                        }
                       />
                     </div>
                     <RadiiPreview
                       radii={tokens.radii}
-                      previewMode={previewMode}
-                    />
-
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
                       previewMode={previewMode}
                     />
 
@@ -721,12 +750,6 @@ export function TokenGenerator({
                       previewMode={previewMode}
                     />
 
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
-                      previewMode={previewMode}
-                    />
-
                     {/* Tailwind Usage Example */}
                     <TailwindUsageExample type="shadows" />
                   </TabsContent>
@@ -735,20 +758,30 @@ export function TokenGenerator({
                   <TabsContent value="borders" className="space-y-6">
                     <div className="border-b pb-6">
                       <BorderColorsEditor
-                        borderColors={borderColors}
-                        onBorderColorsChange={setBorderColors}
+                        borderColors={
+                          tokens.borderColors || {
+                            light: { default: "", input: "", ring: "" },
+                            dark: { default: "", input: "", ring: "" },
+                          }
+                        }
+                        onBorderColorsChange={(colors) =>
+                          setBorderSettings((prev) => ({
+                            ...prev,
+                            colors: colors[previewMode],
+                          }))
+                        }
+                        borderWidth={borderSettings.width}
+                        onBorderWidthChange={(width) =>
+                          setBorderSettings((prev) => ({ ...prev, width }))
+                        }
                         previewMode={previewMode}
+                        primitives={tokens.primitives}
                       />
                     </div>
                     <BordersPreview
                       previewMode={previewMode}
-                      borderColors={borderColors[previewMode]}
-                    />
-
-                    {/* Component Preview */}
-                    <ComponentPreview
-                      tokens={tokens}
-                      previewMode={previewMode}
+                      borderColors={tokens.borderColors?.[previewMode]}
+                      borderWidth={tokens.borderWidth}
                     />
 
                     {/* Tailwind Usage Example */}
@@ -829,7 +862,7 @@ export function TokenGenerator({
                   <p className="text-sm text-muted-foreground mb-3">
                     Install locally via npm for offline use and privacy.
                   </p>
-                  <Button asChild variant="outline" size="sm">
+                  <Button intent="default" asChild variant="outline" size="sm">
                     <a
                       href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
                       target="_blank"
@@ -962,6 +995,11 @@ export function TokenGenerator({
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Preview Tab */}
+        <TabsContent value="preview" className="mt-6">
+          {tokens && <PreviewGallery tokens={tokens} />}
         </TabsContent>
       </Tabs>
     </div>

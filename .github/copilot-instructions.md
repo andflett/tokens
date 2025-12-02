@@ -10,3 +10,4 @@ when creating components, prefer using shadcn/ui components and extend them as n
 if a component is used in more than one place, create a reusable component for it
 favour heroicons or lucide icons over custom svg icons - DO NOT USE EMOJIS
 do not use HOC components for layouts, use the nextjs app router layouts https://nextjs.org/docs/app/getting-started/layouts-and-pages
+favour our animated tabs component over vanilla tabs

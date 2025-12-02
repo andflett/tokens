@@ -71,7 +71,12 @@ export function SiteHeader() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Button
+                intent="default"
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+              >
                 <SunIcon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <MoonIcon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 <span className="sr-only">Toggle theme</span>
@@ -106,6 +111,7 @@ export function SiteHeader() {
         {/* Mobile Navigation */}
         <div className="flex md:hidden items-center gap-2">
           <Button
+            intent="default"
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0 relative"
@@ -166,7 +172,7 @@ export function SiteHeader() {
             >
               Documentation
             </Link>
-            
+
             {/* Docs sub-navigation - only show when on docs pages */}
             {pathname.startsWith("/docs") && (
               <div className="ml-4 mt-1 space-y-1 border-l-2 border-border/50 pl-4">
@@ -196,7 +202,7 @@ export function SiteHeader() {
                 </Link>
               </div>
             )}
-            
+
             <Link
               href="/generate"
               className={mobileNavLinkClass("/generate")}

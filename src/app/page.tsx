@@ -134,7 +134,11 @@ export default function HomePage() {
                   spacing and typography.
                 </p>
                 <div>
-                  <Button className="shadow-lg shadow-primary/20" asChild>
+                  <Button
+                    intent="default"
+                    className="shadow-lg shadow-primary/20"
+                    asChild
+                  >
                     <Link href="/generate">Open Token Designer</Link>
                   </Button>
                 </div>
@@ -150,7 +154,11 @@ export default function HomePage() {
                   generate token sets.
                 </p>
                 <div>
-                  <Button className="shadow-lg shadow-primary/20" asChild>
+                  <Button
+                    intent="default"
+                    className="shadow-lg shadow-primary/20"
+                    asChild
+                  >
                     <Link href="/docs">Read the MCP docs</Link>
                   </Button>
                 </div>
@@ -279,7 +287,7 @@ export default function HomePage() {
             it finally understand what you actually want.
           </p>
           <div className="mt-8">
-            <Button size="lg" asChild className="gap-2">
+            <Button intent="default" size="lg" asChild className="gap-2">
               <Link href="/generate">
                 <BoltIcon className="h-4 w-4" />
                 Design Your Tokens
