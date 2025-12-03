@@ -29,7 +29,7 @@ export default function DocsPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
+        <h1 className="text-3xl font-bold">Documentation</h1>
         <p className="text-muted-foreground">
           Learn how to use Tokens with your AI assistant
         </p>

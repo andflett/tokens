@@ -14,7 +14,7 @@ function GeneratorContent() {
     <div className="mx-auto w-full max-w-5xl px-6">
       <div className="py-10">
         <div className="mb-6 space-y-2">
-          <h1 className="text-3xl font-extrabold">Theme Designer</h1>
+          <h1 className="text-3xl font-bold">Theme Designer</h1>
         </div>
 
         <TokenGenerator initialTab={tab} />

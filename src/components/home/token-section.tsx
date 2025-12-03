@@ -35,7 +35,7 @@ export function TokenSection({
     <section id={id} className="">
       <div className="grid gap-6 md:gap-12 lg:grid-cols-2 lg:gap-18 items-start">
         <div>
-          <h2 className="text-3xl font-extrabold mb-4">{title}</h2>
+          <h2 className="text-3xl font-bold mb-4">{title}</h2>
           <p className="mb-6 leading-relaxed">{description}</p>
 
           {/* Command palette style prompt */}

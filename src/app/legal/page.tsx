@@ -13,10 +13,8 @@ export default function LegalPage() {
       <div className="py-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Privacy, Terms & Legal</h1>
-          <p className="text-muted-foreground">
-            Last updated: November 2025
-          </p>
+          <h1 className="text-3xl font-bold">Privacy, Terms & Legal</h1>
+          <p className="text-muted-foreground">Last updated: November 2025</p>
         </div>
 
         <div className="max-w-3xl space-y-12">
@@ -25,11 +23,11 @@ export default function LegalPage() {
             <h2 className="text-2xl font-bold mb-4">Privacy Policy</h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                <strong className="text-foreground">We do not collect any personal data.</strong>
+                <strong className="text-foreground">
+                  We do not collect any personal data.
+                </strong>
               </p>
-              <p>
-                Tokens is designed with privacy in mind. We do not:
-              </p>
+              <p>Tokens is designed with privacy in mind. We do not:</p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Store any of your data on our servers</li>
                 <li>Track your usage or behavior</li>
@@ -38,8 +36,9 @@ export default function LegalPage() {
                 <li>Share any data with third parties</li>
               </ul>
               <p>
-                All token generation happens in your browser or through the MCP protocol 
-                directly between your AI assistant and our service. No data is persisted.
+                All token generation happens in your browser or through the MCP
+                protocol directly between your AI assistant and our service. No
+                data is persisted.
               </p>
             </div>
           </section>
@@ -49,12 +48,15 @@ export default function LegalPage() {
             <h2 className="text-2xl font-bold mb-4">Cookie Policy</h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                <strong className="text-foreground">We do not use cookies.</strong>
+                <strong className="text-foreground">
+                  We do not use cookies.
+                </strong>
               </p>
               <p>
-                Tokens does not use any cookies, tracking pixels, or similar technologies. 
-                Your theme preference (light/dark mode) is stored locally in your browser using 
-                localStorage, which is not a cookie and cannot be accessed by us or any third party.
+                Tokens does not use any cookies, tracking pixels, or similar
+                technologies. Your theme preference (light/dark mode) is stored
+                locally in your browser using localStorage, which is not a
+                cookie and cannot be accessed by us or any third party.
               </p>
             </div>
           </section>
@@ -63,50 +65,65 @@ export default function LegalPage() {
           <section id="terms">
             <h2 className="text-2xl font-bold mb-4">Terms of Use</h2>
             <div className="space-y-4 text-muted-foreground">
+              <p>By using Tokens, you agree to the following terms:</p>
+
+              <h3 className="text-lg font-semibold text-foreground mt-6">
+                Use at Your Own Risk
+              </h3>
               <p>
-                By using Tokens, you agree to the following terms:
+                Tokens is provided &ldquo;as is&rdquo; without warranty of any
+                kind, express or implied. You use this service at your own risk.
               </p>
-              
-              <h3 className="text-lg font-semibold text-foreground mt-6">Use at Your Own Risk</h3>
+
+              <h3 className="text-lg font-semibold text-foreground mt-6">
+                No Warranty
+              </h3>
               <p>
-                Tokens is provided &ldquo;as is&rdquo; without warranty of any kind, express or implied. 
-                You use this service at your own risk.
+                We make no warranties or representations about the accuracy,
+                reliability, completeness, or timeliness of the content,
+                services, software, or other materials provided through Tokens.
+                The generated design tokens are provided for convenience and
+                should be reviewed before use in production.
               </p>
-              
-              <h3 className="text-lg font-semibold text-foreground mt-6">No Warranty</h3>
+
+              <h3 className="text-lg font-semibold text-foreground mt-6">
+                Limitation of Liability
+              </h3>
               <p>
-                We make no warranties or representations about the accuracy, reliability, 
-                completeness, or timeliness of the content, services, software, or other 
-                materials provided through Tokens. The generated design tokens are 
-                provided for convenience and should be reviewed before use in production.
-              </p>
-              
-              <h3 className="text-lg font-semibold text-foreground mt-6">Limitation of Liability</h3>
-              <p>
-                In no event shall Andrew Flett or Tokens be liable for any direct, 
-                indirect, incidental, special, consequential, or punitive damages, including 
-                but not limited to loss of profits, data, use, goodwill, or other intangible 
-                losses, resulting from:
+                In no event shall Andrew Flett or Tokens be liable for any
+                direct, indirect, incidental, special, consequential, or
+                punitive damages, including but not limited to loss of profits,
+                data, use, goodwill, or other intangible losses, resulting from:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Your use or inability to use the service</li>
                 <li>Any unauthorized access to or use of our servers</li>
-                <li>Any bugs, viruses, or other harmful code that may be transmitted through the service</li>
+                <li>
+                  Any bugs, viruses, or other harmful code that may be
+                  transmitted through the service
+                </li>
                 <li>Any errors or omissions in any content</li>
-                <li>Any loss or damage of any kind incurred as a result of your use of any content posted or transmitted through the service</li>
+                <li>
+                  Any loss or damage of any kind incurred as a result of your
+                  use of any content posted or transmitted through the service
+                </li>
               </ul>
-              
-              <h3 className="text-lg font-semibold text-foreground mt-6">Generated Content</h3>
+
+              <h3 className="text-lg font-semibold text-foreground mt-6">
+                Generated Content
+              </h3>
               <p>
-                The design tokens and code generated by Tokens are provided free of 
-                restrictions. You may use them in any project, commercial or non-commercial, 
-                without attribution required.
+                The design tokens and code generated by Tokens are provided free
+                of restrictions. You may use them in any project, commercial or
+                non-commercial, without attribution required.
               </p>
-              
-              <h3 className="text-lg font-semibold text-foreground mt-6">Changes to Terms</h3>
+
+              <h3 className="text-lg font-semibold text-foreground mt-6">
+                Changes to Terms
+              </h3>
               <p>
-                We reserve the right to modify these terms at any time. Changes will be 
-                posted on this page with an updated revision date.
+                We reserve the right to modify these terms at any time. Changes
+                will be posted on this page with an updated revision date.
               </p>
             </div>
           </section>
@@ -124,7 +141,8 @@ export default function LegalPage() {
                   rel="noopener noreferrer"
                 >
                   flett.cc
-                </Link>.
+                </Link>
+                .
               </p>
             </div>
           </section>

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Mulish, JetBrains_Mono } from "next/font/google";
+import {
+  Mulish,
+  JetBrains_Mono,
+  Noto_Sans,
+  Quicksand,
+  Manrope,
+  Figtree,
+} from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -7,7 +14,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { config } from "@/lib/config";
 import "./globals.css";
 
-const mulish = Mulish({
+const mulish = Figtree({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -20,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Design Token Generator",
+    default: "Theme Designer | Tokens",
     template: "%s | Tokens",
   },
   description:
@@ -60,27 +67,12 @@ export default function RootLayout({
           <div className="relative flex min-h-screen flex-col">
             {/* Grid background */}
             <div className="pointer-events-none absolute inset-0 -z-10">
-              {/* Grid lines */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-                    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)
-                  `,
-                  backgroundSize: "20px 20px",
-                  maskImage:
-                    "linear-gradient(to bottom, black 0%, transparent 25%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, black 0%, transparent 25%)",
-                }}
-              />
               {/* Intersection dots */}
               <div
                 className="absolute inset-0"
                 style={{
                   backgroundImage: `radial-gradient(circle, var(--color-neutral-200) 1px, transparent 1px)`,
-                  backgroundSize: "10px 10px",
+                  backgroundSize: "12px 12px",
                   maskImage:
                     "linear-gradient(to bottom, black 0%, transparent 25%)",
                   WebkitMaskImage:

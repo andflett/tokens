@@ -38,7 +38,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="py-20 pt-28 md:pb-8 relative overflow-hidden">
         <div className="mx-auto max-w-2xl text-center relative z-10">
-          <h1 className="text-5xl font-black md:text-5xl md:leading-13">
+          <h1 className="text-5xl font-bold md:text-5xl md:leading-13">
             <span className="relative inline-block">
               Why
               <TokenBadge
@@ -60,16 +60,16 @@ export default function HomePage() {
           </TokenBadge>
 
           <p className="max-w-2xl px-6 text-lg text-muted-foreground mt-6">
-            Clearly defining your design foundations – colors, typography ,
-            spacing , borders , shadows – and instructing your AI to stick to
-            them is key to avoiding your app turning into a sloppy mess.
+            Clearly defining your design foundations – colours, typography,
+            spacing, borders, shadows – and instructing your AI to stick to them
+            is key to avoiding your app turning into a sloppy mess.
           </p>
         </div>
       </section>
 
       {/* Next Steps */}
       <section className="pb-18">
-        <div className="mx-auto max-w-2xl text-center">
+        <Card className="mx-auto max-w-2xl text-center">
           <Tabs
             value={generatorTab}
             onValueChange={(v) => setGeneratorTab(v as "web" | "mcp")}
@@ -108,50 +108,40 @@ export default function HomePage() {
             </div>
 
             <TabsContent value="web" className="mt-10 space-y-4 text-left">
-              <Card>
-                <CardContent>
-                  <h3 className="text-lg font-semibold">
-                    Design tokens in the web UI
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Manually craft and fine-tune your tokens using the visual
-                    generator. Perfect when you want exact control over colors,
-                    spacing and typography.
-                  </p>
-                  <div>
-                    <Button intent="default" asChild>
-                      <Link href="/generate">Open Token Designer</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <h3 className="text-lg font-semibold">
+                Design tokens in the web UI
+              </h3>
+              <p className="text-muted-foreground">
+                Manually craft and fine-tune your tokens using the visual
+                generator. Perfect when you want exact control over colors,
+                spacing and typography.
+              </p>
+              <div>
+                <Button intent="default" asChild>
+                  <Link href="/generate">Open Token Designer</Link>
+                </Button>
+              </div>
             </TabsContent>
 
             <TabsContent value="mcp" className="mt-10 space-y-4 text-left">
-              <Card>
-                <CardContent>
-                  <h3 className="text-lg font-semibold">
-                    Automate with the MCP
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Integrate tokens into your AI workflows so generators
-                    produce consistent, token-driven UI. Use the MCP to
-                    programmatically generate token sets.
-                  </p>
-                  <div>
-                    <Button
-                      intent="default"
-                      className="shadow-lg shadow-primary/20"
-                      asChild
-                    >
-                      <Link href="/docs">Read the MCP docs</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <h3 className="text-lg font-semibold">Automate with the MCP</h3>
+              <p className="text-muted-foreground">
+                Integrate tokens into your AI workflows so generators produce
+                consistent, token-driven UI. Use the MCP to programmatically
+                generate token sets.
+              </p>
+              <div>
+                <Button
+                  intent="default"
+                  className="shadow-lg shadow-primary/20"
+                  asChild
+                >
+                  <Link href="/docs">Read the MCP docs</Link>
+                </Button>
+              </div>
             </TabsContent>
           </Tabs>
-        </div>
+        </Card>
       </section>
 
       <section className="flex flex-col items-start border-t pt-16 pb-0">
@@ -181,7 +171,7 @@ export default function HomePage() {
           </div>
         </div> */}
 
-        <h2 className="text-3xl font-extrabold mb-4">New to all this?</h2>
+        <h2 className="text-3xl font-bold mb-4">New to all this?</h2>
 
         <p className="text-lg relative">
           You and your AI aren&apos;t probably aren't speaking the same design
@@ -209,8 +199,8 @@ export default function HomePage() {
 
         <TokenSection
           id="colors"
-          title="Color"
-          description="Colors are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code."
+          title="Colour"
+          description="Colours are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code."
           visual={<ColorVisual />}
           tokenList={<ColorTokenList />}
           prompt="Use the card background color with its foreground for this section, and primary with primary-foreground for the button"
@@ -256,7 +246,7 @@ export default function HomePage() {
       {/* CTA */}
       <section className="border-t py-16 lg:py-20">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="text-2xl font-bold sm:text-3xl">
             Ready to level up your AI generated code?
           </h2>
           <p className="mt-4 text-muted-foreground">
