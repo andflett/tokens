@@ -129,6 +129,38 @@ export function SiteHeader() {
             </div>
           </Button>
         </div>
+
+        {/* Mobile Theme Toggle - Always visible on right */}
+        <div className="absolute right-6 flex md:hidden items-center">
+          {mounted && (
+            <ThemeToggler
+              theme={theme as "light" | "dark" | "system"}
+              resolvedTheme={resolvedTheme as "light" | "dark"}
+              setTheme={setTheme}
+              direction="ltr"
+            >
+              {({ resolved, toggleTheme }) => (
+                <Button
+                  intent="secondary"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => {
+                    const nextTheme = resolved === "light" ? "dark" : "light";
+                    toggleTheme(nextTheme);
+                  }}
+                >
+                  {resolved === "dark" ? (
+                    <MoonIcon className="h-4 w-4" />
+                  ) : (
+                    <SunIcon className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              )}
+            </ThemeToggler>
+          )}
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}

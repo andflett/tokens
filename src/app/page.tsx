@@ -45,7 +45,7 @@ export default function HomePage() {
           Design Tokens for AI
         </Badge>
         <div className="max-w-3xl text-center items-center relative flex flex-col gap-6">
-          <h1 className="text-6xl font-bold tracking-tight relative">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight relative">
             Why does my AI-generated UI look like turd?
           </h1>
 
@@ -98,30 +98,32 @@ export default function HomePage() {
 
             <TabsContent value="design">
               <Card>
-                <CardContent className="space-y-6 px-8 py-4">
-                  <div className="flex flex-row items-start gap-6">
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
                     <BrushIcon
                       animate
                       loop
                       loopDelay={1000}
-                      className="h-10 w-10 text-primary shrink-0"
+                      className="h-12 w-12 text-primary"
                     />
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-bold">
-                        Take control with design tokens
-                      </h3>
-                      <p className="text-muted-foreground">
-                        Clearly defining your design foundations – colours,
-                        typography, spacing, borders, shadows – as design
-                        tokens, and instructing your AI to stick to them, is key
-                        to avoiding your app turning into a sloppy mess.
-                      </p>
-                      <div className="pt-4">
-                        <Button intent="default" asChild>
-                          <Link href="/generate">Design your tokens</Link>
-                        </Button>
-                      </div>
-                    </div>
+                    <h3 className="text-lg font-semibold">
+                      Take control with design tokens
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Clearly defining your design foundations – colours,
+                      typography, spacing, borders, shadows – as design
+                      tokens, and instructing your AI to stick to them, is key
+                      to avoiding your app turning into a sloppy mess.
+                    </p>
+                  </div>
+                  <div>
+                    <Button
+                      intent="default"
+                      className="shadow-lg shadow-primary/20"
+                      asChild
+                    >
+                      <Link href="/generate">Design your tokens</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -185,9 +187,14 @@ export default function HomePage() {
       </section>
 
       <div className="space-y-22 mt-20">
-        <h2 className="text-5xl font-bold tracking-tight text-center">
-          Talk to your AI about...
-        </h2>
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Speak to your AI in design tokens
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Once you&apos;ve created your tokens, here&apos;s how to use them in your prompts
+          </p>
+        </div>
         <TokenSection
           id="colors"
           title="Colour"
