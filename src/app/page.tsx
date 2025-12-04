@@ -173,9 +173,9 @@ export default function HomePage() {
               for colors, spacing, typography.
             </p>
             <p className="text-lg  text-muted-foreground">
-              The same problem exists with AI. Design tokens apply semantic
-              names to standardised values – whether in Tailwind classes, CSS
-              variables, or any other format. If your AI isn&apos;t instructed to use
+              The same problem exists with AI. <Term term="design-tokens">Design tokens</Term> apply semantic
+              names to standardised values – whether in <Term term="tailwind">Tailwind</Term> classes, <Term term="css-variables">CSS
+              variables</Term>, or any other format. If your AI isn&apos;t instructed to use
               those tokens, it may just pick random values.
             </p>
           </div>
