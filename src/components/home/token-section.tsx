@@ -5,9 +5,10 @@ import { AnimatedTokenVisual } from "./animated-token-visual";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import React from "react";
-import { Card } from "../ui/card";
+import React, { useState, useEffect, useRef } from "react";
+import { Card, CardContent } from "../ui/card";
 import { TerminalIcon } from "../animate-ui/icons/terminal";
+import { Button } from "../ui/button";
 
 export function TokenSection({
   id,
@@ -27,65 +28,189 @@ export function TokenSection({
   /** The tab name to link to on the generate page */
   generateTab?: string;
 }) {
-  // Extract the token type from the title (e.g., "Spacing Tokens" -> "spacing")
+  const [isInView, setIsInView] = useState(false);
+  const [typedText, setTypedText] = useState("");
+  const [showUI, setShowUI] = useState(false);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Extract the token type from the title
   const tokenType = title.toLowerCase().replace(" tokens", "");
   const tabLink = generateTab || id;
 
+  // Intersection observer to trigger animation when in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isInView) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isInView]);
+
+  // Typing animation
+  useEffect(() => {
+    if (!isInView) return;
+
+    let currentIndex = 0;
+    const typingSpeed = 30;
+
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= prompt.length) {
+        setTypedText(prompt.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTypingComplete(true);
+        // Wait longer to let user read the prompt
+        setTimeout(() => {
+          setShowUI(true);
+        }, 1800);
+      }
+    }, typingSpeed);
+
+    return () => clearInterval(typingInterval);
+  }, [isInView, prompt]);
+
   return (
-    <section id={id} className="">
-      <div className="grid gap-6 md:gap-12 lg:grid-cols-2 lg:gap-18 items-start">
-        <div>
-          <h2 className="text-3xl font-bold mb-4">{title}</h2>
-          <p className="mb-6 leading-relaxed">{description}</p>
-
-          {/* Command palette style prompt */}
-          <div className="relative flex items-start gap-4 bg-background">
-            <div className="flex flex-col gap-2">
-              <div className="flex-shrink-0 h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mt-0.5">
-                <TerminalIcon
-                  size={16}
-                  className="text-primary"
-                  animate
-                  animateOnView
-                  loop
-                />
-              </div>
+    <section id={id} ref={ref} className="">
+      <div className="grid gap-4 md:gap-12 lg:grid-cols-2 items-start">
+        <Card>
+          <CardContent className="space-y-4">
+            <h2 className="text-3xl font-bold">{title}</h2>
+            <p className="leading-relaxed text-muted-foreground">
+              {description}
+            </p>
+            <div className="pt-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/generate#${tabLink}`}>
+                  Edit {title.toLowerCase()} tokens
+                  <ArrowLongRightIcon className="h-4 w-4 ml-1" />
+                </Link>
+              </Button>
             </div>
-            <div className="flex-1 min-w-0 flex flex-col gap-1">
-              <p className="text-sm font-medium">Try a prompt like...</p>
-              <div className="text-xs leading-relaxed text-muted-foreground break-words font-mono pr-0 md:pr-8">
-                {prompt}
-              </div>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <AnimatedTokenVisual>
-          <Card className="relative overflow-hidden p-0">
-            {tokenList ? (
-              <Tabs defaultValue="visual" className="w-full">
-                <div className="border-b bg-muted/30 px-4 py-2">
-                  <TabsList className="h-8">
-                    <TabsTrigger value="visual" className="text-xs">
-                      Visual
-                    </TabsTrigger>
-                    <TabsTrigger value="tokens" className="text-xs">
-                      Tokens
-                    </TabsTrigger>
-                  </TabsList>
+        <Card className="relative overflow-hidden p-0">
+          {tokenList ? (
+            <Tabs defaultValue="visual" className="w-full">
+              <div className="border-b bg-muted/30 px-4 py-2">
+                <TabsList className="h-8">
+                  <TabsTrigger value="visual" className="text-xs">
+                    Visual
+                  </TabsTrigger>
+                  <TabsTrigger value="tokens" className="text-xs">
+                    Tokens
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent
+                value="visual"
+                className="p-6 mt-0 h-[400px] relative overflow-hidden"
+              >
+                {/* Prompt - starts centered, slides down */}
+                <div
+                  className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-700 ease-out ${
+                    showUI
+                      ? "translate-y-[280px] opacity-80"
+                      : "translate-y-0 opacity-100"
+                  }`}
+                >
+                  <div className="relative flex items-start gap-4 bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 w-full">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex-shrink-0 h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mt-0.5">
+                        <TerminalIcon
+                          size={16}
+                          className="text-primary"
+                          animate={isInView}
+                          loop
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0 flex flex-col gap-1">
+                      <div className="text-xs leading-relaxed text-muted-foreground break-words font-mono">
+                        {typedText}
+                        {!isTypingComplete && (
+                          <span className="inline-block w-1.5 h-3 bg-primary ml-0.5 animate-pulse" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <TabsContent value="visual" className="p-6 mt-0">
+
+                {/* Visual - fades in above */}
+                <div
+                  className={`transition-all duration-700 ease-out ${
+                    showUI
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                >
                   {visual}
-                </TabsContent>
-                <TabsContent value="tokens" className="p-6 mt-0">
-                  {tokenList}
-                </TabsContent>
-              </Tabs>
-            ) : (
-              <div className="p-6">{visual}</div>
-            )}
-          </Card>
-        </AnimatedTokenVisual>
+                </div>
+              </TabsContent>
+              <TabsContent
+                value="tokens"
+                className="p-6 mt-0 h-[400px] overflow-y-auto"
+              >
+                {tokenList}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <div className="p-6 h-[400px] relative overflow-hidden">
+              {/* Prompt - starts centered, slides down */}
+              <div
+                className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-700 ease-out ${
+                  showUI
+                    ? "translate-y-[280px] opacity-80"
+                    : "translate-y-0 opacity-100"
+                }`}
+              >
+                <div className="relative flex items-start gap-4 bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 w-full">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex-shrink-0 h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mt-0.5">
+                      <TerminalIcon
+                        size={16}
+                        className="text-primary"
+                        animate={isInView}
+                        loop
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col gap-1">
+                    <p className="text-sm font-medium">Try a prompt like...</p>
+                    <div className="text-xs leading-relaxed text-muted-foreground break-words font-mono">
+                      {typedText}
+                      {!isTypingComplete && (
+                        <span className="inline-block w-1.5 h-3 bg-primary ml-0.5 animate-pulse" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual - fades in above */}
+              <div
+                className={`transition-all duration-700 ease-out ${
+                  showUI
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
+              >
+                {visual}
+              </div>
+            </div>
+          )}
+        </Card>
       </div>
     </section>
   );

@@ -101,14 +101,14 @@ function AnimatedTabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "border shadow-md p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full border-border/70",
+        "border border-primary/15 shadow-md shadow-primary/20 p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full",
         className
       )}
       {...props}
     >
       {/* Animated pill background */}
       <div
-        className="cursor-pointer absolute h-8 rounded-full bg-muted/80 transition-all duration-200 ease-out"
+        className="cursor-pointer absolute h-8 rounded-full bg-primary-subdued transition-all duration-200 ease-out"
         style={{
           left: pillStyle.left,
           width: pillStyle.width,

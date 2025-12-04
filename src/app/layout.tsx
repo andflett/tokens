@@ -64,15 +64,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            {/* Grid background */}
-            <div className="pointer-events-none absolute inset-0 -z-10">
-              {/* Intersection dots */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle,rgb(0_0_0_/_0.15)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgb(255_255_255_/_0.15)_1px,transparent_1px)] bg-[length:20px_20px] [mask-image:linear-gradient(to_bottom,black_0%,transparent_55%)]" />
-            </div>
-
+          <div className="flex min-h-screen flex-col bg-[#fff4ff]/60 dark:bg-background">
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main className="relative flex-1">
+              {/* Subtle grid only at top of main content */}
+              <div className="pointer-events-none absolute left-0 right-0 top-0 h-[90vh] z-0 bg-[linear-gradient(rgb(229_184_229_/_0.15)_1px,transparent_1px),linear-gradient(90deg,rgb(229_184_229_/_0.15)_1px,transparent_1px)] bg-[length:16px_16px] [mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] dark:bg-[linear-gradient(rgb(255_255_255_/_0.03)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255_/_0.03)_1px,transparent_1px)]" />
+              {/* Main content sits above grid */}
+              <div className="relative z-10">{children}</div>
+            </main>
             <SiteFooter />
           </div>
           <Toaster />

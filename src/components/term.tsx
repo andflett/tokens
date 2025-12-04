@@ -39,7 +39,7 @@ export function Term({ term, children, className }: TermProps) {
       <PopoverTrigger asChild>
         <span
           className={cn(
-            "cursor-pointer inline-flex items-center border-b-2 border-purple-300",
+            "cursor-pointer inline-flex items-center border-b-2 border-purple-200",
             "hover:border-primary hover:text-primary transition-colors",
             "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
             className

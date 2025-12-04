@@ -32,6 +32,8 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "@/components/animate-ui/icons/sparkles";
 import { Brush, BrushIcon } from "@/components/animate-ui/icons/brush";
 import { AIInstructionsDemo } from "@/components/home/ai-instructions-demo";
+import { AnimatedTerminal } from "@/components/home/animated-terminal";
+import { TokenShowcasePanel } from "@/components/home/token-showcase-panel";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = React.useState("design");
@@ -45,14 +47,9 @@ export default function HomePage() {
           Design Tokens for AI
         </Badge>
         <div className="max-w-3xl text-center items-center relative flex flex-col gap-6">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight relative">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight relative">
             Why does my AI-generated UI look like turd?
           </h1>
-
-          <p className="max-w-xl text-xl text-muted-foreground">
-            Random colors. Arbitrary spacing. Mismatched typography. Every
-            prompt creates new slop. We've all been there.
-          </p>
         </div>
       </section>
 
@@ -99,31 +96,40 @@ export default function HomePage() {
             <TabsContent value="design">
               <Card>
                 <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <BrushIcon
-                      animate
-                      loop
-                      loopDelay={1000}
-                      className="h-12 w-12 text-primary"
-                    />
-                    <h3 className="text-lg font-semibold">
-                      Take control with design tokens
-                    </h3>
-                    <p className="text-muted-foreground">
-                      Clearly defining your design foundations – colours,
-                      typography, spacing, borders, shadows – as design
-                      tokens, and instructing your AI to stick to them, is key
-                      to avoiding your app turning into a sloppy mess.
-                    </p>
-                  </div>
-                  <div>
-                    <Button
-                      intent="default"
-                      className="shadow-lg shadow-primary/20"
-                      asChild
-                    >
-                      <Link href="/generate">Design your tokens</Link>
-                    </Button>
+                  <div className="grid gap-6 md:grid-cols-[1fr_300px] items-center">
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <BrushIcon
+                          animate
+                          loop
+                          loopDelay={1000}
+                          className="h-10 w-10 text-primary flex-shrink-0"
+                        />
+                        <div>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Take control with design tokens
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Clearly defining your design foundations – colours,
+                            typography, spacing, borders, shadows – as design
+                            tokens, and instructing your AI to stick to them, is
+                            key to avoiding your app turning into a sloppy mess.
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <Button
+                          intent="default"
+                          className="shadow-lg shadow-primary/20"
+                          asChild
+                        >
+                          <Link href="/generate">Design your tokens</Link>
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="hidden md:block">
+                      <TokenShowcasePanel />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -132,27 +138,38 @@ export default function HomePage() {
             <TabsContent value="teach">
               <Card>
                 <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <TerminalIcon
-                      className="h-12 w-12 text-primary"
-                      animate
-                      loop
-                    />
-                    <h3 className="text-lg font-semibold">Teach your AI</h3>
-                    <p className="text-muted-foreground">
-                      Integrate tokens into your AI workflows so generators
-                      produce consistent, token-driven UI. Use the MCP to
-                      programmatically generate token sets.
-                    </p>
-                  </div>
-                  <div>
-                    <Button
-                      intent="default"
-                      className="shadow-lg shadow-primary/20"
-                      asChild
-                    >
-                      <Link href="/docs">Read the MCP docs</Link>
-                    </Button>
+                  <div className="grid gap-6 md:grid-cols-[1fr_320px] items-center">
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <TerminalIcon
+                          className="h-10 w-10 text-primary flex-shrink-0"
+                          animate
+                          loop
+                        />
+                        <div>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Teach your AI
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Integrate tokens into your AI workflows so
+                            generators produce consistent, token-driven UI. Use
+                            the MCP to programmatically generate token sets.
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <Button
+                          intent="default"
+                          className="shadow-lg shadow-primary/20"
+                          asChild
+                        >
+                          <Link href="/docs">Read the MCP docs</Link>
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="hidden md:block">
+                      <AnimatedTerminal />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -162,38 +179,43 @@ export default function HomePage() {
       </section>
 
       <section className="pt-0 pb-0">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-20">
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold tracking-tight">
-              You and your AI aren&apos;t speaking the same design language
-            </h2>
-            <p className="text-lg  text-muted-foreground">
-              We've all felt the pain when designs don't translate from Figma to
-              code. Design tokens introduce a shared vocabulary: named values
-              for colors, spacing, typography.
-            </p>
-            <p className="text-lg  text-muted-foreground">
-              The same problem exists with AI. <Term term="design-tokens">Design tokens</Term> apply semantic
-              names to standardised values – whether in <Term term="tailwind">Tailwind</Term> classes, <Term term="css-variables">CSS
-              variables</Term>, or any other format. If your AI isn&apos;t instructed to use
-              those tokens, it may just pick random values.
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <AIInstructionsDemo />
-          </div>
-        </div>
+        <Card>
+          <CardContent className="space-y-6 px-12 py-6">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-20">
+              <div>
+                <div className="mt-1">
+                  <AIInstructionsDemo />
+                </div>
+              </div>
+              <div className="space-y-6">
+                <h2 className="text-4xl font-bold tracking-tight">
+                  You and your AI aren&apos;t speaking the same design language
+                </h2>
+                <p className="text-lg text-foreground">
+                  We've all felt the pain when designs don't translate from
+                  Figma to code. Design tokens introduce a shared vocabulary:
+                  named values for colors, spacing, typography.
+                </p>
+                <p className="text-md text-foreground">
+                  The same problem exists with AI.{" "}
+                  <Term term="design-tokens">Design tokens</Term> apply semantic
+                  names to standardised values – whether in{" "}
+                  <Term term="tailwind">Tailwind</Term> classes,{" "}
+                  <Term term="css-variables">CSS variables</Term>, or any other
+                  format. If your AI isn&apos;t instructed to use those tokens,
+                  it may just pick random values.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </section>
 
       <div className="space-y-22 mt-20">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Speak to your AI in design tokens
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-[-6]">
+            How to speak to your AI in design tokens
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Once you&apos;ve created your tokens, here&apos;s how to use them in your prompts
-          </p>
         </div>
         <TokenSection
           id="colors"
@@ -252,7 +274,7 @@ export default function HomePage() {
       </div>
 
       {/* CTA */}
-      <section className="border-t py-16 lg:py-20">
+      <section className="py-16 lg:py-20">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-2xl font-bold sm:text-3xl">
             Ready to level up your AI generated code?

@@ -162,7 +162,7 @@ export function AIInstructionsDemo() {
       </div>
 
       {/* Terminal content */}
-      <div className="p-6 h-[280px] bg-neutral-950 relative overflow-hidden">
+      <div className="p-6 h-[350px] bg-neutral-950 relative overflow-hidden">
         {/* Copy button positioned in top right of text area */}
         <div className="absolute top-4 right-4 z-10">
           <CopyButton text={instructions} />
