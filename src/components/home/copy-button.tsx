@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardDocumentIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
 
 export function CopyButton({ text }: { text: string }) {
