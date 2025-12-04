@@ -163,6 +163,11 @@ export function AIInstructionsDemo() {
 
       {/* Terminal content */}
       <div className="p-6 h-[280px] bg-neutral-950 relative overflow-hidden">
+        {/* Copy button positioned in top right of text area */}
+        <div className="absolute top-4 right-4 z-10">
+          <CopyButton text={instructions} />
+        </div>
+
         <div className="absolute inset-0 p-6 overflow-hidden">
           <pre className="font-mono text-sm text-neutral-200 whitespace-pre-wrap leading-relaxed">
             {!isComplete && displayedText.length === 0 && showCursor && (
@@ -181,11 +186,6 @@ export function AIInstructionsDemo() {
 
         {/* Fade to transparent gradient */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-800 to-transparent pointer-events-none" />
-
-        {/* Copy button positioned in bottom right */}
-        <div className="absolute bottom-4 right-4">
-          <CopyButton text={instructions} />
-        </div>
       </div>
     </div>
   );
