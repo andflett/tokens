@@ -173,10 +173,10 @@ export default function HomePage() {
               for colors, spacing, typography.
             </p>
             <p className="text-lg  text-muted-foreground">
-              The same problem exists with AI. Your generated UI most likely
-              uses <Term term="tailwind">Tailwind CSS</Term> which engineers
-              have used as their design language for years, but if your AI isn't
-              instructed to use those tokens, it may just pick random values.
+              The same problem exists with AI. Design tokens apply semantic
+              names to standardised values – whether in Tailwind classes, CSS
+              variables, or any other format. If your AI isn&apos;t instructed to use
+              those tokens, it may just pick random values.
             </p>
           </div>
 
