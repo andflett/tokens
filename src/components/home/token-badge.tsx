@@ -14,7 +14,7 @@ export function TokenBadge({
 }) {
   return (
     <div className={`absolute z-10 ${className}`} style={style}>
-      <div className="relative border border-purple-300 border-dashed inline-flex items-center rounded-full bg-purple-200 px-3 py-1 text-xs font-mono whitespace-nowrap text-foreground shadow-lg animate-in fade-in zoom-in duration-700">
+      <div className="relative border border-purple-100 border-dashed inline-flex items-center rounded-full bg-purple-50 px-3 py-1 text-xs font-mono whitespace-nowrap text-foreground animate-in fade-in zoom-in duration-700">
         {children}
       </div>
 

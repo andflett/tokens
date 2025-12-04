@@ -3,6 +3,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { ThemeToggler } from "@/components/animate-ui/primitives/effects/theme-toggler";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -138,7 +139,7 @@ export function TokenGenerator({
   className,
   initialTab,
 }: TokenGeneratorProps) {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [brandColors, setBrandColors] = React.useState<BrandColors>(
     () =>
       initialColors ||
@@ -423,30 +424,43 @@ export function TokenGenerator({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {/* Light/Dark Toggle - sets app theme */}
-                  <AnimatedTabsList
-                    value={previewMode}
-                    onValueChange={(v) =>
-                      handlePreviewModeChange(v as "light" | "dark")
+                  <ThemeToggler
+                    theme={(theme || "system") as "light" | "dark" | "system"}
+                    resolvedTheme={
+                      (resolvedTheme || "light") as "light" | "dark"
                     }
-                    items={[
-                      {
-                        value: "light",
-                        label: (
-                          <>
-                            <SunIcon className="h-4 w-4" />
-                          </>
-                        ),
-                      },
-                      {
-                        value: "dark",
-                        label: (
-                          <>
-                            <MoonIcon className="h-4 w-4" />
-                          </>
-                        ),
-                      },
-                    ]}
-                  />
+                    setTheme={setTheme}
+                    direction="ltr"
+                  >
+                    {({ resolved, toggleTheme }) => (
+                      <AnimatedTabsList
+                        value={resolved}
+                        onValueChange={(v) => {
+                          const newMode = v as "light" | "dark";
+                          handlePreviewModeChange(newMode);
+                          toggleTheme(newMode);
+                        }}
+                        items={[
+                          {
+                            value: "light",
+                            label: (
+                              <>
+                                <SunIcon className="h-4 w-4" />
+                              </>
+                            ),
+                          },
+                          {
+                            value: "dark",
+                            label: (
+                              <>
+                                <MoonIcon className="h-4 w-4" />
+                              </>
+                            ),
+                          },
+                        ]}
+                      />
+                    )}
+                  </ThemeToggler>
                   <Button onClick={() => setExportOpen(true)}>Export</Button>
                 </div>
               </CardHeader>

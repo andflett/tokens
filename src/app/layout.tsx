@@ -13,7 +13,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { config } from "@/lib/config";
 import "./globals.css";
-
+import { Analytics } from "@vercel/analytics/next";
 const mulish = Figtree({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Theme Designer | Tokens",
+    default: "Why does my AI-generated UI look like turd?",
     template: "%s | Tokens",
   },
   description:
@@ -68,17 +68,7 @@ export default function RootLayout({
             {/* Grid background */}
             <div className="pointer-events-none absolute inset-0 -z-10">
               {/* Intersection dots */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `radial-gradient(circle, var(--color-neutral-200) 1px, transparent 1px)`,
-                  backgroundSize: "12px 12px",
-                  maskImage:
-                    "linear-gradient(to bottom, black 0%, transparent 25%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, black 0%, transparent 25%)",
-                }}
-              />
+              <div className="absolute inset-0 bg-[radial-gradient(circle,rgb(0_0_0_/_0.15)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgb(255_255_255_/_0.15)_1px,transparent_1px)] bg-[length:20px_20px] [mask-image:linear-gradient(to_bottom,black_0%,transparent_55%)]" />
             </div>
 
             <SiteHeader />
@@ -87,6 +77,7 @@ export default function RootLayout({
           </div>
           <Toaster />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

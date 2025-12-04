@@ -11,17 +11,12 @@ import {
   MoonIcon,
   ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ThemeToggler } from "@/components/animate-ui/primitives/effects/theme-toggler";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
 
@@ -32,7 +27,7 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "px-3 py-1 rounded text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors",
+      "px-3 py-1 rounded text-sm font-medium text-muted-foreground hover:text-foreground transition-colors",
       pathname === href ? "text-foreground" : ""
     );
 
@@ -44,8 +39,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <div className="flex items-center gap-6">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-center px-6">
+        <div className="absolute left-6 flex items-center gap-6">
           <Link href="/" aria-label="Home" className="flex items-center">
             <TurdLogo
               width={28}
@@ -58,54 +53,43 @@ export function SiteHeader() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">
-          <div className="flex items-center gap-2 border-r border-border/80 pr-2">
-            <Link href="/" className={navLinkClass("/")}>
-              About
-            </Link>
-            <Link href="/generate" className={navLinkClass("/generate")}>
-              Theme Designer
-            </Link>
-            <Link href="/docs" className={navLinkClass("/docs")}>
-              Documentation
-            </Link>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                intent="secondary"
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-              >
-                <SunIcon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <MoonIcon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => setTheme("light")}
-                className="gap-2"
-              >
-                <SunIcon className="h-4 w-4" />
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme("dark")}
-                className="gap-2"
-              >
-                <MoonIcon className="h-4 w-4" />
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme("system")}
-                className="gap-2"
-              >
-                <ComputerDesktopIcon className="h-4 w-4" />
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Link href="/" className={navLinkClass("/")}>
+            About
+          </Link>
+          <Link href="/generate" className={navLinkClass("/generate")}>
+            Token Designer
+          </Link>
+          <Link href="/docs" className={navLinkClass("/docs")}>
+            Documentation
+          </Link>
+          {mounted && (
+            <ThemeToggler
+              theme={theme as "light" | "dark" | "system"}
+              resolvedTheme={resolvedTheme as "light" | "dark"}
+              setTheme={setTheme}
+              direction="ltr"
+            >
+              {({ resolved, toggleTheme }) => (
+                <Button
+                  intent="secondary"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => {
+                    const nextTheme = resolved === "light" ? "dark" : "light";
+                    toggleTheme(nextTheme);
+                  }}
+                >
+                  {resolved === "dark" ? (
+                    <MoonIcon className="h-4 w-4" />
+                  ) : (
+                    <SunIcon className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              )}
+            </ThemeToggler>
+          )}
         </nav>
 
         {/* Mobile Navigation */}
@@ -213,46 +197,45 @@ export function SiteHeader() {
           </nav>
 
           {/* Theme Toggle - Animated Pill */}
-          <div className="mt-4 pt-4 border-t border-border/50">
-            <div className="inline-flex items-center rounded-lg bg-muted p-1">
-              <button
-                onClick={() => setTheme("light")}
-                className={cn(
-                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-                  mounted && theme === "light"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
+          {mounted && (
+            <div className="mt-4 pt-4 border-t border-border/50">
+              <ThemeToggler
+                theme={theme as "light" | "dark" | "system"}
+                resolvedTheme={resolvedTheme as "light" | "dark"}
+                setTheme={setTheme}
+                direction="ltr"
               >
-                <SunIcon className="h-4 w-4" />
-                Light
-              </button>
-              <button
-                onClick={() => setTheme("dark")}
-                className={cn(
-                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-                  mounted && theme === "dark"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                {({ resolved, toggleTheme }) => (
+                  <div className="inline-flex items-center rounded-lg bg-muted p-1">
+                    <button
+                      onClick={() => toggleTheme("light")}
+                      className={cn(
+                        "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                        resolved === "light"
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <SunIcon className="h-4 w-4" />
+                      Light
+                    </button>
+                    <button
+                      onClick={() => toggleTheme("dark")}
+                      className={cn(
+                        "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                        resolved === "dark"
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <MoonIcon className="h-4 w-4" />
+                      Dark
+                    </button>
+                  </div>
                 )}
-              >
-                <MoonIcon className="h-4 w-4" />
-                Dark
-              </button>
-              <button
-                onClick={() => setTheme("system")}
-                className={cn(
-                  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-                  mounted && theme === "system"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <ComputerDesktopIcon className="h-4 w-4" />
-                System
-              </button>
+              </ThemeToggler>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </header>
