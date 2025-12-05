@@ -119,10 +119,10 @@ export function TokenSection({
               >
                 {/* Prompt - starts centered, slides down */}
                 <div
-                  className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-700 ease-out ${
+                  className={`absolute inset-x-0 p-6 transition-all duration-700 ease-out ${
                     showUI
-                      ? "translate-y-[280px] opacity-80"
-                      : "translate-y-0 opacity-100"
+                      ? "bottom-0 top-auto"
+                      : "inset-y-0 flex items-center justify-center"
                   }`}
                 >
                   <div className="relative flex items-start gap-4 bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 w-full">
@@ -169,10 +169,10 @@ export function TokenSection({
             <div className="p-6 h-[400px] relative overflow-hidden">
               {/* Prompt - starts centered, slides down */}
               <div
-                className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-700 ease-out ${
+                className={`absolute inset-x-0 p-6 transition-all duration-700 ease-out ${
                   showUI
-                    ? "translate-y-[280px] opacity-80"
-                    : "translate-y-0 opacity-100"
+                    ? "bottom-0 top-auto"
+                    : "inset-y-0 flex items-center justify-center"
                 }`}
               >
                 <div className="relative flex items-start gap-4 bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 w-full">

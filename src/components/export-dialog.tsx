@@ -193,13 +193,13 @@ export function ExportDialog({
             variant="outline"
             onClick={handleDownloadForLovable}
           >
-            💜 Download for Lovable
+            Export as Lovable Theme
           </Button>
           <Button intent="default" variant="outline" onClick={handleCopy}>
-            📋 Copy
+            Copy
           </Button>
           <Button intent="default" onClick={handleDownload}>
-            ⬇️ Download
+            Download
           </Button>
         </div>
       </DialogContent>

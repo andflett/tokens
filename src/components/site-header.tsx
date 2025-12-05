@@ -6,11 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import TurdLogo from "./turd-logo";
-import {
-  SunIcon,
-  MoonIcon,
-  ComputerDesktopIcon,
-} from "@heroicons/react/24/outline";
+import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
 import { ThemeToggler } from "@/components/animate-ui/primitives/effects/theme-toggler";
 import { cn } from "@/lib/utils";
 
@@ -227,47 +223,6 @@ export function SiteHeader() {
               Design your Tokens
             </Link>
           </nav>
-
-          {/* Theme Toggle - Animated Pill */}
-          {mounted && (
-            <div className="mt-4 pt-4 border-t border-border/50">
-              <ThemeToggler
-                theme={theme as "light" | "dark" | "system"}
-                resolvedTheme={resolvedTheme as "light" | "dark"}
-                setTheme={setTheme}
-                direction="ltr"
-              >
-                {({ resolved, toggleTheme }) => (
-                  <div className="inline-flex items-center rounded-lg bg-muted p-1">
-                    <button
-                      onClick={() => toggleTheme("light")}
-                      className={cn(
-                        "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-                        resolved === "light"
-                          ? "bg-background text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <SunIcon className="h-4 w-4" />
-                      Light
-                    </button>
-                    <button
-                      onClick={() => toggleTheme("dark")}
-                      className={cn(
-                        "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
-                        resolved === "dark"
-                          ? "bg-background text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <MoonIcon className="h-4 w-4" />
-                      Dark
-                    </button>
-                  </div>
-                )}
-              </ThemeToggler>
-            </div>
-          )}
         </div>
       </div>
     </header>

@@ -117,6 +117,16 @@ export const glossary: Record<string, GlossaryTerm> = {
     full: "A framework provides the structure and tools for building web applications. Popular ones include React (used by Lovable, v0, and many others), Vue, Svelte, and Angular. Build tools like Vite are often used alongside these to compile and bundle your code. Most AI coding tools generate code for React by default.",
     learnMoreUrl: "https://react.dev",
   },
+  "styling-system": {
+    term: "Styling System",
+    short: "The method used to apply visual styles to your UI",
+    full: "A styling system defines how you apply colors, spacing, and other visual styles to your interface. Popular approaches include Tailwind CSS (utility classes), CSS-in-JS (styled-components, Emotion), and CSS Modules. Most AI builders default to Tailwind because it's predictable and easy to generate.",
+  },
+  "utility-classes": {
+    term: "Utility Classes",
+    short: "Pre-built CSS classes that apply single styles",
+    full: "Utility classes are small, single-purpose CSS classes like 'text-center' or 'bg-blue-500'. Instead of writing custom CSS, you combine these classes to build your UI. Tailwind CSS popularized this approach, making it the default for most AI-generated code.",
+  },
 };
 
 export function getTerm(key: string): GlossaryTerm | undefined {

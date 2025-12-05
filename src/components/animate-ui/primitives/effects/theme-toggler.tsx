@@ -77,6 +77,14 @@ function ThemeToggler({
     }
   }, [theme, resolvedTheme, preview]);
 
+  // Sync current state when theme/resolvedTheme changes externally
+  React.useEffect(() => {
+    setCurrent({
+      effective: theme,
+      resolved: resolvedTheme,
+    });
+  }, [theme, resolvedTheme]);
+
   const [fromClip, toClip] = getClipKeyframes(direction);
 
   const toggleTheme = React.useCallback(

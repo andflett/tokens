@@ -129,10 +129,10 @@ function AnimatedTabsList({
             onValueChange?.(item.value);
           }}
           className={cn(
-            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
             activeIndex === index
-              ? "text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "text-primary-subdued-foreground"
+              : "text-foreground hover:text-primary-subdued-foreground"
           )}
         >
           {item.label}

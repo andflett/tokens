@@ -34,6 +34,8 @@ import { Brush, BrushIcon } from "@/components/animate-ui/icons/brush";
 import { AIInstructionsDemo } from "@/components/home/ai-instructions-demo";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
 import { TokenShowcasePanel } from "@/components/home/token-showcase-panel";
+import { FrameworkDiscoveryPanel } from "@/components/home/framework-discovery-panel";
+import { SlidersHorizontal } from "@/components/animate-ui/icons/sliders-horizontal";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = React.useState("design");
@@ -41,7 +43,7 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="pb-10 pt-18 relative flex flex-col items-center gap-4">
+      <section className="pb-12 pt-18 relative flex flex-col items-center gap-4">
         <Badge variant={"ghost"}>
           <Sparkles loop animate className="h-7 w-7 mr-1" />
           Design Tokens for AI
@@ -57,7 +59,7 @@ export default function HomePage() {
       <section className="pb-18">
         <div className="mx-auto max-w-3xl">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-11">
+            <div className="flex justify-center mb-8">
               <AnimatedTabsList
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -67,10 +69,8 @@ export default function HomePage() {
                     label: (
                       <>
                         <BrushIcon
-                          animate
-                          loop
-                          loopDelay={1000}
-                          className="h-4 w-4 text-primary mr-1"
+                          animateOnHover
+                          className="h-4 w-4 text-primary-subdued-foreground mr-1"
                         />
                         Token Designer
                       </>
@@ -83,9 +83,9 @@ export default function HomePage() {
                         <TerminalIcon
                           animate
                           loop
-                          className="h-4 w-4 text-primary mr-1"
+                          className="h-4 w-4 text-primary-subdued-foreground mr-1"
                         />
-                        Teach your AI
+                        Train your AI
                       </>
                     ),
                   },
@@ -96,38 +96,33 @@ export default function HomePage() {
             <TabsContent value="design">
               <Card>
                 <CardContent className="space-y-6">
-                  <div className="grid gap-6 md:grid-cols-[1fr_300px] items-center">
+                  <div className="grid gap-12 md:grid-cols-[1fr_250px] items-start">
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <BrushIcon
+                      <div className="flex items-start gap-6">
+                        <SlidersHorizontal
                           animate
-                          loop
-                          loopDelay={1000}
-                          className="h-10 w-10 text-primary flex-shrink-0"
+                          animation="default-loop"
+                          loop={true}
+                          loopDelay={1500}
+                          className="h-8 w-8 text-primary flex-shrink-0"
                         />
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">
+                        <div className="gap-2 flex flex-col">
+                          <h3 className="text-xl font-semibold mb-2">
                             Take control with design tokens
                           </h3>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-foreground/70">
                             Clearly defining your design foundations – colours,
                             typography, spacing, borders, shadows – as design
                             tokens, and instructing your AI to stick to them, is
                             key to avoiding your app turning into a sloppy mess.
                           </p>
+                          <Button intent="default" className="mt-4" asChild>
+                            <Link href="/generate">Design your tokens</Link>
+                          </Button>
                         </div>
                       </div>
-                      <div>
-                        <Button
-                          intent="default"
-                          className="shadow-lg shadow-primary/20"
-                          asChild
-                        >
-                          <Link href="/generate">Design your tokens</Link>
-                        </Button>
-                      </div>
                     </div>
-                    <div className="hidden md:block">
+                    <div className="">
                       <TokenShowcasePanel />
                     </div>
                   </div>
@@ -138,33 +133,27 @@ export default function HomePage() {
             <TabsContent value="teach">
               <Card>
                 <CardContent className="space-y-6">
-                  <div className="grid gap-6 md:grid-cols-[1fr_320px] items-center">
+                  <div className="grid gap-12 md:grid-cols-[1fr_320px] items-start">
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-6">
                         <TerminalIcon
-                          className="h-10 w-10 text-primary flex-shrink-0"
+                          className="h-9 w-9 text-primary flex-shrink-0"
                           animate
                           loop
                         />
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            Teach your AI
+                        <div className="flex gap-2 flex-col">
+                          <h3 className="text-2xl font-semibold">
+                            Train your AI
                           </h3>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-foreground/70">
                             Integrate tokens into your AI workflows so
                             generators produce consistent, token-driven UI. Use
                             the MCP to programmatically generate token sets.
                           </p>
+                          <Button intent="default" className="mt-2" asChild>
+                            <Link href="/docs">Read the MCP docs</Link>
+                          </Button>
                         </div>
-                      </div>
-                      <div>
-                        <Button
-                          intent="default"
-                          className="shadow-lg shadow-primary/20"
-                          asChild
-                        >
-                          <Link href="/docs">Read the MCP docs</Link>
-                        </Button>
                       </div>
                     </div>
                     <div className="hidden md:block">
@@ -188,15 +177,15 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="space-y-6">
-                <h2 className="text-4xl font-bold tracking-tight">
+                <h2 className="text-4xl font-bold tracking-tight ">
                   You and your AI aren&apos;t speaking the same design language
                 </h2>
-                <p className="text-lg text-foreground">
+                <p className="text-lg text-foreground leading-relaxed">
                   We've all felt the pain when designs don't translate from
                   Figma to code. Design tokens introduce a shared vocabulary:
                   named values for colors, spacing, typography.
                 </p>
-                <p className="text-md text-foreground">
+                <p className="text-md text-foreground leading-relaxed">
                   The same problem exists with AI.{" "}
                   <Term term="design-tokens">Design tokens</Term> apply semantic
                   names to standardised values – whether in{" "}
@@ -217,6 +206,9 @@ export default function HomePage() {
             How to speak to your AI in design tokens
           </h2>
         </div>
+
+        <FrameworkDiscoveryPanel darkBg />
+
         <TokenSection
           id="colors"
           title="Colour"
