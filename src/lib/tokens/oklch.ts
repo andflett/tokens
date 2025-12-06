@@ -4,6 +4,7 @@
  */
 
 import { formatHex, formatRgb, formatHsl, Oklch, converter } from "culori";
+// @ts-ignore
 import { APCAcontrast, sRGBtoY } from "apca-w3";
 import type { ColorScale, ColorFormat } from "../types";
 
