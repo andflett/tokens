@@ -64,7 +64,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col bg-[#fff4ff]/60 dark:bg-background">
+          <div className="flex min-h-screen flex-col bg-primary-25 dark:bg-background">
             <SiteHeader />
             <main className="relative flex-1">
               {/* Subtle grid only at top of main content */}

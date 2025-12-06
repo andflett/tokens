@@ -151,9 +151,7 @@ export function TokenGenerator({
     "light"
   );
   const [exportOpen, setExportOpen] = React.useState(false);
-  const [generatorTab, setGeneratorTab] = React.useState<
-    "web" | "mcp" | "preview"
-  >("web");
+  const [showPreview, setShowPreview] = React.useState(false);
   const validTabs = [
     "colors",
     "typography",
@@ -366,750 +364,472 @@ export function TokenGenerator({
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* Main Generator Tab (Web vs MCP) */}
-      <Tabs
-        value={generatorTab}
-        onValueChange={(v) => setGeneratorTab(v as "web" | "mcp" | "preview")}
-      >
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <AnimatedTabsList
-            value={generatorTab}
-            onValueChange={(v) =>
-              setGeneratorTab(v as "web" | "mcp" | "preview")
-            }
-            items={[
-              {
-                value: "web",
-                label: (
-                  <>
-                    <ComputerDesktopIcon className="h-4 w-4" />
-                    Web Generator
-                  </>
-                ),
-              },
-              {
-                value: "preview",
-                label: (
-                  <>
-                    <ViewColumnsIcon className="h-4 w-4" />
-                    Preview
-                  </>
-                ),
-              },
-              {
-                value: "mcp",
-                label: (
-                  <>
-                    <CommandLineIcon className="h-4 w-4" />
-                    AI MCP Tool
-                  </>
-                ),
-              },
-            ]}
-          />
+      {/* Top bar with token type nav (left) and action buttons (right) */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        {tokens && (
+          <Tabs value={tokenTab} onValueChange={setTokenTab}>
+            <AnimatedTabsList
+              value={tokenTab}
+              onValueChange={setTokenTab}
+              items={[
+                {
+                  value: "colors",
+                  label: (
+                    <>
+                      <SwatchIcon className="h-4 w-4" />
+                      Colors
+                    </>
+                  ),
+                },
+                {
+                  value: "typography",
+                  label: (
+                    <>
+                      <DocumentTextIcon className="h-4 w-4" />
+                      Typography
+                    </>
+                  ),
+                },
+                {
+                  value: "spacing",
+                  label: (
+                    <>
+                      <ArrowsPointingOutIcon className="h-4 w-4" />
+                      Space
+                    </>
+                  ),
+                },
+                {
+                  value: "radii",
+                  label: (
+                    <>
+                      <StopIcon className="h-4 w-4" />
+                      Radius
+                    </>
+                  ),
+                },
+                {
+                  value: "shadows",
+                  label: (
+                    <>
+                      <Square3Stack3DIcon className="h-4 w-4" />
+                      Shadows
+                    </>
+                  ),
+                },
+                {
+                  value: "borders",
+                  label: (
+                    <>
+                      <ViewColumnsIcon className="h-4 w-4" />
+                      Borders
+                    </>
+                  ),
+                },
+                {
+                  value: "layout",
+                  label: (
+                    <>
+                      <Squares2X2Icon className="h-4 w-4" />
+                      Layout
+                    </>
+                  ),
+                },
+              ]}
+              className="flex-wrap"
+            />
+          </Tabs>
+        )}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowPreview(!showPreview)}
+            className="flex items-center gap-1.5"
+          >
+            <ViewColumnsIcon className="h-4 w-4" />
+            {showPreview ? "Hide Preview" : "Show Preview"}
+          </Button>
           <Button onClick={() => setExportOpen(true)}>
             Export your tokens
           </Button>
         </div>
+      </div>
 
-        <TabsContent value="web" className="mt-6 space-y-6">
-          {/* Token Tabs */}
-          {tokens && (
-            <Card>
-              <CardContent>
-                <Tabs
-                  value={tokenTab}
-                  onValueChange={setTokenTab}
-                  className="space-y-6"
-                >
-                  <AnimatedTabsList
-                    value={tokenTab}
-                    onValueChange={setTokenTab}
-                    items={[
-                      {
-                        value: "colors",
-                        label: (
-                          <>
-                            <SwatchIcon className="h-4 w-4" />
-                            Colors
-                          </>
-                        ),
-                      },
-                      {
-                        value: "typography",
-                        label: (
-                          <>
-                            <DocumentTextIcon className="h-4 w-4" />
-                            Typography
-                          </>
-                        ),
-                      },
-                      {
-                        value: "spacing",
-                        label: (
-                          <>
-                            <ArrowsPointingOutIcon className="h-4 w-4" />
-                            Space
-                          </>
-                        ),
-                      },
-                      {
-                        value: "radii",
-                        label: (
-                          <>
-                            <StopIcon className="h-4 w-4" />
-                            Radius
-                          </>
-                        ),
-                      },
-                      {
-                        value: "shadows",
-                        label: (
-                          <>
-                            <Square3Stack3DIcon className="h-4 w-4" />
-                            Shadows
-                          </>
-                        ),
-                      },
-                      {
-                        value: "borders",
-                        label: (
-                          <>
-                            <ViewColumnsIcon className="h-4 w-4" />
-                            Borders
-                          </>
-                        ),
-                      },
-                      {
-                        value: "layout",
-                        label: (
-                          <>
-                            <Squares2X2Icon className="h-4 w-4" />
-                            Layout
-                          </>
-                        ),
-                      },
-                    ]}
-                    className="flex-wrap"
-                  />
+      {/* Preview Gallery (conditionally shown) */}
+      {showPreview && tokens && (
+        <Card>
+          <CardContent className="pt-6">
+            <PreviewGallery tokens={tokens} />
+          </CardContent>
+        </Card>
+      )}
 
-                  {/* Colors Tab */}
-                  <TabsContent value="colors" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <Tabs
+      {/* Token Editor */}
+      {tokens && (
+        <Card>
+          <CardContent>
+            <Tabs
+              value={tokenTab}
+              onValueChange={setTokenTab}
+              className="space-y-6"
+            >
+              {/* Colors Tab */}
+              <TabsContent value="colors" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
+                      <div className="flex items-center justify-between gap-4">
+                        <AnimatedTabsList
                           value={colorSubTab}
                           onValueChange={setColorSubTab}
+                          items={[
+                            { value: "primitives", label: "Color Scales" },
+                            { value: "semantic", label: "Semantic" },
+                          ]}
+                        />
+                        <ThemeToggler
+                          theme={
+                            (theme || "system") as "light" | "dark" | "system"
+                          }
+                          resolvedTheme={
+                            (resolvedTheme || "light") as "light" | "dark"
+                          }
+                          setTheme={setTheme}
+                          direction="ltr"
                         >
-                          <div className="flex items-center justify-between gap-4">
-                            <AnimatedTabsList
-                              value={colorSubTab}
-                              onValueChange={setColorSubTab}
-                              items={[
-                                { value: "primitives", label: "Color Scales" },
-                                { value: "semantic", label: "Semantic" },
-                              ]}
-                            />
-                            <ThemeToggler
-                              theme={
-                                (theme || "system") as
-                                  | "light"
-                                  | "dark"
-                                  | "system"
-                              }
-                              resolvedTheme={
-                                (resolvedTheme || "light") as "light" | "dark"
-                              }
-                              setTheme={setTheme}
-                              direction="ltr"
-                            >
-                              {({ resolved, toggleTheme }) => (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const newMode =
-                                      resolved === "light" ? "dark" : "light";
-                                    toggleTheme(newMode);
-                                  }}
-                                  className="border border-primary/15 shadow-md shadow-primary/20 p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full cursor-pointer"
-                                >
-                                  {/* Animated pill background */}
-                                  <div
-                                    className="absolute h-8 rounded-full bg-primary-subdued transition-all duration-200 ease-out"
-                                    style={{
-                                      left:
-                                        resolved === "light"
-                                          ? "6px"
-                                          : "calc(50% + 2px)",
-                                      width: "calc(50% - 8px)",
-                                    }}
-                                  />
-                                  {/* Light button */}
-                                  <div
-                                    className={cn(
-                                      "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                                      resolved === "light"
-                                        ? "text-primary-subdued-foreground"
-                                        : "text-foreground"
-                                    )}
-                                  >
-                                    <SunIcon className="h-4 w-4" />
-                                  </div>
-                                  {/* Dark button */}
-                                  <div
-                                    className={cn(
-                                      "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                                      resolved === "dark"
-                                        ? "text-primary-subdued-foreground"
-                                        : "text-foreground"
-                                    )}
-                                  >
-                                    <MoonIcon className="h-4 w-4" />
-                                  </div>
-                                </button>
-                              )}
-                            </ThemeToggler>
-                          </div>
-
-                          <TabsContent value="primitives" className="mt-4">
-                            <PalettePreviewEditable
-                              palette={tokens.primitives}
-                              colorFormat="oklch"
-                              onColorEdit={handleColorEdit}
-                              onColorReset={handleColorReset}
-                              isColorEdited={isColorEdited}
-                            />
-                          </TabsContent>
-
-                          <TabsContent value="semantic" className="mt-4">
-                            <div
-                              className="rounded-lg p-6"
-                              style={{
-                                backgroundColor:
-                                  previewMode === "light"
-                                    ? "#ffffff"
-                                    : "#0a0a0a",
+                          {({ resolved, toggleTheme }) => (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newMode =
+                                  resolved === "light" ? "dark" : "light";
+                                toggleTheme(newMode);
                               }}
+                              className="border border-primary/15 shadow-md shadow-primary/20 p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full cursor-pointer"
                             >
-                              <p className="text-xs text-muted-foreground mb-4">
-                                Click on any semantic color to select from its
-                                related scale or customize with a color picker.
-                              </p>
-                              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                {Object.entries(
-                                  tokens.semantic[previewMode]
-                                ).map(([name, color]) => {
-                                  const scaleName =
-                                    SEMANTIC_SCALE_MAPPING[name] || "primary";
-                                  const relevantScale =
-                                    tokens.primitives[scaleName];
+                              {/* Animated pill background */}
+                              <div
+                                className="absolute h-8 rounded-full bg-primary-subdued transition-all duration-200 ease-out"
+                                style={{
+                                  left:
+                                    resolved === "light"
+                                      ? "6px"
+                                      : "calc(50% + 2px)",
+                                  width: "calc(50% - 8px)",
+                                }}
+                              />
+                              {/* Light button */}
+                              <div
+                                className={cn(
+                                  "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                                  resolved === "light"
+                                    ? "text-primary-subdued-foreground"
+                                    : "text-foreground"
+                                )}
+                              >
+                                <SunIcon className="h-4 w-4" />
+                              </div>
+                              {/* Dark button */}
+                              <div
+                                className={cn(
+                                  "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                                  resolved === "dark"
+                                    ? "text-primary-subdued-foreground"
+                                    : "text-foreground"
+                                )}
+                              >
+                                <MoonIcon className="h-4 w-4" />
+                              </div>
+                            </button>
+                          )}
+                        </ThemeToggler>
+                      </div>
 
-                                  if (
-                                    relevantScale &&
-                                    typeof relevantScale !== "string"
-                                  ) {
-                                    return (
-                                      <SemanticColorEditable
-                                        key={name}
-                                        name={name}
-                                        semantic={color}
-                                        relevantScale={relevantScale}
-                                        scaleName={scaleName}
-                                        onBaseChange={() => {
-                                          toast.info(
-                                            `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
-                                            { duration: 3000 }
-                                          );
-                                        }}
-                                      />
-                                    );
-                                  }
+                      <TabsContent value="primitives" className="mt-4">
+                        <PalettePreviewEditable
+                          palette={tokens.primitives}
+                          colorFormat="oklch"
+                          onColorEdit={handleColorEdit}
+                          onColorReset={handleColorReset}
+                          isColorEdited={isColorEdited}
+                        />
+                      </TabsContent>
+
+                      <TabsContent value="semantic" className="mt-4">
+                        <div
+                          className="rounded-lg p-6"
+                          style={{
+                            backgroundColor:
+                              previewMode === "light" ? "#ffffff" : "#0a0a0a",
+                          }}
+                        >
+                          <p className="text-xs text-muted-foreground mb-4">
+                            Click on any semantic color to select from its
+                            related scale or customize with a color picker.
+                          </p>
+                          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {Object.entries(tokens.semantic[previewMode]).map(
+                              ([name, color]) => {
+                                const scaleName =
+                                  SEMANTIC_SCALE_MAPPING[name] || "primary";
+                                const relevantScale =
+                                  tokens.primitives[scaleName];
+
+                                if (
+                                  relevantScale &&
+                                  typeof relevantScale !== "string"
+                                ) {
                                   return (
-                                    <SemanticColorPreview
+                                    <SemanticColorEditable
                                       key={name}
                                       name={name}
                                       semantic={color}
+                                      relevantScale={relevantScale}
+                                      scaleName={scaleName}
+                                      onBaseChange={() => {
+                                        toast.info(
+                                          `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
+                                          { duration: 3000 }
+                                        );
+                                      }}
                                     />
                                   );
-                                })}
-                              </div>
-                            </div>
-                          </TabsContent>
-                        </Tabs>
-                        <TailwindUsageExample type="colors" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <h3 className="text-base font-semibold">
-                            Set Your Brand Colors
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            Choose your primary and secondary colors. Our smart
-                            algorithms will automatically generate complete
-                            11-shade color scales and complementary palettes
-                            (neutral, success, warning, destructive) using OKLCH
-                            color space for perceptually uniform results.
-                          </p>
+                                }
+                                return (
+                                  <SemanticColorPreview
+                                    key={name}
+                                    name={name}
+                                    semantic={color}
+                                  />
+                                );
+                              }
+                            )}
+                          </div>
                         </div>
-                        <BrandColorPickers
-                          primary={brandColors.primary}
-                          secondary={brandColors.secondary}
-                          onChange={setBrandColors}
-                        />
-                        <div className="rounded-lg border bg-muted/50 p-3">
-                          <p className="text-sm text-muted-foreground">
-                            <strong>Tip:</strong> You can fine-tune any color in
-                            the scales below, or let the algorithms handle
-                            everything for a harmonious design system.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Typography Tab */}
-                  <TabsContent value="typography" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <TypographyPreview
-                          typography={tokens.typography}
-                          previewMode={previewMode}
-                        />
-                        <TailwindUsageExample type="typography" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <TypographyEditor
-                          baseFontSize={typographySettings.baseFontSize}
-                          onBaseFontSizeChange={(value) =>
-                            setTypographySettings((prev) => ({
-                              ...prev,
-                              baseFontSize: value,
-                            }))
-                          }
-                          multiplier={typographySettings.multiplier}
-                          onMultiplierChange={(value) =>
-                            setTypographySettings((prev) => ({
-                              ...prev,
-                              multiplier: value,
-                            }))
-                          }
-                          normalTracking={typographySettings.normalTracking}
-                          onNormalTrackingChange={(value) =>
-                            setTypographySettings((prev) => ({
-                              ...prev,
-                              normalTracking: value,
-                            }))
-                          }
-                          normalLeading={typographySettings.normalLeading}
-                          onNormalLeadingChange={(value) =>
-                            setTypographySettings((prev) => ({
-                              ...prev,
-                              normalLeading: value,
-                            }))
-                          }
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Spacing Tab */}
-                  <TabsContent value="spacing" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <SpacingPreview spacing={tokens.spacing} />
-                        <TailwindUsageExample type="spacing" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <SpacingEditor
-                          baseUnit={spacingBaseUnit}
-                          onBaseUnitChange={setSpacingBaseUnit}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Radii Tab */}
-                  <TabsContent value="radii" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <RadiiPreview
-                          radii={tokens.radii}
-                          previewMode={previewMode}
-                        />
-                        <TailwindUsageExample type="radii" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <RadiiEditor
-                          baseRadius={radiiSettings.base}
-                          onBaseRadiusChange={(value) =>
-                            setRadiiSettings((prev) => ({
-                              ...prev,
-                              base: value,
-                            }))
-                          }
-                          multiplier={radiiSettings.multiplier}
-                          onMultiplierChange={(value) =>
-                            setRadiiSettings((prev) => ({
-                              ...prev,
-                              multiplier: value,
-                            }))
-                          }
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Shadows Tab */}
-                  <TabsContent value="shadows" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <ShadowsPreview
-                          shadows={tokens.shadows}
-                          previewMode={previewMode}
-                        />
-                        <TailwindUsageExample type="shadows" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <ShadowsEditorAdvanced
-                          settings={shadowSettings}
-                          onSettingsChange={setShadowSettings}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Borders Tab */}
-                  <TabsContent value="borders" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <BordersPreview
-                          previewMode={previewMode}
-                          borderColors={tokens.borderColors?.[previewMode]}
-                          borderWidth={tokens.borderWidth}
-                        />
-                        <TailwindUsageExample type="borders" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <BorderColorsEditor
-                          borderColors={
-                            tokens.borderColors || {
-                              light: { default: "", input: "", ring: "" },
-                              dark: { default: "", input: "", ring: "" },
-                            }
-                          }
-                          onBorderColorsChange={(colors) =>
-                            setBorderSettings((prev) => ({
-                              ...prev,
-                              colors: colors[previewMode],
-                            }))
-                          }
-                          borderWidth={borderSettings.width}
-                          onBorderWidthChange={(width) =>
-                            setBorderSettings((prev) => ({ ...prev, width }))
-                          }
-                          previewMode={previewMode}
-                          primitives={tokens.primitives}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Layout Tab */}
-                  <TabsContent value="layout" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                      {/* Left: Preview & Usage */}
-                      <div className="space-y-6">
-                        <LayoutPreview layout={layoutTokens} />
-                        <TailwindUsageExample type="layout" />
-                      </div>
-                      {/* Right: Editor/Controls */}
-                      <div className="border-b pb-6">
-                        <LayoutEditor
-                          layout={layoutTokens}
-                          onLayoutChange={setLayoutTokens}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Export Dialog */}
-          {tokens && (
-            <ExportDialog
-              open={exportOpen}
-              onOpenChange={setExportOpen}
-              tokens={tokens}
-              mode={mode}
-            />
-          )}
-        </TabsContent>
-
-        {/* MCP Tool Tab */}
-        <TabsContent value="mcp" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                  <CommandLineIcon className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <div>
-                  <CardTitle>AI MCP Tool</CardTitle>
-                  <CardDescription>
-                    Use this generator with AI assistants via the Model Context
-                    Protocol (MCP)
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Prompt Example - demonstrating MCP usage */}
-              {(() => {
-                const mcpExamplePrompt =
-                  "Generate a complete design token system for my fintech app with a deep blue primary color (#1e40af) and warm orange secondary (#f97316). Include all color scales, typography, spacing, and shadows. Export as Tailwind v4 CSS variables.";
-                return (
+                      </TabsContent>
+                    </Tabs>
+                    <TailwindUsageExample type="colors" />
+                  </div>
+                  {/* Right: Editor/Controls */}
                   <div className="space-y-4">
-                    <div className="rounded-md border bg-card overflow-hidden shadow-lg">
-                      {/* File header */}
-                      <div className="flex items-center justify-between px-4 py-2.5 bg-muted/30 border-b">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <SparkleIcon className="h-4 w-4" />
-                          <span className="font-mono text-xs">
-                            Try something like...
-                          </span>
-                        </div>
-                        <CopyButton text={mcpExamplePrompt} />
-                      </div>
-
-                      {/* Chat messages */}
-                      <div className="p-4 space-y-4">
-                        {/* User message */}
-                        <div className="flex justify-end">
-                          <div className="max-w-[85%] rounded-2xl bg-neutral-100 px-4 py-2.5 text-foreground/70 text-sm">
-                            <div className="leading-relaxed whitespace-pre-wrap">
-                              {mcpExamplePrompt}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* AI thinking indicator */}
-                        <div className="flex items-start gap-3">
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-primary/60" />
-                          </div>
-                          <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-muted/50">
-                            <div className="flex gap-1">
-                              <div
-                                className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
-                                style={{
-                                  animationDelay: "0ms",
-                                  animationDuration: "1.4s",
-                                }}
-                              />
-                              <div
-                                className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
-                                style={{
-                                  animationDelay: "200ms",
-                                  animationDuration: "1.4s",
-                                }}
-                              />
-                              <div
-                                className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
-                                style={{
-                                  animationDelay: "400ms",
-                                  animationDuration: "1.4s",
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="space-y-2">
+                      <h3 className="text-base font-semibold">
+                        Set Your Brand Colors
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Choose your primary and secondary colors. Our algorithms
+                        will automatically generate complete 12-shade color
+                        scales and complementary palettes (neutral, success,
+                        warning, destructive) using OKLCH color space for
+                        perceptually uniform results.
+                      </p>
                     </div>
-                  </div>
-                );
-              })()}
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">What is MCP?</h3>
-                <p className="text-muted-foreground">
-                  The Model Context Protocol (MCP) allows AI assistants like
-                  Claude, GitHub Copilot, and others to connect to external
-                  tools and services. This means you can ask your AI assistant
-                  to generate design tokens for you directly!
-                </p>
-              </div>
-
-              {/* Installation Options */}
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-xl border p-4">
-                  <h4 className="font-medium mb-2">🌐 Hosted Server</h4>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Use our hosted MCP server - no installation required. Always
-                    up-to-date.
-                  </p>
-                  <code className="text-xs bg-muted px-2 py-1 rounded block">
-                    https://tokens.flett.cc/mcp
-                  </code>
-                </div>
-                <div className="rounded-xl border p-4">
-                  <h4 className="font-medium mb-2">📦 NPM Package</h4>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Install locally via npm for offline use and privacy.
-                  </p>
-                  <Button intent="default" asChild variant="outline" size="sm">
-                    <a
-                      href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View on NPM →
-                    </a>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Setup Instructions</h3>
-
-                {/* Claude Desktop */}
-                <div className="rounded-xl border p-4 space-y-3">
-                  <h4 className="font-medium">Claude Desktop</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Add to ~/Library/Application
-                    Support/Claude/claude_desktop_config.json (macOS)
-                  </p>
-
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">
-                      Option 1: Hosted Server
-                    </p>
-                    <div className="rounded-lg bg-muted p-3">
-                      <pre className="text-xs font-mono overflow-x-auto">
-                        {`{
-  "mcpServers": {
-    "tokens": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://tokens.flett.cc/mcp"]
-    }
-  }
-}`}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">
-                      Option 2: Local NPM Package
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      First:{" "}
-                      <code className="bg-muted px-1 rounded">
-                        npm install -g @flett/design-tokens-mcp-server
-                      </code>
-                    </p>
-                    <div className="rounded-lg bg-muted p-3">
-                      <pre className="text-xs font-mono overflow-x-auto">
-                        {`{
-  "mcpServers": {
-    "tokens": {
-      "command": "toke-mcp"
-    }
-  }
-}`}
-                      </pre>
+                    <BrandColorPickers
+                      primary={brandColors.primary}
+                      secondary={brandColors.secondary}
+                      onChange={setBrandColors}
+                    />
+                    <div className="rounded-lg border bg-muted/50 p-3">
+                      <p className="text-sm text-muted-foreground">
+                        <strong>Tip:</strong> You can fine-tune any color in the
+                        scales below, or let the algorithms handle everything
+                        for a harmonious design system.
+                      </p>
                     </div>
                   </div>
                 </div>
+              </TabsContent>
 
-                {/* VS Code */}
-                <div className="rounded-xl border p-4 space-y-3">
-                  <h4 className="font-medium">VS Code + GitHub Copilot</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Add to settings.json:
-                  </p>
-                  <div className="rounded-lg bg-muted p-3">
-                    <pre className="text-xs font-mono overflow-x-auto">
-                      {`{
-  "github.copilot.chat.mcp": {
-    "servers": {
-      "tokens": {
-        "url": "https://tokens.flett.cc/mcp"
-      }
-    }
-  }
-}`}
-                    </pre>
+              {/* Typography Tab */}
+              <TabsContent value="typography" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <TypographyPreview
+                      typography={tokens.typography}
+                      previewMode={previewMode}
+                    />
+                    <TailwindUsageExample type="typography" />
+                  </div>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <TypographyEditor
+                      baseFontSize={typographySettings.baseFontSize}
+                      onBaseFontSizeChange={(value) =>
+                        setTypographySettings((prev) => ({
+                          ...prev,
+                          baseFontSize: value,
+                        }))
+                      }
+                      multiplier={typographySettings.multiplier}
+                      onMultiplierChange={(value) =>
+                        setTypographySettings((prev) => ({
+                          ...prev,
+                          multiplier: value,
+                        }))
+                      }
+                      normalTracking={typographySettings.normalTracking}
+                      onNormalTrackingChange={(value) =>
+                        setTypographySettings((prev) => ({
+                          ...prev,
+                          normalTracking: value,
+                        }))
+                      }
+                      normalLeading={typographySettings.normalLeading}
+                      onNormalLeadingChange={(value) =>
+                        setTypographySettings((prev) => ({
+                          ...prev,
+                          normalLeading: value,
+                        }))
+                      }
+                    />
                   </div>
                 </div>
+              </TabsContent>
 
-                {/* Cursor */}
-                <div className="rounded-xl border p-4 space-y-3">
-                  <h4 className="font-medium">Cursor</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Add to ~/.cursor/mcp.json:
-                  </p>
-                  <div className="rounded-lg bg-muted p-3">
-                    <pre className="text-xs font-mono overflow-x-auto">
-                      {`{
-  "tokens": {
-    "url": "https://tokens.flett.cc/mcp"
-  }
-}`}
-                    </pre>
+              {/* Spacing Tab */}
+              <TabsContent value="spacing" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <SpacingPreview spacing={tokens.spacing} />
+                    <TailwindUsageExample type="spacing" />
+                  </div>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <SpacingEditor
+                      baseUnit={spacingBaseUnit}
+                      onBaseUnitChange={setSpacingBaseUnit}
+                    />
                   </div>
                 </div>
-              </div>
+              </TabsContent>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Example Prompts</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">
-                      &quot;Generate a token system with blue as the primary
-                      color&quot;
-                    </p>
+              {/* Radii Tab */}
+              <TabsContent value="radii" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <RadiiPreview
+                      radii={tokens.radii}
+                      previewMode={previewMode}
+                    />
+                    <TailwindUsageExample type="radii" />
                   </div>
-                  <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">
-                      &quot;Create dark mode tokens for a health tech app&quot;
-                    </p>
-                  </div>
-                  <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">
-                      &quot;Make a warm color palette with orange and
-                      brown&quot;
-                    </p>
-                  </div>
-                  <div className="rounded-lg border p-3">
-                    <p className="text-sm font-medium">
-                      &quot;Export my tokens as Tailwind v4 CSS&quot;
-                    </p>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <RadiiEditor
+                      baseRadius={radiiSettings.base}
+                      onBaseRadiusChange={(value) =>
+                        setRadiiSettings((prev) => ({
+                          ...prev,
+                          base: value,
+                        }))
+                      }
+                      multiplier={radiiSettings.multiplier}
+                      onMultiplierChange={(value) =>
+                        setRadiiSettings((prev) => ({
+                          ...prev,
+                          multiplier: value,
+                        }))
+                      }
+                    />
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </TabsContent>
 
-        {/* Preview Tab */}
-        <TabsContent value="preview" className="mt-6">
-          {tokens && <PreviewGallery tokens={tokens} />}
-        </TabsContent>
-      </Tabs>
+              {/* Shadows Tab */}
+              <TabsContent value="shadows" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <ShadowsPreview
+                      shadows={tokens.shadows}
+                      previewMode={previewMode}
+                    />
+                    <TailwindUsageExample type="shadows" />
+                  </div>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <ShadowsEditorAdvanced
+                      settings={shadowSettings}
+                      onSettingsChange={setShadowSettings}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Borders Tab */}
+              <TabsContent value="borders" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <BordersPreview
+                      previewMode={previewMode}
+                      borderColors={tokens.borderColors?.[previewMode]}
+                      borderWidth={tokens.borderWidth}
+                    />
+                    <TailwindUsageExample type="borders" />
+                  </div>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <BorderColorsEditor
+                      borderColors={
+                        tokens.borderColors || {
+                          light: { default: "", input: "", ring: "" },
+                          dark: { default: "", input: "", ring: "" },
+                        }
+                      }
+                      onBorderColorsChange={(colors) =>
+                        setBorderSettings((prev) => ({
+                          ...prev,
+                          colors: colors[previewMode],
+                        }))
+                      }
+                      borderWidth={borderSettings.width}
+                      onBorderWidthChange={(width) =>
+                        setBorderSettings((prev) => ({ ...prev, width }))
+                      }
+                      previewMode={previewMode}
+                      primitives={tokens.primitives}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Layout Tab */}
+              <TabsContent value="layout" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
+                  {/* Left: Preview & Usage */}
+                  <div className="space-y-6">
+                    <LayoutPreview layout={layoutTokens} />
+                    <TailwindUsageExample type="layout" />
+                  </div>
+                  {/* Right: Editor/Controls */}
+                  <div className="border-b pb-6">
+                    <LayoutEditor
+                      layout={layoutTokens}
+                      onLayoutChange={setLayoutTokens}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Export Dialog */}
+      {tokens && (
+        <ExportDialog
+          open={exportOpen}
+          onOpenChange={setExportOpen}
+          tokens={tokens}
+          mode={mode}
+        />
+      )}
     </div>
   );
 }

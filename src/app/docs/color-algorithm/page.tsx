@@ -111,8 +111,9 @@ export default function ColorAlgorithmPage() {
           <h2 className="text-2xl font-bold mb-4">Chromatic Color Algorithm</h2>
           <p className="text-muted-foreground mb-6">
             For colors with hue (blues, greens, oranges, purples, etc.), we use
-            a three-part approach inspired by Matt Ström's WCAG-driven color
-            palette generation.
+            a Radix Colors-inspired approach with smooth easing curves,
+            progressive chroma distribution, and constant hue for brand
+            consistency.
           </p>
 
           <div className="space-y-6">
@@ -120,91 +121,103 @@ export default function ColorAlgorithmPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  1. Smooth Lightness Distribution
+                  1. Adaptive Lightness Distribution
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Lightness steps are calibrated to provide visually even
-                  progression from light to dark, optimized for UI elements like
-                  buttons, cards, and badges.
+                  Lightness uses adaptive scaling based on available headroom
+                  above and below the base color. Smooth easing curves at the
+                  light end optimize for UI backgrounds, while larger jumps at
+                  the dark end ensure text contrast and accessibility.
                 </p>
                 <div className="rounded-lg bg-muted p-4">
                   <pre className="text-xs font-mono overflow-x-auto">
-                    {`Shade  Offset from base (500)
-  50   +0.33 (much lighter)
- 100   +0.28
- 200   +0.22
- 300   +0.15
- 400   +0.07
- 500    0.00 (exact base color)
- 600   -0.10
- 700   -0.20
- 800   -0.28
- 900   -0.34
- 950   -0.38`}
+                    {`Shade  Headroom Usage       Purpose
+  25   +98% of available   Nearly white (subtle tint)
+  50   +93% of available   Very light background
+ 100   +86% of available   Light background
+ 200   +76% of available   Soft background
+ 300   +62% of available   UI element background
+ 400   +38% of available   Hover state
+ 500    0% (exact base)    Base/primary color
+ 600   -20% of available   Active/pressed state
+ 700   -38% of available   Borders
+ 800   -56% of available   Solid backgrounds
+ 900   -76% of available   High contrast text
+ 950   -90% of available   Highest contrast`}
                   </pre>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Parabolic Chroma Curve */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  2. Parabolic Chroma Curve
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Chroma follows a parabolic curve that peaks at shade 500,
-                  creating vibrant mid-tones while reducing saturation at
-                  extremes for natural-looking lighter and darker shades.
-                </p>
-                <div className="rounded-lg bg-muted p-4 mb-4">
-                  <pre className="text-xs font-mono">
-                    {`Formula: C(n) = -4(max-min)n² + 4(max-min)n + min
-Where n = normalized position (0-1)
-      max = 1.1 (10% boost at peak)
-      min = 0.3 (70% reduction at extremes)`}
-                  </pre>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  This ensures colors remain vibrant where they matter most
-                  (buttons, links, accents) while preventing oversaturation in
-                  backgrounds and dark UI elements.
+                <p className="text-sm text-muted-foreground mt-4">
+                  This adaptive approach ensures optimal results regardless of
+                  your base color's lightness—whether you start with a light
+                  pastel or a dark, rich hue.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Bezold-Brücke Hue Shift */}
+            {/* Progressive Chroma Easing */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  3. Bezold-Brücke Hue Shift Compensation
+                  2. Progressive Chroma Easing
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Lighter colors appear to shift hue perceptually—a phenomenon
-                  called the Bezold-Brücke effect. We compensate by slightly
-                  rotating hue in lighter shades.
+                  Chroma follows a progressive easing curve that creates subtle
+                  pastel tints at the light end while maintaining full vibrancy
+                  through the interactive range (shades 400-900).
                 </p>
                 <div className="rounded-lg bg-muted p-4 mb-4">
-                  <pre className="text-xs font-mono">
-                    {`Formula: H(n) = H_base + 5(1 - n)
-Where n = normalized position (0-1)
-
-Example: If base hue = 210° (blue)
-  Shade 50:  215° (slightly warmer)
-  Shade 500: 210° (exact base)
-  Shade 950: 210° (stays true)`}
+                  <pre className="text-xs font-mono overflow-x-auto">
+                    {`Shade Range  Chroma %   Purpose
+  25         8-23%      Very subtle hint of color
+  50-100     23-55%     Gentle color introduction
+  100-200    55-85%     Smooth progression
+  200-400    85-100%    Approaching peak
+  400-900    100%       Full peak maintained
+  900-950    94-100%    Minimal reduction`}
                   </pre>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  This subtle adjustment (±5°) keeps colors looking consistent
-                  across the entire scale, preventing the "muddy" or "off"
-                  appearance common in naive algorithms.
+                  This distribution ensures light backgrounds feel clean and
+                  subtle while interactive elements (buttons, links, badges)
+                  remain vibrant and engaging. The extended peak range through
+                  shade 900 maintains color presence even in darker UI elements.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Constant Hue */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  3. Constant Hue Throughout Scale
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Unlike some algorithms that apply hue rotation, we maintain
+                  constant hue across all shades. This ensures perfect brand
+                  color consistency and creates a cohesive, recognizable
+                  palette.
+                </p>
+                <div className="rounded-lg bg-muted p-4 mb-4">
+                  <pre className="text-xs font-mono">
+                    {`Formula: H(n) = H_base (constant)
+
+Example: If base hue = 310.4° (purple)
+  Shade 25:  310.4°
+  Shade 500: 310.4° (exact base)
+  Shade 950: 310.4°`}
+                  </pre>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  This approach, inspired by Radix Colors, prioritizes brand
+                  recognition and visual consistency. Users will immediately
+                  recognize your brand color across all shades, from the
+                  lightest backgrounds to the darkest text.
                 </p>
               </CardContent>
             </Card>
@@ -213,16 +226,16 @@ Example: If base hue = 210° (blue)
           <div className="rounded-xl border p-6 bg-card mt-6">
             <h3 className="font-semibold mb-2">Reference</h3>
             <p className="text-sm text-muted-foreground mb-2">
-              This approach is inspired by Matt Ström's article on generating
-              WCAG-compliant color palettes for Stripe:
+              This approach is inspired by Radix Colors' methodology for
+              creating accessible, beautiful color systems:
             </p>
             <a
-              href="https://mattstromawn.com/writing/generating-color-palettes/"
+              href="https://www.radix-ui.com/colors"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-primary hover:underline"
             >
-              Generating Color Palettes →
+              Radix Colors Documentation →
             </a>
           </div>
         </section>
@@ -364,20 +377,22 @@ Our algorithm at base 0.556:
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Based on proven approaches from Tailwind CSS and Matt Ström's
-                  work at Stripe, used in thousands of production applications.
+                  Based on proven approaches from Radix Colors and Tailwind CSS,
+                  methodologies used in thousands of production applications and
+                  design systems.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Natural-Looking</CardTitle>
+                <CardTitle className="text-lg">Brand Consistent</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Hue shift compensation prevents the "muddy" or "off"
-                  appearance common in algorithmically generated scales.
+                  Constant hue throughout the scale ensures perfect brand color
+                  recognition. Your purple stays purple from the lightest tint
+                  to the darkest shade.
                 </p>
               </CardContent>
             </Card>

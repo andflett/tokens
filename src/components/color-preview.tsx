@@ -116,7 +116,7 @@ export function EditableColorSwatch({
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "h-10 w-full rounded transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 relative group",
+            "h-15 w-full rounded transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 relative group",
             isEdited && "ring-2 ring-offset-1 ring-primary",
             className
           )}
@@ -214,7 +214,7 @@ export function ColorScalePreview({
   className,
 }: ColorScalePreviewProps) {
   const shades = [
-    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+    25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
   ] as const;
 
   return (
@@ -260,7 +260,7 @@ export function ColorScalePreviewEditable({
   className,
 }: ColorScalePreviewEditableProps) {
   const shades = [
-    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+    25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
   ] as const;
 
   return (

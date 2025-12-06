@@ -55,6 +55,9 @@ export function SiteHeader() {
           <Link href="/generate" className={navLinkClass("/generate")}>
             Token Designer
           </Link>
+          <Link href="/mcp" className={navLinkClass("/mcp")}>
+            AI MCP
+          </Link>
           <Link href="/docs" className={navLinkClass("/docs")}>
             Documentation
           </Link>
@@ -176,6 +179,20 @@ export function SiteHeader() {
               onClick={() => setMobileMenuOpen(false)}
             >
               About
+            </Link>
+            <Link
+              href="/generate"
+              className={mobileNavLinkClass("/generate")}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Token Designer
+            </Link>
+            <Link
+              href="/mcp"
+              className={mobileNavLinkClass("/mcp")}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              AI MCP
             </Link>
             <Link
               href="/docs"

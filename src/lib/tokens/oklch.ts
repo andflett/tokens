@@ -4,6 +4,7 @@
  */
 
 import { formatHex, formatRgb, formatHsl, Oklch, converter } from "culori";
+import { APCAcontrast, sRGBtoY } from "apca-w3";
 import type { ColorScale, ColorFormat } from "../types";
 
 const toOklch = converter("oklch");
@@ -58,74 +59,161 @@ function toe(l: number): number {
 }
 
 /**
- * Compute scale lightness using WCAG-driven exponential contrast function
- * Guarantees 4.5:1 contrast ratio for colors 500 steps apart (WCAG AA)
+ * Compute scale lightness using APCA contrast algorithm
+ * Creates perceptually uniform lightness steps based on APCA contrast values
+ *
+ * APCA provides better perceptual accuracy than WCAG 2.x:
+ * - Lc 90 = High contrast (body text)
+ * - Lc 75 = Medium contrast (large text)
+ * - Lc 60 = Moderate contrast (UI elements)
+ * - Lc 45 = Low contrast (disabled states)
  *
  * @param scaleValue - Position in scale (0 = lightest, 1 = darkest)
- * @param backgroundY - Background luminance (1.0 for white in light mode)
+ * @param backgroundY - Background luminance (for APCA calculation)
+ * @param targetContrast - Target APCA contrast value (default 90)
  */
 function computeScaleLightness(
   scaleValue: number,
-  backgroundY: number
+  backgroundY: number,
+  targetContrast: number = 90
 ): number {
-  // Exponential contrast function: Y = (Yb + 0.05) / e^(3.04x) - 0.05
-  // Higher x values produce darker colors (more contrast with white background)
-  const Y = (backgroundY + 0.05) / Math.exp(3.04 * scaleValue) - 0.05;
+  // For light backgrounds, we want darker colors as scaleValue increases
+  // APCA contrast is directional: text on background
+  // We use exponential distribution for smooth perceptual steps
 
-  // Convert Y to Lab L* then apply toe function for OKLab L
-  const labL = YtoL(Math.max(0, Math.min(1, Y)));
-  const okLabL = toe(labL / 100); // Normalize to 0-1 range
+  // Map scaleValue (0-1) to APCA contrast range
+  // scaleValue 0 (lightest) = low contrast (Lc ~15)
+  // scaleValue 0.5 (medium) = medium contrast (Lc ~60-75)
+  // scaleValue 1 (darkest) = high contrast (Lc ~90-108)
+  const minContrast = 15;
+  const maxContrast = 108;
+  const apcaContrast =
+    minContrast + (maxContrast - minContrast) * Math.pow(scaleValue, 1.5);
 
-  return okLabL;
+  // Binary search to find the Y luminance that achieves target APCA contrast
+  let low = 0.0;
+  let high = 1.0;
+  let iterations = 0;
+  const maxIterations = 50;
+  const tolerance = 0.5; // APCA contrast tolerance
+
+  while (iterations < maxIterations && high - low > 0.0001) {
+    const mid = (low + high) / 2;
+
+    // Convert Y to sRGB for APCA (approximate grayscale)
+    const textRGB = Math.pow(mid, 1 / 2.2) * 255;
+    const bgRGB = Math.pow(backgroundY, 1 / 2.2) * 255;
+
+    // Calculate APCA contrast (text on background)
+    const contrast = Math.abs(
+      APCAcontrast(
+        sRGBtoY([textRGB, textRGB, textRGB]),
+        sRGBtoY([bgRGB, bgRGB, bgRGB])
+      )
+    );
+
+    if (Math.abs(contrast - apcaContrast) < tolerance) {
+      // Convert Y to Lab L* then to OKLab L
+      const labL = YtoL(mid);
+      return toe(labL / 100);
+    }
+
+    if (contrast < apcaContrast) {
+      // Need more contrast, so adjust based on background
+      if (backgroundY > 0.5) {
+        high = mid; // Lighter bg: go darker
+      } else {
+        low = mid; // Darker bg: go lighter
+      }
+    } else {
+      if (backgroundY > 0.5) {
+        low = mid;
+      } else {
+        high = mid;
+      }
+    }
+
+    iterations++;
+  }
+
+  // Fallback: convert final Y to OKLab L
+  const finalY = (low + high) / 2;
+  const labL = YtoL(finalY);
+  return toe(labL / 100);
 }
 
 /**
- * Compute scale chroma using parabolic curve
- * Creates vibrant mid-tones while reducing chroma at extremes
+ * Compute scale chroma using progressive easing curve
+ * Creates smooth chroma transitions from desaturated light tints to vibrant mid-tones
+ *
+ * Chroma Distribution:
+ * - Shade 25 (0-0.03): 8-23% - Very subtle hint of color
+ * - Shades 50-100 (0.03-0.12): 23-55% - Gentle color introduction
+ * - Shades 100-200 (0.12-0.28): 55-85% - Smooth progression to vibrant
+ * - Shades 200-400 (0.28-0.45): 85-100% - Approaching peak saturation
+ * - Shades 400-900 (0.45-0.85): 100% - Full peak chroma maintained
+ * - Shades 900-950 (0.85-1): 94-100% - Minimal reduction for darkest shade
  *
  * @param scaleValue - Position in scale (0 = lightest, 1 = darkest)
  * @param baseChroma - Chroma of the base color (shade 500)
- * @param minMultiplier - Chroma multiplier at extremes (default 0.3)
- * @param maxMultiplier - Chroma multiplier at peak (default 1.1)
  */
-function computeScaleChroma(
-  scaleValue: number,
-  baseChroma: number,
-  minMultiplier: number = 0.3,
-  maxMultiplier: number = 1.1
-): number {
-  // Parabolic formula: S(n) = -4(Smax - Smin)n² + 4(Smax - Smin)n + Smin
-  // This creates a curve that peaks at n = 0.5 (shade 500)
-  const diff = maxMultiplier - minMultiplier;
-  const multiplier =
-    -4 * diff * Math.pow(scaleValue, 2) + 4 * diff * scaleValue + minMultiplier;
+function computeScaleChroma(scaleValue: number, baseChroma: number): number {
+  // For lightest shade (0-0.03), very subtle chroma
+  if (scaleValue < 0.03) {
+    const t = scaleValue / 0.03;
+    return baseChroma * (0.08 + 0.15 * Math.pow(t, 1.5));
+  }
 
-  return baseChroma * multiplier;
-}
+  // For very light colors (0.03-0.12), gradually build chroma
+  if (scaleValue < 0.12) {
+    const t = (scaleValue - 0.03) / 0.09;
+    return baseChroma * (0.23 + 0.32 * Math.pow(t, 1.3));
+  }
 
-/**
- * Compute scale hue with Bezold-Brücke shift compensation
- * Lighter colors appear to shift hue, this compensates for the effect
- *
- * @param scaleValue - Position in scale (0 = lightest, 1 = darkest)
- * @param baseHue - Hue of the base color (shade 500)
- */
-function computeScaleHue(scaleValue: number, baseHue: number): number {
-  // Bezold-Brücke shift: H(n) = Hbase + 5(1 - n)
-  // Lighter colors (n → 0) shift hue slightly
-  const shift = 5 * (1 - scaleValue);
-  return (baseHue + shift + 360) % 360;
+  // For light colors (0.12-0.28), continue smooth progression
+  if (scaleValue < 0.28) {
+    const t = (scaleValue - 0.12) / 0.16;
+    return baseChroma * (0.55 + 0.3 * Math.pow(t, 1.1));
+  }
+
+  // For medium-light to mid range (0.28-0.45), approach full chroma
+  if (scaleValue < 0.45) {
+    const t = (scaleValue - 0.28) / 0.17;
+    return baseChroma * (0.85 + 0.15 * t);
+  }
+
+  // For mid to dark range (0.45-0.85), maintain peak chroma
+  if (scaleValue < 0.85) {
+    return baseChroma;
+  }
+
+  // For very dark colors (0.85-1), minimal chroma reduction
+  const t = (scaleValue - 0.85) / 0.15;
+  return baseChroma * (1 - 0.06 * t);
 }
 
 /**
  * Generate a color scale from a base color using OKLCH
- * Creates 11 shades (50,100,200,...,900,950) with perceptually uniform lightness
+ * Creates 12 shades (25,50,100,200,...,900,950) with perceptually uniform lightness
  * Shade 500 exactly matches the baseColor
  *
- * Algorithm based on Matt Ström's WCAG-driven approach:
- * - Exponential contrast function guarantees 4.5:1 ratio for WCAG AA compliance
- * - Parabolic chroma curve creates vibrant mid-tones
- * - Bezold-Brücke hue shift compensation for natural appearance
+ * Algorithm inspired by Radix Colors methodology:
+ *
+ * Lightness Distribution:
+ * - Uses easing curves for smooth perceptual transitions
+ * - Light shades (25-400): Gradual steps optimized for UI backgrounds and subtle states
+ * - Dark shades (600-950): Larger jumps for text contrast and accessibility
+ * - Adaptive scaling based on available headroom above/below base color
+ *
+ * Chroma Distribution:
+ * - Progressive easing from desaturated light tints (8% at shade 25)
+ * - Smooth transitions through mid-range (reaching 100% by shade 400)
+ * - Peak chroma maintained through interactive range (shades 400-900)
+ * - Minimal reduction only at darkest shade (950)
+ *
+ * Hue:
+ * - Constant throughout entire scale (no Bezold-Brücke shift)
+ * - Ensures brand color consistency across all shades
  */
 export function generateColorScale(baseColor: string): ColorScale {
   const base = parseToOklch(baseColor);
@@ -140,38 +228,45 @@ export function generateColorScale(baseColor: string): ColorScale {
   // Based on Tailwind's neutral scale: very light at top, huge drops in middle range
   let lightnessSteps: Record<number, number>;
 
-  console.log({ isAchromatic, baseChroma, base, baseColor });
+  // Calculate available headroom for lighter/darker shades
+  const maxLightness = 0.98;
+  const minLightness = 0.15;
+  const headroomUp = maxLightness - baseLightness;
+  const headroomDown = baseLightness - minLightness;
 
   if (isAchromatic) {
-    // For neutrals: match Tailwind's distribution pattern
-    // Small steps at light end, massive drops 300-500, medium steps at dark end
+    // For neutrals: Smooth exponential curve with adaptive scaling
+    // More even perceptual steps throughout the range
     lightnessSteps = {
-      50: baseLightness + 0.429, // Very close to white
-      100: baseLightness + 0.414, // Tiny step from 50
-      200: baseLightness + 0.366, // Small step
-      300: baseLightness + 0.314, // Small step
-      400: baseLightness + 0.152, // HUGE drop
-      500: baseLightness, // Exact match (around 0.556 for neutral-500)
-      600: baseLightness - 0.117, // Large drop
-      700: baseLightness - 0.185, // Medium step
-      800: baseLightness - 0.287, // Large drop
-      900: baseLightness - 0.351, // Medium step
-      950: baseLightness - 0.411, // Medium step
+      25: baseLightness + headroomUp * 0.98, // Nearly white
+      50: baseLightness + headroomUp * 0.94, // Very light
+      100: baseLightness + headroomUp * 0.88, // Very light
+      200: baseLightness + headroomUp * 0.78, // Light
+      300: baseLightness + headroomUp * 0.64, // Light
+      400: baseLightness + headroomUp * 0.32, // Medium-light
+      500: baseLightness, // Exact match
+      600: baseLightness - headroomDown * 0.3, // Medium-dark
+      700: baseLightness - headroomDown * 0.48, // Dark
+      800: baseLightness - headroomDown * 0.66, // Dark
+      900: baseLightness - headroomDown * 0.82, // Very dark
+      950: baseLightness - headroomDown * 0.92, // Extremely dark
     };
   } else {
-    // For chromatic colors: smooth, more even distribution
+    // For chromatic colors: Radix-style easing with smooth gradients at light end
+    // and larger jumps at dark end for text contrast
     lightnessSteps = {
-      50: baseLightness + 0.33, // Much lighter
-      100: baseLightness + 0.28,
-      200: baseLightness + 0.22,
-      300: baseLightness + 0.15,
-      400: baseLightness + 0.07,
-      500: baseLightness, // Exact match
-      600: baseLightness - 0.1,
-      700: baseLightness - 0.2,
-      800: baseLightness - 0.28,
-      900: baseLightness - 0.34,
-      950: baseLightness - 0.38,
+      25: baseLightness + headroomUp * 0.98, // Nearly white (subtle tint)
+      50: baseLightness + headroomUp * 0.93, // Very light background
+      100: baseLightness + headroomUp * 0.86, // Light background
+      200: baseLightness + headroomUp * 0.71, // Soft background
+      300: baseLightness + headroomUp * 0.6, // UI element background
+      400: baseLightness + headroomUp * 0.38, // Hover state
+      500: baseLightness, // Base color
+      600: baseLightness - headroomDown * 0.2, // Active/pressed state (smaller step)
+      700: baseLightness - headroomDown * 0.38, // Borders
+      800: baseLightness - headroomDown * 0.56, // Solid backgrounds
+      900: baseLightness - headroomDown * 0.76, // High contrast text
+      950: baseLightness - headroomDown * 0.9, // Highest contrast
     };
   }
 
@@ -189,20 +284,17 @@ export function generateColorScale(baseColor: string): ColorScale {
     // Clamp lightness to valid range
     const lightness = Math.max(0.15, Math.min(0.98, targetLightness));
 
-    // Calculate normalized position for chroma/hue (0 = shade 50, 0.5 = shade 500, 1 = shade 950)
-    const normalizedPosition = (shadeNum - 50) / 900;
+    // Calculate normalized position for chroma/hue (0 = shade 25, ~0.51 = shade 500, 1 = shade 950)
+    const normalizedPosition = (shadeNum - 25) / 925;
 
-    // Compute chroma using parabolic curve (creates vibrant mid-tones)
+    // Compute chroma (creates vibrant mid-tones, desaturated at extremes)
     let chroma = baseChroma;
     if (!isAchromatic) {
       chroma = computeScaleChroma(normalizedPosition, baseChroma);
     }
 
-    // Compute hue with Bezold-Brücke shift compensation
-    let hue = baseHue;
-    if (!isAchromatic) {
-      hue = computeScaleHue(normalizedPosition, baseHue);
-    }
+    // Keep hue constant (no Bezold-Brücke shift for Radix-style consistency)
+    const hue = baseHue;
 
     const shadeColor: Oklch = {
       mode: "oklch",

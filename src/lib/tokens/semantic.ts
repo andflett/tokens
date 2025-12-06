@@ -27,8 +27,8 @@ function findContrastingColor(
   const darkContrast = getContrastRatio(background, darkColor);
 
   // Prefer light text unless dark text is SIGNIFICANTLY better
-  // Dark text must have at least 1.5x better contrast ratio AND meet WCAG AA
-  if (darkContrast >= 4.5 && darkContrast > lightContrast * 1.5) {
+  // Dark text must have at least 2x better contrast ratio AND meet WCAG AA
+  if (darkContrast >= 4.5 && darkContrast > lightContrast * 2) {
     // Only use dark text if it's much better and accessible
     return darkColor;
   } else {

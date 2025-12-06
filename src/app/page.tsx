@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Term } from "@/components/term";
 import Link from "next/link";
 import { BoltIcon } from "@heroicons/react/24/outline";
+import { LetterSpacingIcon, LineHeightIcon } from "@radix-ui/react-icons";
 
 // Import home page components
 import { TokenBadge } from "@/components/home/token-badge";
@@ -43,14 +44,14 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="pb-12 pt-18 relative flex flex-col items-center gap-4">
-        <Badge variant={"ghost"}>
+      <section className="pb-6 pt-14 relative flex flex-col items-center gap-4">
+        {/* <Badge variant={"ghost"}>
           <Sparkles loop animate className="h-7 w-7 mr-1" />
           Design Tokens for AI
-        </Badge>
-        <div className="max-w-3xl text-center items-center relative flex flex-col gap-6">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight relative">
-            Why does my AI-generated UI look like turd?
+        </Badge> */}
+        <div className="max-w-2xl text-center items-center relative flex flex-col gap-6">
+          <h1 className="text-3xl md:text-5xl font-bold leading-tight tracking-tight relative">
+            Why does everything I build with AI look like turd?
           </h1>
         </div>
       </section>
@@ -59,7 +60,7 @@ export default function HomePage() {
       <section className="pb-18">
         <div className="mx-auto max-w-3xl">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-11">
               <AnimatedTabsList
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -228,10 +229,13 @@ export default function HomePage() {
           prompt="Add consistent spacing between these cards using our spacing scale (6 units), and set padding inside each card to 8 units"
         />
 
+        <LetterSpacingIcon />
+        <LineHeightIcon />
+
         <TokenSection
           id="typography"
           title="Typography"
-          description="Font sizes use a named scale from extra-small to extra-large. Weights range from normal to bold. Your AI understands these token names better than raw pixel values."
+          description="Font sizes use a named scale from extra-small to extra-large. Line-height follows our leading scale (tight, snug, normal, relaxed, loose) and letter spacing follows our tracking scale (tighter through widest) defined in tokens. Weights range from normal to bold. Your AI understands these semantic names better than raw pixel values."
           visual={<TypographyVisual />}
           tokenList={<TypographyTokenList />}
           prompt="Make all headings extra-large and bold, body text should be the base size, and captions should be small with muted color"
