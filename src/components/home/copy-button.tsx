@@ -4,8 +4,15 @@ import { useState } from "react";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
-export function CopyButton({ text }: { text: string }) {
+export function CopyButton({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -15,13 +22,14 @@ export function CopyButton({ text }: { text: string }) {
   };
 
   return (
-    <button
+    <Button
+      variant={"ghost"}
+      intent="secondary"
       onClick={handleCopy}
       className={cn(
-        "inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all",
-        copied
-          ? "bg-success text-success-foreground"
-          : "text-neutral-200 hover:bg-neutral-700"
+        " transition-all",
+        copied ? "bg-success-subdued text-success-subdued-foreground" : "",
+        className
       )}
       title="Copy to clipboard"
     >
@@ -33,6 +41,6 @@ export function CopyButton({ text }: { text: string }) {
       ) : (
         <ClipboardDocumentIcon className="h-3.5 w-3.5" />
       )}
-    </button>
+    </Button>
   );
 }

@@ -11,12 +11,15 @@ interface TerminalLine {
 }
 
 const terminalContent: TerminalLine[] = [
-  { type: "comment", text: "# Install the Toke MCP Server", delay: 0 },
-  { type: "command", text: "npx -y @tokedesign/mcp-server", delay: 800 },
-  { type: "output", text: "✓ Toke MCP Server started", delay: 1200 },
-  { type: "output", text: "✓ Connected to token generator", delay: 1600 },
-  { type: "comment", text: "# Or use the hosted version", delay: 2400 },
-  { type: "command", text: "https://mcp.toke.design", delay: 3000 },
+  { type: "comment", text: "# Install MCP Server", delay: 0 },
+  {
+    type: "command",
+    text: "npx -y @flett/design-tokens-mcp-server",
+    delay: 600,
+  },
+  { type: "output", text: "✓ Connected to token generator", delay: 600 },
+  { type: "comment", text: "# Or use the hosted version", delay: 600 },
+  { type: "command", text: "https://tokens.flett.cc/mcp", delay: 600 },
 ];
 
 export function AnimatedTerminal() {
@@ -56,7 +59,7 @@ export function AnimatedTerminal() {
   }, [currentCharIndex, isTyping, visibleLines]);
 
   return (
-    <Card className="bg-slate-950 border-slate-800 overflow-hidden font-mono text-sm">
+    <Card className="bg-slate-950 py-0 shadow-none border-slate-800 overflow-hidden font-mono text-sm">
       {/* Terminal header */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-800 bg-slate-900">
         <div className="flex gap-1.5">
@@ -64,7 +67,7 @@ export function AnimatedTerminal() {
           <div className="h-3 w-3 rounded-full bg-yellow-500" />
           <div className="h-3 w-3 rounded-full bg-green-500" />
         </div>
-        <div className="text-xs text-slate-400 ml-2">terminal</div>
+        <div className="text-xs text-slate-400 ml-2">~/your-app</div>
       </div>
 
       {/* Terminal content */}
@@ -115,7 +118,7 @@ export function AnimatedTerminal() {
       {/* Footer with link */}
       <div className="border-t border-slate-800 bg-slate-900/50 px-4 py-2">
         <Link
-          href="https://www.npmjs.com/package/@tokedesign/mcp-server"
+          href="https://www.npmjs.com/package/@flett/design-tokens-mcp-server"
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-slate-400 hover:text-slate-200 transition-colors inline-flex items-center gap-1"

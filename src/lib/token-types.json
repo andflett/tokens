@@ -1,0 +1,37 @@
+{
+  "colors": {
+    "title": "Colour",
+    "description": "Colours are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code.",
+    "prompt": "Use semantic color tokens like bg-background, bg-card, bg-popover with their matching foreground colors. Don't use arbitrary hex codes or custom color values."
+  },
+  "spacing": {
+    "title": "Spacing",
+    "description": "Spacing uses a scale where each step is 4 pixels. When you tell your AI 'add some space,' it picks randomly. Be specific about your spacing values and stick to the scale.",
+    "prompt": "Use spacing tokens from our scale (0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 40, 48, 56, 64). Don't use arbitrary spacing values."
+  },
+  "typography": {
+    "title": "Typography",
+    "description": "Font sizes use a named scale from extra-small to extra-large. Line-height follows our leading scale (tight, snug, normal, relaxed, loose) and letter spacing follows our tracking scale (tighter through widest) defined in tokens. Weights range from normal to bold. Your AI understands these semantic names better than raw pixel values.",
+    "prompt": "Use typography tokens: text-xs through text-xl for sizes, leading-tight/snug/normal/relaxed/loose for line-height, tracking-tighter/wider/widest for letter-spacing, and font-normal/medium/semibold/bold for weights."
+  },
+  "radii": {
+    "title": "Border Radius",
+    "description": "Border radius uses a named scale for rounded corners. Use semantic names like rounded-sm, rounded, rounded-md, rounded-lg instead of arbitrary values.",
+    "prompt": "Use border radius tokens: rounded-none, rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl, rounded-3xl, rounded-full. Don't use arbitrary radius values."
+  },
+  "shadows": {
+    "title": "Shadows",
+    "description": "Shadows use preset levels: small (subtle), medium, and large (pronounced). Don't tell your AI 'add a shadow'—specify which level. Cards usually get small shadows, modals get large.",
+    "prompt": "Use shadow tokens: shadow-sm for subtle elevation, shadow for medium depth, shadow-md and shadow-lg for pronounced effects. Don't create custom shadow values."
+  },
+  "borders": {
+    "title": "Borders",
+    "description": "Borders use preset widths (1px, 2px, 4px) and styles (solid, dashed, dotted). Tell your AI which width and style from our token system, not arbitrary values.",
+    "prompt": "Use border tokens: border (1px), border-2 (2px), border-4 (4px) with semantic colors like border-border, border-input. Use border-solid, border-dashed, border-dotted for styles."
+  },
+  "layout": {
+    "title": "Layout",
+    "description": "Layout tokens define breakpoints for different screen sizes and container widths. Tell your AI which container size to use and when layouts should change, instead of writing custom media queries or arbitrary widths.",
+    "prompt": "Use layout tokens: container classes with max-w-sm/md/lg/xl/2xl, and responsive breakpoints sm:, md:, lg:, xl:, 2xl:. Don't use arbitrary widths or custom media queries."
+  }
+}

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
-import { ThemeToggler } from "@/components/animate-ui/primitives/effects/theme-toggler";
+import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,8 +33,9 @@ import {
   BorderColorsEditor,
   LayoutEditor,
   LayoutPreview,
-  TailwindUsageExample,
+  // TailwindUsageExample,
 } from "@/components/token-editors";
+import { ExamplePrompt } from "@/components/example-prompt";
 import { PreviewGallery } from "@/components/preview-gallery";
 import {
   generateTokens,
@@ -69,8 +70,19 @@ import {
   ComputerDesktopIcon,
   ViewColumnsIcon,
 } from "@heroicons/react/24/outline";
-import { SparkleIcon } from "lucide-react";
+import {
+  BrainCog,
+  BrainIcon,
+  HistoryIcon,
+  SendToBack,
+  SparkleIcon,
+} from "lucide-react";
 import { CopyButton } from "@/components/home/copy-button";
+import { Term } from "@/components/term";
+import tokenTypes from "@/lib/token-types.json";
+import Link from "next/link";
+import { Paintbrush } from "./animate-ui/icons/paintbrush";
+import { ResetIcon } from "@radix-ui/react-icons";
 
 interface TokenGeneratorProps {
   /** Initial brand colors */
@@ -103,6 +115,7 @@ const STORAGE_KEYS = {
   SHADOW_SETTINGS: "toke-shadow-settings",
   LAYOUT_TOKENS: "toke-layout-tokens",
   COLOR_EDITS: "toke-color-edits",
+  COLOR_HISTORY: "toke-color-history",
   // Deprecated keys (for migration)
   BASE_RADIUS: "toke-base-radius",
   TYPOGRAPHY: "toke-typography",
@@ -144,6 +157,14 @@ export function TokenGenerator({
     () =>
       initialColors ||
       loadFromStorage(STORAGE_KEYS.BRAND_COLORS, config.defaultBrandColors)
+  );
+  const [pendingColors, setPendingColors] = React.useState<BrandColors>(
+    () =>
+      initialColors ||
+      loadFromStorage(STORAGE_KEYS.BRAND_COLORS, config.defaultBrandColors)
+  );
+  const [colorHistory, setColorHistory] = React.useState<BrandColors[]>(() =>
+    loadFromStorage(STORAGE_KEYS.COLOR_HISTORY, [])
   );
   const [mode] = React.useState<"light" | "dark" | "both">("both");
   const [tokens, setTokens] = React.useState<TokenSystem | null>(null);
@@ -248,6 +269,10 @@ export function TokenGenerator({
     saveToStorage(STORAGE_KEYS.COLOR_EDITS, colorEdits);
   }, [colorEdits]);
 
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.COLOR_HISTORY, colorHistory);
+  }, [colorHistory]);
+
   // Sync preview mode with app theme
   React.useEffect(() => {
     if (resolvedTheme === "dark" || resolvedTheme === "light") {
@@ -255,8 +280,8 @@ export function TokenGenerator({
     }
   }, [resolvedTheme]);
 
-  // Generate tokens when colors or mode changes
-  React.useEffect(() => {
+  // Generate tokens function
+  const generateTokenSystem = React.useCallback(() => {
     try {
       const baseTokens = generateTokens(brandColors, mode);
 
@@ -328,6 +353,59 @@ export function TokenGenerator({
     onGenerate,
   ]);
 
+  // Generate tokens on initial load
+  React.useEffect(() => {
+    generateTokenSystem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Regenerate when settings change (including colors)
+  React.useEffect(() => {
+    if (tokens) {
+      generateTokenSystem();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    brandColors,
+    spacingBaseUnit,
+    radiiSettings,
+    borderSettings,
+    typographySettings,
+    shadowSettings,
+    layoutTokens,
+    colorEdits,
+  ]);
+
+  const handleGenerateTokens = () => {
+    // Add to history (keep last 10 unique)
+    const newHistory = [
+      pendingColors,
+      ...colorHistory.filter(
+        (h) =>
+          h.primary !== pendingColors.primary ||
+          h.secondary !== pendingColors.secondary
+      ),
+    ].slice(0, 10);
+    setColorHistory(newHistory);
+
+    // Update active colors which will trigger token regeneration
+    setBrandColors(pendingColors);
+    saveToStorage(STORAGE_KEYS.BRAND_COLORS, pendingColors);
+    toast.success("Tokens generated!");
+  };
+
+  const handleResetColors = () => {
+    setPendingColors(config.defaultBrandColors);
+    toast.info("Colors reset to defaults");
+  };
+
+  const handleSelectFromHistory = (colors: BrandColors) => {
+    setPendingColors(colors);
+    setBrandColors(colors);
+    saveToStorage(STORAGE_KEYS.BRAND_COLORS, colors);
+    toast.success("Colors loaded from history!");
+  };
+
   const handleColorEdit = (
     colorName: string,
     shade: number,
@@ -360,6 +438,18 @@ export function TokenGenerator({
 
   const isColorEdited = (colorName: string, shade: number) => {
     return colorEdits[colorName]?.[shade] !== undefined;
+  };
+
+  // Introduction panel component
+  const IntroPanel = ({ type }: { type: keyof typeof tokenTypes }) => {
+    const data = tokenTypes[type];
+    return (
+      <div className="">
+        <h2 className="font-bold mb-2 text-2xl">{data.title}</h2>
+        <p className="text-foreground/90 mb-4">{data.description}</p>
+        <ExamplePrompt type={type} />
+      </div>
+    );
   };
 
   return (
@@ -426,7 +516,7 @@ export function TokenGenerator({
                     </>
                   ),
                 },
-                {
+                /* {
                   value: "layout",
                   label: (
                     <>
@@ -434,7 +524,7 @@ export function TokenGenerator({
                       Layout
                     </>
                   ),
-                },
+                } */
               ]}
               className="flex-wrap"
             />
@@ -467,358 +557,426 @@ export function TokenGenerator({
 
       {/* Token Editor */}
       {tokens && (
-        <Card>
-          <CardContent>
-            <Tabs
-              value={tokenTab}
-              onValueChange={setTokenTab}
-              className="space-y-6"
-            >
-              {/* Colors Tab */}
-              <TabsContent value="colors" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
-                      <div className="flex items-center justify-between gap-4">
-                        <AnimatedTabsList
-                          value={colorSubTab}
-                          onValueChange={setColorSubTab}
-                          items={[
-                            { value: "primitives", label: "Color Scales" },
-                            { value: "semantic", label: "Semantic" },
-                          ]}
-                        />
-                        <ThemeToggler
-                          theme={
-                            (theme || "system") as "light" | "dark" | "system"
-                          }
-                          resolvedTheme={
-                            (resolvedTheme || "light") as "light" | "dark"
-                          }
-                          setTheme={setTheme}
-                          direction="ltr"
-                        >
-                          {({ resolved, toggleTheme }) => (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newMode =
-                                  resolved === "light" ? "dark" : "light";
-                                toggleTheme(newMode);
-                              }}
-                              className="border border-primary/15 shadow-md shadow-primary/20 p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full cursor-pointer"
-                            >
-                              {/* Animated pill background */}
-                              <div
-                                className="absolute h-8 rounded-full bg-primary-subdued transition-all duration-200 ease-out"
-                                style={{
-                                  left:
-                                    resolved === "light"
-                                      ? "6px"
-                                      : "calc(50% + 2px)",
-                                  width: "calc(50% - 8px)",
-                                }}
-                              />
-                              {/* Light button */}
-                              <div
-                                className={cn(
-                                  "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                                  resolved === "light"
-                                    ? "text-primary-subdued-foreground"
-                                    : "text-foreground"
-                                )}
-                              >
-                                <SunIcon className="h-4 w-4" />
-                              </div>
-                              {/* Dark button */}
-                              <div
-                                className={cn(
-                                  "relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                                  resolved === "dark"
-                                    ? "text-primary-subdued-foreground"
-                                    : "text-foreground"
-                                )}
-                              >
-                                <MoonIcon className="h-4 w-4" />
-                              </div>
-                            </button>
-                          )}
-                        </ThemeToggler>
-                      </div>
+        <Tabs
+          value={tokenTab}
+          onValueChange={setTokenTab}
+          className="space-y-6"
+        >
+          {/* Colors Tab */}
+          <TabsContent value="colors" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
 
-                      <TabsContent value="primitives" className="mt-4">
-                        <PalettePreviewEditable
-                          palette={tokens.primitives}
-                          colorFormat="oklch"
-                          onColorEdit={handleColorEdit}
-                          onColorReset={handleColorReset}
-                          isColorEdited={isColorEdited}
-                        />
-                      </TabsContent>
+              <Card>
+                <CardContent className="space-y-8">
+                  <IntroPanel type="colors" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <Tabs value={colorSubTab} onValueChange={setColorSubTab}>
+                    <div className="flex items-center justify-between gap-4">
+                      <AnimatedTabsList
+                        value={colorSubTab}
+                        onValueChange={setColorSubTab}
+                        items={[
+                          { value: "primitives", label: "Color Scales" },
+                          { value: "semantic", label: "Semantic" },
+                        ]}
+                      />
+                      <ThemeSwitch size="lg" />
+                    </div>
 
-                      <TabsContent value="semantic" className="mt-4">
-                        <div
-                          className="rounded-lg p-6"
-                          style={{
-                            backgroundColor:
-                              previewMode === "light" ? "#ffffff" : "#0a0a0a",
-                          }}
-                        >
-                          <p className="text-xs text-muted-foreground mb-4">
-                            Click on any semantic color to select from its
-                            related scale or customize with a color picker.
-                          </p>
-                          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {Object.entries(tokens.semantic[previewMode]).map(
-                              ([name, color]) => {
-                                const scaleName =
-                                  SEMANTIC_SCALE_MAPPING[name] || "primary";
-                                const relevantScale =
-                                  tokens.primitives[scaleName];
+                    <TabsContent value="primitives" className="mt-4">
+                      <PalettePreviewEditable
+                        palette={Object.fromEntries(
+                          Object.entries(tokens.primitives).filter(
+                            ([key]) => !["green", "red", "yellow"].includes(key)
+                          )
+                        )}
+                        colorFormat="oklch"
+                        onColorEdit={handleColorEdit}
+                        onColorReset={handleColorReset}
+                        isColorEdited={isColorEdited}
+                      />
+                    </TabsContent>
 
-                                if (
-                                  relevantScale &&
-                                  typeof relevantScale !== "string"
-                                ) {
-                                  return (
-                                    <SemanticColorEditable
-                                      key={name}
-                                      name={name}
-                                      semantic={color}
-                                      relevantScale={relevantScale}
-                                      scaleName={scaleName}
-                                      onBaseChange={() => {
-                                        toast.info(
-                                          `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
-                                          { duration: 3000 }
-                                        );
-                                      }}
-                                    />
-                                  );
-                                }
+                    <TabsContent value="semantic" className="mt-4">
+                      <div
+                        className="rounded-lg p-6"
+                        style={{
+                          backgroundColor:
+                            previewMode === "light" ? "#ffffff" : "#0a0a0a",
+                        }}
+                      >
+                        <p className="text-xs text-muted-foreground mb-4">
+                          Click on any semantic color to select from its related
+                          scale or customize with a color picker.
+                        </p>
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                          {Object.entries(tokens.semantic[previewMode]).map(
+                            ([name, color]) => {
+                              const scaleName =
+                                SEMANTIC_SCALE_MAPPING[name] || "primary";
+                              const relevantScale =
+                                tokens.primitives[scaleName];
+
+                              if (
+                                relevantScale &&
+                                typeof relevantScale !== "string"
+                              ) {
                                 return (
-                                  <SemanticColorPreview
+                                  <SemanticColorEditable
                                     key={name}
                                     name={name}
                                     semantic={color}
+                                    relevantScale={relevantScale}
+                                    scaleName={scaleName}
+                                    onBaseChange={() => {
+                                      toast.info(
+                                        `To change ${name} semantic colors, modify the ${scaleName} brand color above.`,
+                                        { duration: 3000 }
+                                      );
+                                    }}
                                   />
                                 );
                               }
-                            )}
-                          </div>
+                              return (
+                                <SemanticColorPreview
+                                  key={name}
+                                  name={name}
+                                  semantic={color}
+                                />
+                              );
+                            }
+                          )}
                         </div>
-                      </TabsContent>
-                    </Tabs>
-                    <TailwindUsageExample type="colors" />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                  {/* <TailwindUsageExample type="colors" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96">
+                <CardHeader className="gap-1">
+                  <CardTitle className="text-xl font-bold">
+                    Generate your colour tokens
+                  </CardTitle>
+                  <CardDescription>
+                    Select primary and secondary colours to get started. You can
+                    fine tune once generated.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <BrandColorPickers
+                    primary={pendingColors.primary}
+                    secondary={pendingColors.secondary}
+                    onChange={setPendingColors}
+                    colorHistory={colorHistory}
+                    onSelectFromHistory={handleSelectFromHistory}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleGenerateTokens}
+                      className="flex-1"
+                      disabled={
+                        pendingColors.primary === brandColors.primary &&
+                        pendingColors.secondary === brandColors.secondary
+                      }
+                    >
+                      <Paintbrush className="h-4 w-4" animateOnHover />
+                      Generate
+                    </Button>
+                    {/*    <Button
+                      intent="secondary"
+                      variant="outline"
+                      onClick={handleResetColors}
+                    >
+                      Reset
+                    </Button> */}
                   </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="text-base font-semibold">
-                        Set Your Brand Colors
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Choose your primary and secondary colors. Our algorithms
-                        will automatically generate complete 12-shade color
-                        scales and complementary palettes (neutral, success,
-                        warning, destructive) using OKLCH color space for
-                        perceptually uniform results.
-                      </p>
+                  {colorHistory.length > 0 && (
+                    <div className="flex gap-2 flex-row items-center">
+                      <div className="flex flex-wrap ">
+                        {colorHistory.slice(0, 6).map((colors, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSelectFromHistory(colors)}
+                            className="flex items-center gap-1 p-1 rounded hover:bg-primary-subdued cursor-pointer transition-colors"
+                            title={`${colors.primary} / ${colors.secondary}`}
+                          >
+                            <div
+                              className="h-5 w-5 rounded shadow-sm  border border-white"
+                              style={{ backgroundColor: colors.primary }}
+                            />
+                            <div
+                              className="ml-[-10px] h-5 w-5 rounded shadow-sm border border-white"
+                              style={{ backgroundColor: colors.secondary }}
+                            />
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <BrandColorPickers
-                      primary={brandColors.primary}
-                      secondary={brandColors.secondary}
-                      onChange={setBrandColors}
-                    />
-                    <div className="rounded-lg border bg-muted/50 p-3">
-                      <p className="text-sm text-muted-foreground">
-                        <strong>Tip:</strong> You can fine-tune any color in the
-                        scales below, or let the algorithms handle everything
-                        for a harmonious design system.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
+                  )}
+                  <CardDescription className="space-y-2 text-sm text-muted-foreground border-t border-border/60 pt-3 mt-4">
+                    <p>
+                      We generate color scales and complementary semantic colors
+                      using <Term term="oklch">OKLCH</Term> color space and{" "}
+                      <Term term="apca">APCA</Term> contrast algorithms
+                      beautiful perceptually accurate, accessible color tokens.
+                      Learn more in the{" "}
+                      <Link
+                        href="/docs/color-algorithm"
+                        className="text-primary underline"
+                      >
+                        docs
+                      </Link>
+                      .
+                    </p>
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Typography Tab */}
-              <TabsContent value="typography" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <TypographyPreview
-                      typography={tokens.typography}
-                      previewMode={previewMode}
-                    />
-                    <TailwindUsageExample type="typography" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <TypographyEditor
-                      baseFontSize={typographySettings.baseFontSize}
-                      onBaseFontSizeChange={(value) =>
-                        setTypographySettings((prev) => ({
-                          ...prev,
-                          baseFontSize: value,
-                        }))
-                      }
-                      multiplier={typographySettings.multiplier}
-                      onMultiplierChange={(value) =>
-                        setTypographySettings((prev) => ({
-                          ...prev,
-                          multiplier: value,
-                        }))
-                      }
-                      normalTracking={typographySettings.normalTracking}
-                      onNormalTrackingChange={(value) =>
-                        setTypographySettings((prev) => ({
-                          ...prev,
-                          normalTracking: value,
-                        }))
-                      }
-                      normalLeading={typographySettings.normalLeading}
-                      onNormalLeadingChange={(value) =>
-                        setTypographySettings((prev) => ({
-                          ...prev,
-                          normalLeading: value,
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-              </TabsContent>
+          {/* Typography Tab */}
+          <TabsContent value="typography" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="typography" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <TypographyPreview
+                    typography={tokens.typography}
+                    previewMode={previewMode}
+                  />
+                  {/* <TailwindUsageExample type="typography" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardHeader>
+                  <CardTitle>Typography Settings</CardTitle>
+                  <CardDescription>
+                    Adjust font sizes, scales, and spacing to match your design.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <TypographyEditor
+                    baseFontSize={typographySettings.baseFontSize}
+                    onBaseFontSizeChange={(value) =>
+                      setTypographySettings((prev) => ({
+                        ...prev,
+                        baseFontSize: value,
+                      }))
+                    }
+                    multiplier={typographySettings.multiplier}
+                    onMultiplierChange={(value) =>
+                      setTypographySettings((prev) => ({
+                        ...prev,
+                        multiplier: value,
+                      }))
+                    }
+                    normalTracking={typographySettings.normalTracking}
+                    onNormalTrackingChange={(value) =>
+                      setTypographySettings((prev) => ({
+                        ...prev,
+                        normalTracking: value,
+                      }))
+                    }
+                    normalLeading={typographySettings.normalLeading}
+                    onNormalLeadingChange={(value) =>
+                      setTypographySettings((prev) => ({
+                        ...prev,
+                        normalLeading: value,
+                      }))
+                    }
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Spacing Tab */}
-              <TabsContent value="spacing" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <SpacingPreview spacing={tokens.spacing} />
-                    <TailwindUsageExample type="spacing" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <SpacingEditor
-                      baseUnit={spacingBaseUnit}
-                      onBaseUnitChange={setSpacingBaseUnit}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
+          {/* Spacing Tab */}
+          <TabsContent value="spacing" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="spacing" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <SpacingPreview spacing={tokens.spacing} />
+                  {/* <TailwindUsageExample type="spacing" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardHeader>
+                  <CardTitle>Spacing Settings</CardTitle>
+                  <CardDescription>
+                    Configure the base unit for your spacing scale.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <SpacingEditor
+                    baseUnit={spacingBaseUnit}
+                    onBaseUnitChange={setSpacingBaseUnit}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Radii Tab */}
-              <TabsContent value="radii" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <RadiiPreview
-                      radii={tokens.radii}
-                      previewMode={previewMode}
-                    />
-                    <TailwindUsageExample type="radii" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <RadiiEditor
-                      baseRadius={radiiSettings.base}
-                      onBaseRadiusChange={(value) =>
-                        setRadiiSettings((prev) => ({
-                          ...prev,
-                          base: value,
-                        }))
-                      }
-                      multiplier={radiiSettings.multiplier}
-                      onMultiplierChange={(value) =>
-                        setRadiiSettings((prev) => ({
-                          ...prev,
-                          multiplier: value,
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-              </TabsContent>
+          {/* Radii Tab */}
+          <TabsContent value="radii" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="radii" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <RadiiPreview
+                    radii={tokens.radii}
+                    previewMode={previewMode}
+                  />
+                  {/* <TailwindUsageExample type="radii" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardHeader>
+                  <CardTitle>Border Radius Settings</CardTitle>
+                  <CardDescription>
+                    Adjust the base radius and scale for rounded corners.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadiiEditor
+                    baseRadius={radiiSettings.base}
+                    onBaseRadiusChange={(value) =>
+                      setRadiiSettings((prev) => ({
+                        ...prev,
+                        base: value,
+                      }))
+                    }
+                    multiplier={radiiSettings.multiplier}
+                    onMultiplierChange={(value) =>
+                      setRadiiSettings((prev) => ({
+                        ...prev,
+                        multiplier: value,
+                      }))
+                    }
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Shadows Tab */}
-              <TabsContent value="shadows" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <ShadowsPreview
-                      shadows={tokens.shadows}
-                      previewMode={previewMode}
-                    />
-                    <TailwindUsageExample type="shadows" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <ShadowsEditorAdvanced
-                      settings={shadowSettings}
-                      onSettingsChange={setShadowSettings}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
+          {/* Shadows Tab */}
+          <TabsContent value="shadows" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="shadows" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <ShadowsPreview
+                    shadows={tokens.shadows}
+                    previewMode={previewMode}
+                  />
+                  {/* <TailwindUsageExample type="shadows" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardHeader>
+                  <CardTitle>Shadow Settings</CardTitle>
+                  <CardDescription>
+                    Fine-tune shadow appearance with offset, blur, and opacity.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ShadowsEditorAdvanced
+                    settings={shadowSettings}
+                    onSettingsChange={setShadowSettings}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Borders Tab */}
-              <TabsContent value="borders" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <BordersPreview
-                      previewMode={previewMode}
-                      borderColors={tokens.borderColors?.[previewMode]}
-                      borderWidth={tokens.borderWidth}
-                    />
-                    <TailwindUsageExample type="borders" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <BorderColorsEditor
-                      borderColors={
-                        tokens.borderColors || {
-                          light: { default: "", input: "", ring: "" },
-                          dark: { default: "", input: "", ring: "" },
-                        }
+          {/* Borders Tab */}
+          <TabsContent value="borders" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="borders" />
+                  {/* ExamplePrompt moved to IntroPanel */}
+                  <BordersPreview
+                    previewMode={previewMode}
+                    borderColors={tokens.borderColors?.[previewMode]}
+                    borderWidth={tokens.borderWidth}
+                  />
+                  {/* <TailwindUsageExample type="borders" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardContent>
+                  <BorderColorsEditor
+                    borderColors={
+                      tokens.borderColors || {
+                        light: { default: "", input: "", ring: "" },
+                        dark: { default: "", input: "", ring: "" },
                       }
-                      onBorderColorsChange={(colors) =>
-                        setBorderSettings((prev) => ({
-                          ...prev,
-                          colors: colors[previewMode],
-                        }))
-                      }
-                      borderWidth={borderSettings.width}
-                      onBorderWidthChange={(width) =>
-                        setBorderSettings((prev) => ({ ...prev, width }))
-                      }
-                      previewMode={previewMode}
-                      primitives={tokens.primitives}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
+                    }
+                    onBorderColorsChange={(colors) =>
+                      setBorderSettings((prev) => ({
+                        ...prev,
+                        colors: colors[previewMode],
+                      }))
+                    }
+                    borderWidth={borderSettings.width}
+                    onBorderWidthChange={(width) =>
+                      setBorderSettings((prev) => ({ ...prev, width }))
+                    }
+                    previewMode={previewMode}
+                    primitives={tokens.primitives}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-              {/* Layout Tab */}
-              <TabsContent value="layout" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 items-start">
-                  {/* Left: Preview & Usage */}
-                  <div className="space-y-6">
-                    <LayoutPreview layout={layoutTokens} />
-                    <TailwindUsageExample type="layout" />
-                  </div>
-                  {/* Right: Editor/Controls */}
-                  <div className="border-b pb-6">
-                    <LayoutEditor
-                      layout={layoutTokens}
-                      onLayoutChange={setLayoutTokens}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+          {/* Layout Tab */}
+          <TabsContent value="layout" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6 pt-6">
+                  <IntroPanel type="layout" />
+                  <LayoutPreview layout={layoutTokens} />
+                  {/* <TailwindUsageExample type="layout" /> */}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+                <CardHeader>
+                  <CardTitle>Layout Settings</CardTitle>
+                  <CardDescription>
+                    Set up container widths and responsive breakpoints.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LayoutEditor
+                    layout={layoutTokens}
+                    onLayoutChange={setLayoutTokens}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       )}
 
       {/* Export Dialog */}

@@ -131,13 +131,13 @@ export function AIInstructionsDemo() {
       {/* Terminal header */}
       <div className="flex items-center justify-between gap-2 border-b border-neutral-800 bg-neutral-900 px-4 py-2.5">
         <div className="flex gap-1.5">
-          <div className="h-3 w-3 rounded-full bg-neutral-700" />
-          <div className="h-3 w-3 rounded-full bg-neutral-700" />
-          <div className="h-3 w-3 rounded-full bg-neutral-700" />
+          <div className="h-3 w-3 rounded-full bg-red-600" />
+          <div className="h-3 w-3 rounded-full bg-yellow-600" />
+          <div className="h-3 w-3 rounded-full bg-green-600" />
         </div>
 
-        {/* Subtle tabs */}
-        <div className="flex-1 flex items-center justify-end gap-1">
+        {/* Tabs */}
+        <div className="flex-1 flex items-center justify-center gap-1">
           <button
             onClick={() => setActiveTab("claude")}
             className={`px-3 py-1 text-xs font-mono transition-colors ${

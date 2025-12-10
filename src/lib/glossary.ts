@@ -75,12 +75,19 @@ export const glossary: Record<string, GlossaryTerm> = {
     term: "OKLCH",
     short: "A perceptually uniform color space",
     full: "OKLCH is a color space that represents colors in a way that matches human perception. Unlike RGB or HSL, equal steps in OKLCH values produce visually equal changes. This makes it ideal for generating color scales that look balanced.",
-    learnMoreUrl: "https://oklch.com",
+    learnMoreUrl: "/docs/color-algorithm",
+  },
+  apca: {
+    term: "APCA",
+    short:
+      "Advanced Perceptual Contrast Algorithm - a modern contrast measurement",
+    full: "APCA (Advanced Perceptual Contrast Algorithm) is a modern contrast calculation method that better matches human perception than WCAG 2.x. It provides directional, context-aware contrast values that help create more accessible and readable interfaces. We use APCA to ensure color scales have appropriate contrast for text and UI elements.",
+    learnMoreUrl: "/docs/color-algorithm",
   },
   "color-algorithm": {
     term: "Color Algorithm",
     short: "The method used to generate balanced color scales",
-    full: "Our color algorithm uses OKLCH color space with different approaches for chromatic and achromatic colors. Chromatic colors get smooth lightness distribution with parabolic chroma curves for vibrant mid-tones. Neutrals use Tailwind's distribution pattern with subtle light tones and aggressive mid-range contrast for better readability.",
+    full: "Our color algorithm uses OKLCH color space with APCA contrast for perceptually accurate scales. Chromatic colors get smooth lightness distribution with progressive chroma curves for vibrant mid-tones. Neutrals use Tailwind's distribution pattern with subtle light tones and aggressive mid-range contrast for better readability.",
     learnMoreUrl: "/docs/color-algorithm",
   },
   "color-scale": {

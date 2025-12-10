@@ -79,6 +79,13 @@ interface BrandColorPickersProps {
   secondary: string;
   /** Callback when any color changes */
   onChange: (colors: { primary: string; secondary: string }) => void;
+  /** Color history for quick selection */
+  colorHistory?: { primary: string; secondary: string }[];
+  /** Callback when selecting from history */
+  onSelectFromHistory?: (colors: {
+    primary: string;
+    secondary: string;
+  }) => void;
   /** Additional CSS classes */
   className?: string;
 }
@@ -91,17 +98,17 @@ export function BrandColorPickers({
   primary,
   secondary,
   onChange,
+  colorHistory,
+  onSelectFromHistory,
   className,
 }: BrandColorPickersProps) {
   return (
     <div className={cn("grid gap-4 sm:grid-cols-2", className)}>
       <ColorPicker
-        label="Primary"
         value={primary}
         onChange={(color) => onChange({ primary: color, secondary })}
       />
       <ColorPicker
-        label="Secondary"
         value={secondary}
         onChange={(color) => onChange({ primary, secondary: color })}
       />

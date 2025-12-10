@@ -6,13 +6,11 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import TurdLogo from "./turd-logo";
-import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
-import { ThemeToggler } from "@/components/animate-ui/primitives/effects/theme-toggler";
+import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
 
@@ -23,7 +21,7 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "px-3 py-1 rounded text-sm font-medium text-muted-foreground hover:text-foreground transition-colors",
+      "px-3 py-1 rounded text-sm font-medium text-foreground/80 hover:text-foreground transition-colors",
       pathname === href ? "text-foreground" : ""
     );
 
@@ -34,7 +32,7 @@ export function SiteHeader() {
     );
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background">
+    <header className="sticky top-0 z-50 shadow-sm bg-background">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-center px-6">
         <div className="absolute left-6 flex items-center gap-6">
           <Link href="/" aria-label="Home" className="flex items-center">
@@ -61,48 +59,27 @@ export function SiteHeader() {
           <Link href="/docs" className={navLinkClass("/docs")}>
             Documentation
           </Link>
-          {mounted && (
-            <ThemeToggler
-              theme={theme as "light" | "dark" | "system"}
-              resolvedTheme={resolvedTheme as "light" | "dark"}
-              setTheme={setTheme}
-              direction="ltr"
-            >
-              {({ resolved, toggleTheme }) => (
-                <Button
-                  intent="secondary"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => {
-                    const nextTheme = resolved === "light" ? "dark" : "light";
-                    toggleTheme(nextTheme);
-                  }}
-                >
-                  {resolved === "dark" ? (
-                    <MoonIcon className="h-4 w-4" />
-                  ) : (
-                    <SunIcon className="h-4 w-4" />
-                  )}
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
-              )}
-            </ThemeToggler>
-          )}
         </nav>
 
-        {/* Mobile Navigation */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Desktop Theme Switch - right aligned */}
+        <div className="absolute right-6 hidden md:flex items-center">
+          {mounted && <ThemeSwitch size="sm" />}
+        </div>
+
+        {/* Mobile Controls - theme switch + hamburger at far right */}
+        <div className="absolute right-6 flex md:hidden items-center gap-2">
+          {mounted && <ThemeSwitch size="sm" />}
+
           <Button
             intent="default"
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 relative"
+            className=""
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
-            {/* Hamburger to X animation */}
-            <div className="flex flex-col justify-center items-center w-5 h-5">
+            {/* Hamburger to X animation - foreground color */}
+            <div className="flex flex-col justify-center items-center w-5 h-7 text-foreground">
               <span
                 className={cn(
                   "block h-0.5 w-5 bg-current transition-all duration-300 ease-in-out",
@@ -127,38 +104,6 @@ export function SiteHeader() {
               />
             </div>
           </Button>
-        </div>
-
-        {/* Mobile Theme Toggle - Always visible on right */}
-        <div className="absolute right-6 flex md:hidden items-center">
-          {mounted && (
-            <ThemeToggler
-              theme={theme as "light" | "dark" | "system"}
-              resolvedTheme={resolvedTheme as "light" | "dark"}
-              setTheme={setTheme}
-              direction="ltr"
-            >
-              {({ resolved, toggleTheme }) => (
-                <Button
-                  intent="secondary"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => {
-                    const nextTheme = resolved === "light" ? "dark" : "light";
-                    toggleTheme(nextTheme);
-                  }}
-                >
-                  {resolved === "dark" ? (
-                    <MoonIcon className="h-4 w-4" />
-                  ) : (
-                    <SunIcon className="h-4 w-4" />
-                  )}
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
-              )}
-            </ThemeToggler>
-          )}
         </div>
       </div>
 

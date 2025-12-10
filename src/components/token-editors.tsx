@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ColorPicker } from "@/components/color-picker";
+import { LetterSpacingIcon, LineHeightIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { HexColorPicker, HexColorInput } from "react-colorful";
@@ -357,7 +357,7 @@ export function TypographyEditor({
 }: TypographyEditorProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="">
         <div className="space-y-2">
           <Label className="text-sm">Base Font Size (rem)</Label>
           <div className="flex items-center gap-4">
@@ -415,7 +415,7 @@ export function TypographyEditor({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="">
         <div className="space-y-2">
           <Label className="text-sm">Normal Tracking (letter-spacing)</Label>
           <div className="flex items-center gap-4">
@@ -427,6 +427,7 @@ export function TypographyEditor({
               step={1}
               className="flex-1"
             />
+            <LetterSpacingIcon />
             <Input
               type="number"
               value={normalTracking ?? 0}
@@ -458,6 +459,8 @@ export function TypographyEditor({
               step={1}
               className="flex-1"
             />
+            <LineHeightIcon />
+
             <Input
               type="number"
               value={normalLeading ?? 1.5}
@@ -477,11 +480,6 @@ export function TypographyEditor({
           </p>
         </div>
       </div>
-
-      <p className="text-xs text-muted-foreground">
-        Generates xs through 9xl font sizes with calculated line heights. Other
-        values derived from tracking and leading settings.
-      </p>
     </div>
   );
 }
@@ -751,12 +749,7 @@ export function BordersPreview({
     >
       {/* Border Colors Swatches */}
       <div className="space-y-3">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedTextColor }}
-        >
-          Border Color Tokens
-        </h4>
+        <h4 className="text-xs font-mediumr">Border Color Tokens</h4>
         <div className="flex gap-6">
           <div className="flex flex-col items-center gap-2">
             <div

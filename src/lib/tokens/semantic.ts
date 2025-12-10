@@ -116,7 +116,7 @@ export function generateSemanticTokens(
   const muted: SemanticColorPair =
     mode === "light"
       ? {
-          DEFAULT: neutral[100],
+          DEFAULT: neutral[25],
           foreground: neutral[500],
         }
       : {
@@ -178,19 +178,19 @@ export function generateSurfaceTokens(
   if (mode === "light") {
     return {
       background: white,
-      foreground: neutral[950],
+      foreground: neutral[800],
       card: white,
-      "card-foreground": neutral[950],
+      "card-foreground": neutral[800],
       popover: white,
-      "popover-foreground": neutral[950],
+      "popover-foreground": neutral[800],
     };
   } else {
     return {
       background: black,
       foreground: white,
-      card: neutral[900],
+      card: neutral[800],
       "card-foreground": white,
-      popover: neutral[900],
+      popover: neutral[800],
       "popover-foreground": white,
     };
   }

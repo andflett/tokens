@@ -106,6 +106,80 @@ export default function ColorAlgorithmPage() {
 
         <Separator />
 
+        {/* APCA Contrast */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">
+            APCA Contrast for Accessibility
+          </h2>
+          <p className="text-muted-foreground mb-4">
+            We use <Term term="apca">APCA</Term> (Advanced Perceptual Contrast
+            Algorithm) to ensure our color scales meet modern accessibility
+            standards. Unlike WCAG 2.x contrast ratios, APCA provides
+            perceptually accurate, context-aware contrast measurements.
+          </p>
+
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle className="text-lg">Why APCA Over WCAG 2.x?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <p className="font-medium text-sm mb-1">
+                  Perceptually Accurate
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  APCA accounts for how humans actually perceive contrast,
+                  including spatial frequency, polarity effects, and ambient
+                  lighting conditions.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-sm mb-1">
+                  Directional Awareness
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Unlike WCAG ratios, APCA recognizes that light text on dark
+                  backgrounds needs different treatment than dark text on light
+                  backgrounds.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-sm mb-1">
+                  Context-Aware Scoring
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  APCA Lc values directly relate to use cases: Lc 90 for body
+                  text, Lc 75 for large text, Lc 60 for UI elements, Lc 45 for
+                  disabled states.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="rounded-xl border p-6 bg-card">
+            <h3 className="font-semibold mb-2">How We Use APCA</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              When generating color scales, we use APCA to compute optimal
+              lightness values that ensure sufficient contrast for different use
+              cases. This guarantees that:
+            </p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>
+                Light shades work for subtle backgrounds without accessibility
+                issues
+              </li>
+              <li>
+                Mid-range shades provide appropriate contrast for interactive
+                elements
+              </li>
+              <li>Dark shades meet standards for body text (Lc 90+)</li>
+              <li>All scales are perceptually uniform and predictable</li>
+            </ul>
+          </div>
+        </section>
+
+        <Separator />
+
         {/* Chromatic Color Algorithm */}
         <section>
           <h2 className="text-2xl font-bold mb-4">Chromatic Color Algorithm</h2>
@@ -307,21 +381,6 @@ Our algorithm at base 0.556:
   950: 0.145 (vs Tailwind 0.145) ✓`}
               </pre>
             </div>
-          </div>
-
-          <div className="rounded-xl border p-6 bg-card mt-6">
-            <h3 className="font-semibold mb-2">Reference</h3>
-            <p className="text-sm text-muted-foreground mb-2">
-              This approach is based on analysis of Tailwind CSS's color system:
-            </p>
-            <a
-              href="https://designerup.co/blog/how-to-build-a-tailwind-ready-color-system-in-figma-that-developers-love/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-primary hover:underline"
-            >
-              Building a Tailwind-Ready Color System →
-            </a>
           </div>
         </section>
 
