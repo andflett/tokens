@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Mulish,
-  JetBrains_Mono,
-  Noto_Sans,
-  Quicksand,
-  Manrope,
-  Figtree,
-} from "next/font/google";
+import { JetBrains_Mono, Figtree } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -14,6 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { config } from "@/lib/config";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+
 const mulish = Figtree({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -27,24 +21,21 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Why does my AI-generated UI look like turd?",
+    default: "Why does everything I build with AI look like turd?",
     template: "%s | Tokens",
   },
-  description:
-    "Generate beautiful, accessible design tokens from your brand colors. Perfect for designers learning to code with AI assistants.",
+  description: "Generate beautiful, accessible design tokens.",
   metadataBase: new URL(config.appUrl),
   openGraph: {
     title: "Tokens",
-    description:
-      "Generate beautiful, accessible design tokens from your brand colors",
+    description: "Generate beautiful, accessible design tokens.",
     siteName: "Tokens",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Tokens",
-    description:
-      "Generate beautiful, accessible design tokens from your brand colors",
+    description: "Generate beautiful, accessible design tokens.",
   },
 };
 
@@ -65,10 +56,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col bg-[linear-gradient(to_bottom,theme(colors.primary.25),#fdfbff)] dark:bg-[linear-gradient(to_bottom,theme(colors.background),black)]">
+            {/* Subtle grid top of main layout */}
+            <div className="pointer-events-none absolute left-0 right-0 top-0 h-[90vh] z-0 bg-[linear-gradient(rgb(229_184_229_/_0.15)_1px,transparent_1px),linear-gradient(90deg,rgb(229_184_229_/_0.15)_1px,transparent_1px)] bg-[length:16px_16px] [mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] dark:bg-[linear-gradient(rgb(255_255_255_/_0.07)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255_/_0.07)_1px,transparent_1px)]" />
             <SiteHeader />
             <main className="relative flex-1">
-              {/* Subtle grid only at top of main content */}
-              <div className="pointer-events-none absolute left-0 right-0 top-0 h-[90vh] z-0 bg-[linear-gradient(rgb(229_184_229_/_0.15)_1px,transparent_1px),linear-gradient(90deg,rgb(229_184_229_/_0.15)_1px,transparent_1px)] bg-[length:16px_16px] [mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] dark:bg-[linear-gradient(rgb(255_255_255_/_0.03)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255_/_0.03)_1px,transparent_1px)]" />
               {/* Main content sits above grid */}
               <div className="relative z-10">{children}</div>
             </main>

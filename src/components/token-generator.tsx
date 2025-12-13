@@ -36,7 +36,7 @@ import {
   // TailwindUsageExample,
 } from "@/components/token-editors";
 import { ExamplePrompt } from "@/components/example-prompt";
-import { PreviewGallery } from "@/components/preview-gallery";
+import { UIPreviewModal } from "@/components/ui-preview-modal";
 import {
   generateTokens,
   generateSpacingScale,
@@ -63,26 +63,14 @@ import {
   DocumentTextIcon,
   Square3Stack3DIcon,
   StopIcon,
-  SunIcon,
-  MoonIcon,
-  Squares2X2Icon,
-  CommandLineIcon,
-  ComputerDesktopIcon,
   ViewColumnsIcon,
+  ArrowUpCircleIcon,
 } from "@heroicons/react/24/outline";
-import {
-  BrainCog,
-  BrainIcon,
-  HistoryIcon,
-  SendToBack,
-  SparkleIcon,
-} from "lucide-react";
-import { CopyButton } from "@/components/home/copy-button";
 import { Term } from "@/components/term";
 import tokenTypes from "@/lib/token-types.json";
 import Link from "next/link";
 import { Paintbrush } from "./animate-ui/icons/paintbrush";
-import { ResetIcon } from "@radix-ui/react-icons";
+import { MonitorSmartphoneIcon } from "lucide-react";
 
 interface TokenGeneratorProps {
   /** Initial brand colors */
@@ -530,30 +518,19 @@ export function TokenGenerator({
             />
           </Tabs>
         )}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowPreview(!showPreview)}
-            className="flex items-center gap-1.5"
-          >
-            <ViewColumnsIcon className="h-4 w-4" />
-            {showPreview ? "Hide Preview" : "Show Preview"}
+        <div className="flex items-center gap-3">
+          <Button onClick={() => setShowPreview(true)} className="">
+            <MonitorSmartphoneIcon />
           </Button>
           <Button onClick={() => setExportOpen(true)}>
-            Export your tokens
+            <ArrowUpCircleIcon className="!h-5 !w-5 mr-0.5" />
+            Use Your Tokens
           </Button>
         </div>
       </div>
 
-      {/* Preview Gallery (conditionally shown) */}
-      {showPreview && tokens && (
-        <Card>
-          <CardContent className="pt-6">
-            <PreviewGallery tokens={tokens} />
-          </CardContent>
-        </Card>
-      )}
+      {/* UI Preview Modal */}
+      <UIPreviewModal open={showPreview} onOpenChange={setShowPreview} />
 
       {/* Token Editor */}
       {tokens && (
@@ -657,8 +634,8 @@ export function TokenGenerator({
               {/* Editor Card */}
               <Card className="w-full lg:w-96">
                 <CardHeader className="gap-1">
-                  <CardTitle className="text-xl font-bold">
-                    Generate your colour tokens
+                  <CardTitle className="text-lg font-semibold">
+                    Generate new colour tokens
                   </CardTitle>
                   <CardDescription>
                     Select primary and secondary colours to get started. You can

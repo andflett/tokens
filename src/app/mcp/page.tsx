@@ -15,15 +15,7 @@ export default function MCPPage() {
     "Generate a complete design token system for my healthtech app with a deep blue primary color (#1e40af) and warm orange secondary (#f97316). Include all color scales, typography, spacing, and shadows. Export as Tailwind v4 CSS variables.";
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12 space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold">AI MCP Tool</h1>
-        <p className="text-lg text-muted-foreground">
-          Use this design token generator with AI assistants via the Model
-          Context Protocol (MCP)
-        </p>
-      </div>
-
+    <div className="mx-auto w-full max-w-6xl py-10">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">

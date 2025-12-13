@@ -68,15 +68,15 @@ function createExtendedSemanticColor(
     };
   } else {
     // Dark mode: adjust for dark backgrounds
-    const DEFAULT = scale[500];
-    const subdued = scale[50];
-    const highlight = scale[300];
+    const DEFAULT = scale[600];
+    const subdued = scale[200];
+    const highlight = scale[900];
 
     return {
       DEFAULT,
-      foreground: findContrastingColor(DEFAULT, white, scale[900]),
+      foreground: findContrastingColor(DEFAULT, white, scale[950]),
       subdued,
-      "subdued-foreground": scale[700],
+      "subdued-foreground": scale[800],
       highlight,
       "highlight-foreground": findContrastingColor(
         highlight,
@@ -121,7 +121,7 @@ export function generateSemanticTokens(
         }
       : {
           DEFAULT: neutral[800],
-          foreground: neutral[400],
+          foreground: neutral[200],
         };
 
   // Create accent color pair from primary (lighter/softer variant)
@@ -188,9 +188,9 @@ export function generateSurfaceTokens(
     return {
       background: black,
       foreground: white,
-      card: neutral[800],
+      card: neutral[950],
       "card-foreground": white,
-      popover: neutral[800],
+      popover: neutral[950],
       "popover-foreground": white,
     };
   }
@@ -218,9 +218,9 @@ export function generateUtilityTokens(
     };
   } else {
     return {
-      border: neutral[700],
-      input: neutral[700],
-      ring: primary[500],
+      border: neutral[800],
+      input: neutral[800],
+      ring: primary[700],
     };
   }
 }

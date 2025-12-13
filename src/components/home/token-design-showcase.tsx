@@ -17,7 +17,7 @@ import {
  */
 export function TokenDesignShowcaseV1() {
   return (
-    <div className="border border-border shadow-primary-subdued shadow-lg bg-card rounded-xl p-4 space-y-4">
+    <div className="border border-border dark:border-border dark:shadow-none shadow-lg bg-card rounded-xl p-4 space-y-4">
       {/* Color Scale */}
       <div className="space-y-2">
         <div className="flex items-center gap-1.5">

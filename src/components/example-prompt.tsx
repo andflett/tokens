@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { TerminalIcon } from "@/components/animate-ui/icons/terminal";
-import { CopyButton } from "@/components/home/copy-button";
+import { Button } from "./ui/button";
 
 export const TOKEN_PROMPTS: Record<string, string> = {
   colors:
@@ -28,24 +29,81 @@ interface ExamplePromptProps {
 
 export function ExamplePrompt({ type, prompt, className }: ExamplePromptProps) {
   const promptText = prompt || (type ? TOKEN_PROMPTS[type] : undefined);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!promptText) return;
+    navigator.clipboard.writeText(promptText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (!promptText) return null;
 
   return (
     <div
-      className={`flex items-start gap-4 border shadow-lg shadow-primary-subdued rounded-lg p-4 ${
+      className={`border border-border rounded-2xl bg-card shadow-lg overflow-hidden ${
         className || ""
       }`}
     >
-      <div className="flex-shrink-0 h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mt-0.5">
-        <TerminalIcon size={16} className="text-primary" animate loop />
-      </div>
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
-        <div className="text-xs leading-relaxed text-muted-foreground break-words font-mono">
+      {/* Input area */}
+      <div className="px-4 py-4">
+        <p className="text-sm text-foreground/90 leading-relaxed">
           {promptText}
-        </div>
+        </p>
       </div>
-      <CopyButton text={promptText} className="flex-shrink-0" />
+      {/* Bottom toolbar */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-muted/30 border-t border-border/50">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <TerminalIcon size={16} className="text-primary" animate loop />
+          <span className="text-xs font-medium">Example prompt</span>
+        </div>
+        <Button
+          variant={"ghost"}
+          size="sm"
+          intent={"secondary"}
+          onClick={handleCopy}
+          className={`transition-all flex items-center ${
+            copied
+              ? "bg-success-500 text-white hover:bg-success-500 hover:text-white focus:bg-success-500 focus:text-white"
+              : ""
+          }`}
+        >
+          {copied ? (
+            <>
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12.75l6 6 9-13.5"
+                />
+              </svg>
+            </>
+          ) : (
+            <>
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                />
+              </svg>
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

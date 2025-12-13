@@ -3,68 +3,85 @@
 import { useState, useEffect } from "react";
 import { CopyButton } from "./copy-button";
 
-const CLAUDE_INSTRUCTIONS = `# Core Principles
-
-- Always use design tokens from our design system
-- Never use arbitrary values or custom colors
-- Tokens ensure consistency across the application
-
-## Colors
-
-Use semantic color tokens, not hex codes:
-
-- Background layers: \`background\`, \`card\`, \`popover\`
-- Text: \`foreground\`, \`muted-foreground\`, \`primary\`
-- Borders: \`border\`, \`input\`
-- States: \`destructive\`, \`success\`, \`warning\`
-
-## Spacing
-Use the spacing scale (4px increments):
-- Scale: \`1\` (4px), \`2\` (8px), \`4\` (16px), \`6\` (24px), \`8\` (32px)
-- Apply to padding, margins, and gaps
-- Example: "Add 6 units of spacing between cards"
-
-## Typography
-Use the type scale, not pixel values:
-- Sizes: \`xs\`, \`sm\`, \`base\`, \`lg\`, \`xl\`, \`2xl\`, \`3xl\`
-- Weights: \`normal\`, \`medium\`, \`semibold\`, \`bold\`
-- Example: "Make headings xl and bold"
-
-## Shadows
-Use preset shadow levels:
-- \`sm\`: Subtle elevation for cards
-- \`md\`: Standard elevation for dropdowns  
-- \`lg\`: Pronounced elevation for modals
-
-## Layout
-Use container and breakpoint tokens:
-- Containers: \`sm\`, \`md\`, \`lg\`, \`xl\`, \`2xl\`, \`4xl\`
-- Breakpoints: \`tablet\`, \`desktop\`, \`wide\`
-
-## Borders
-Use border width tokens:
-- Widths: \`default\` (1px), \`md\` (2px), \`lg\` (4px)
-- Radius: \`sm\`, \`md\`, \`lg\`, \`full\``;
-
-const COPILOT_INSTRUCTIONS = `---
-applyTo: "**"
----
-
-# Design Tokens
+export const SHARED_INSTRUCTIONS = `# Design Tokens
 
 Always use design tokens from our design system. Never use arbitrary values, custom colors, or hardcoded pixels.
 
 ## Colors
-Use semantic color tokens, not hex values:
-- Backgrounds: \`background\`, \`card\`, \`popover\`
-- Text: \`foreground\`, \`muted-foreground\`
-- Borders: \`border\`, \`input\`
-- Accents: \`primary\`, \`secondary\`, \`accent\`
+
+Use semantic color tokens, not hex values or primitive scales. Follow this hierarchy:
+
+### 1. Semantic Colors (Use First)
+Pay close attention to layering and foreground/background relationships:
+
+**Primary Colors:**
+- \`primary\`: Primary brand color for buttons, links, focus states
+- \`primary-foreground\`: Text on primary backgrounds
+- \`primary-subdued\`: Subtle primary backgrounds (e.g., selected items, hover states)
+- \`primary-subdued-foreground\`: Text on subdued primary backgrounds
+- \`primary-highlight\`: Darker emphasis or active states for primary elements
+- \`primary-highlight-foreground\`: Text on highlight primary backgrounds
+
+**Secondary Colors:**
+- \`secondary\`: Secondary brand color for less prominent actions
+- \`secondary-foreground\`: Text on secondary backgrounds
+- \`secondary-subdued\`: Subtle secondary backgrounds
+- \`secondary-subdued-foreground\`: Text on subdued secondary backgrounds
+- \`secondary-highlight\`: Darker emphasis or active states for secondary elements
+- \`secondary-highlight-foreground\`: Text on highlight secondary backgrounds
+
+**Neutral Colors:**
+- \`neutral\`: Neutral color for tertiary actions
+- \`neutral-foreground\`: Text on neutral backgrounds
+- \`neutral-subdued\`: Subtle neutral backgrounds
+- \`neutral-subdued-foreground\`: Text on subdued neutral backgrounds
+- \`neutral-highlight\`: Darker emphasis for neutral elements
+- \`neutral-highlight-foreground\`: Text on highlight neutral backgrounds
+
+**Intent Colors (Use for Status/Feedback):**
+- \`success\`, \`success-foreground\`: Positive outcomes, completed states
+- \`success-subdued\`, \`success-subdued-foreground\`: Subtle success backgrounds
+- \`success-highlight\`, \`success-highlight-foreground\`: Emphasis for success states
+- \`destructive\`, \`destructive-foreground\`: Errors, dangerous actions
+- \`destructive-subdued\`, \`destructive-subdued-foreground\`: Subtle error backgrounds
+- \`destructive-highlight\`, \`destructive-highlight-foreground\`: Emphasis for error states
+- \`warning\`, \`warning-foreground\`: Warnings, important notices
+- \`warning-subdued\`, \`warning-subdued-foreground\`: Subtle warning backgrounds
+- \`warning-highlight\`, \`warning-highlight-foreground\`: Emphasis for warning states
+
+**Surface & Utility Colors:**
+- \`background\`: Page background
+- \`foreground\`: Primary text color
+- \`card\`, \`card-foreground\`: Card/panel backgrounds and text
+- \`popover\`, \`popover-foreground\`: Popover/dropdown backgrounds and text
+- \`muted\`, \`muted-foreground\`: Muted/disabled backgrounds and secondary text
+- \`accent\`, \`accent-foreground\`: Subtle accents (neutral-based, not a brand color)
+- \`border\`: Default borders
+- \`input\`: Input field borders
+- \`ring\`: Focus ring color
+
+### 2. Primitive Scales (Use Sparingly)
+Only use primitive color scales when semantic tokens don't fit:
+- \`primary-50\` through \`primary-950\`: Full primary color scale
+- \`secondary-50\` through \`secondary-950\`: Full secondary color scale
+- \`neutral-50\` through \`neutral-950\`: Full neutral color scale
+- \`success-50\` through \`success-950\`: Full success color scale
+- \`destructive-50\` through \`destructive-950\`: Full destructive color scale
+- \`warning-50\` through \`warning-950\`: Full warning color scale
+- Use these for custom gradients, illustrations, or unique design needs
+
+**Example:**
+❌ Don't: \`bg-primary-500 text-white\`
+✅ Do: \`bg-primary text-primary-foreground\`
+
+❌ Don't: \`bg-green-100 text-green-800\`
+✅ Do: \`bg-success-subdued text-success-subdued-foreground\`
+
+❌ Don't: \`bg-red-50 text-red-700\`
+✅ Do: \`bg-destructive-subdued text-destructive-subdued-foreground\`
 
 ## Spacing
-Follow the 4px spacing scale:
-- Use spacing units: 1, 2, 4, 6, 8, 12, 16, 20, 24
-- Example: "Add 6 units between elements" means 24px
+- Always use our spacing scale from our tailwind config, never absolute pixel values
 - Apply to padding, margins, and gaps consistently
 
 ## Typography
@@ -84,6 +101,14 @@ Use border tokens:
 - Widths: default (1px), md (2px), lg (4px)
 - Radius: sm, md, lg, full
 - Always use \`border\` color token`;
+
+const CLAUDE_INSTRUCTIONS = SHARED_INSTRUCTIONS;
+
+export const COPILOT_INSTRUCTIONS = `---
+applyTo: "**"
+---
+
+${SHARED_INSTRUCTIONS}`;
 
 type TabType = "claude" | "copilot";
 

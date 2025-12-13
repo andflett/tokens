@@ -17,9 +17,17 @@ const terminalContent: TerminalLine[] = [
     text: "npx -y @flett/design-tokens-mcp-server",
     delay: 600,
   },
-  { type: "output", text: "✓ Connected to token generator", delay: 600 },
-  { type: "comment", text: "# Or use the hosted version", delay: 600 },
-  { type: "command", text: "https://tokens.flett.cc/mcp", delay: 600 },
+  { type: "output", text: "✓ Connected to token generator", delay: 300 },
+  {
+    type: "command",
+    text: "claude",
+    delay: 200,
+  },
+  {
+    type: "command",
+    text: "> generate design tokens for #19F83D, include semantic and scale tokens, output as Tailwind config",
+    delay: 300,
+  },
 ];
 
 export function AnimatedTerminal() {

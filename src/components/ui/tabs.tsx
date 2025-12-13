@@ -101,7 +101,7 @@ function AnimatedTabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "border border-primary/15 shadow-md shadow-primary-subdued p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full",
+        "border border-primary-100/70 dark:border-border shadow-md  dark:shadow-none p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full",
         className
       )}
       {...props}
@@ -129,10 +129,10 @@ function AnimatedTabsList({
             onValueChange?.(item.value);
           }}
           className={cn(
-            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm  whitespace-nowrap transition-colors",
+            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm whitespace-nowrap transition-colors",
             activeIndex === index
               ? "text-primary-subdued-foreground"
-              : "text-foreground hover:text-primary-subdued-foreground"
+              : "text-foreground/80 hover:text-foreground"
           )}
         >
           {item.label}

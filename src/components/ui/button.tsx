@@ -99,7 +99,7 @@ const buttonVariants = cva(
         variant: "ghost",
         intent: "default",
         className:
-          "text-primary hover:bg-primary-subdued hover:text-primary-subdued-foreground",
+          "text-primary bg-primary-subdued hover:bg-primary-subdued hover:text-primary-subdued-foreground",
       },
       {
         variant: "ghost",

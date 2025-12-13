@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-6">
+    <div className="mx-auto w-full max-w-6xl">
       <div className="py-10">
         {/* Header */}
         <div className="mb-8">

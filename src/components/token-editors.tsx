@@ -56,9 +56,9 @@ function PaletteColorPicker({
   const [open, setOpen] = React.useState(false);
 
   const renderPaletteGrid = (palette: ColorScale) => {
-    const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+    const shades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
     return (
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-12 gap-1">
         {shades.map((shade) => {
           const color = palette[shade as keyof ColorScale];
           return (
@@ -69,7 +69,7 @@ function PaletteColorPicker({
                 onChange(color);
                 setOpen(false);
               }}
-              className="h-8 w-8 rounded border border-border hover:scale-110 transition-transform"
+              className="h-6 w-4 cursor-pointer rounded-sm hover:scale-110 transition-transform"
               style={{ backgroundColor: color }}
               title={`${shade}`}
             />
@@ -110,19 +110,25 @@ function PaletteColorPicker({
         <PopoverContent className="w-80 p-3" align="start">
           <Tabs defaultValue="primary" className="w-full">
             <TabsList className="w-full grid grid-cols-4">
-              <TabsTrigger value="primary">Primary</TabsTrigger>
-              <TabsTrigger value="secondary">Secondary</TabsTrigger>
-              <TabsTrigger value="neutral">Neutral</TabsTrigger>
-              <TabsTrigger value="custom">Custom</TabsTrigger>
+              <TabsTrigger value="primary">Tokens</TabsTrigger>
+              <TabsTrigger value="custom">Manual</TabsTrigger>
             </TabsList>
-            <TabsContent value="primary" className="mt-3">
-              {renderPaletteGrid(primitives.primary as ColorScale)}
-            </TabsContent>
-            <TabsContent value="secondary" className="mt-3">
-              {renderPaletteGrid(primitives.secondary as ColorScale)}
-            </TabsContent>
-            <TabsContent value="neutral" className="mt-3">
-              {renderPaletteGrid(primitives.neutral as ColorScale)}
+            <TabsContent
+              value="primary"
+              className="mt-1 px-2 gap-3 flex flex-col"
+            >
+              <div className="space-y-1">
+                <p className="text-xs font-medium">Primary</p>
+                {renderPaletteGrid(primitives.primary as ColorScale)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-medium">Secondary</p>
+                {renderPaletteGrid(primitives.secondary as ColorScale)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-medium">Neutral</p>
+                {renderPaletteGrid(primitives.neutral as ColorScale)}
+              </div>
             </TabsContent>
             <TabsContent value="custom" className="mt-3 space-y-3">
               <HexColorPicker color={value} onChange={onChange} />

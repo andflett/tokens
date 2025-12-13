@@ -21,8 +21,8 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "px-3 py-1 rounded text-sm font-medium text-foreground/80 hover:text-foreground transition-colors",
-      pathname === href ? "text-foreground" : ""
+      "py-1 text-sm font-medium rounded-full px-4 text-foreground/90 hover:bg-muted transition-colors",
+      pathname === href && pathname !== "/" ? "text-foreground bg-muted" : ""
     );
 
   const mobileNavLinkClass = (href: string) =>
@@ -32,9 +32,9 @@ export function SiteHeader() {
     );
 
   return (
-    <header className="sticky top-0 z-50 shadow-sm bg-background">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-center px-6">
-        <div className="absolute left-6 flex items-center gap-6">
+    <header className="sticky top-0 z-50 border-b bg-card rounded-full w-6xl mt-4 mx-auto px-4 shadow-sm">
+      <div className="flex h-14 items-center justify-between w-full">
+        <div className="flex items-start gap-0">
           <Link href="/" aria-label="Home" className="flex items-center">
             <TurdLogo
               width={28}
@@ -48,13 +48,13 @@ export function SiteHeader() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">
           <Link href="/" className={navLinkClass("/")}>
-            About
+            Home
           </Link>
           <Link href="/generate" className={navLinkClass("/generate")}>
             Token Designer
           </Link>
           <Link href="/mcp" className={navLinkClass("/mcp")}>
-            AI MCP
+            MCP Server
           </Link>
           <Link href="/docs" className={navLinkClass("/docs")}>
             Documentation
@@ -62,12 +62,12 @@ export function SiteHeader() {
         </nav>
 
         {/* Desktop Theme Switch - right aligned */}
-        <div className="absolute right-6 hidden md:flex items-center">
+        <div className="hidden md:flex items-center">
           {mounted && <ThemeSwitch size="sm" />}
         </div>
 
         {/* Mobile Controls - theme switch + hamburger at far right */}
-        <div className="absolute right-6 flex md:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-2">
           {mounted && <ThemeSwitch size="sm" />}
 
           <Button

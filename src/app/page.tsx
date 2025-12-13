@@ -27,13 +27,7 @@ import { TerminalIcon } from "@/components/animate-ui/icons/terminal";
 import { BrushIcon } from "@/components/animate-ui/icons/brush";
 import { AIInstructionsDemo } from "@/components/home/ai-instructions-demo";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
-import { TokenShowcasePanel } from "@/components/home/token-showcase-panel";
-import {
-  TokenDesignShowcaseV1,
-  TokenDesignShowcaseV2,
-  TokenDesignShowcaseV3,
-  TokenDesignShowcaseV4,
-} from "@/components/home/token-design-showcase";
+import { TokenDesignShowcaseV1 } from "@/components/home/token-design-showcase";
 import { ExamplePrompt, TOKEN_PROMPTS } from "@/components/example-prompt";
 import tokenTypes from "@/lib/token-types.json";
 
@@ -43,8 +37,8 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="max-w-2xl text-center mx-auto pb-7 pt-10 md:pt-14 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-5xl font-bold leading-[1.2] tracking-tight relative">
+      <section className="max-w-2xl text-center mx-auto pb-7 pt-12 md:pt-14 relative flex flex-col items-center gap-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.15]  relative">
           Why does everything I build with AI look like turd?
         </h1>
       </section>
@@ -62,10 +56,7 @@ export default function HomePage() {
                     value: "design",
                     label: (
                       <>
-                        <BrushIcon
-                          animateOnHover
-                          className="h-4 w-4 text-primary-subdued-foreground mr-1"
-                        />
+                        <BrushIcon animateOnHover className="h-4 w-4 mr-1" />
                         Token Designer
                       </>
                     ),
@@ -74,12 +65,8 @@ export default function HomePage() {
                     value: "teach",
                     label: (
                       <>
-                        <TerminalIcon
-                          animate
-                          loop
-                          className="h-4 w-4 text-primary-subdued-foreground mr-1"
-                        />
-                        Train your AI
+                        <TerminalIcon animate loop className="h-4 w-4 mr-1" />
+                        Token MCP Server
                       </>
                     ),
                   },
@@ -94,10 +81,10 @@ export default function HomePage() {
                     <div className="space-y-4">
                       <div className="flex flex-col items-start gap-6">
                         <div className="gap-3 flex flex-col">
-                          <h3 className="text-2xl font-semibold">
+                          <h3 className="text-2xl font-bold">
                             Take control with design tokens
                           </h3>
-                          <p className="text-foreground/95 text-md leading-6.25">
+                          <p className="text-foreground/95 text-md leading-6.5">
                             Tokens are the blueprint for every color, spacing
                             value, and corner in your app. Not a theme, but a
                             foundational design layer that keeps things
@@ -107,26 +94,24 @@ export default function HomePage() {
                           <Button
                             intent="default"
                             asChild
-                            className="mt-2.5 self-start"
+                            className="mt-4 self-start"
                           >
                             <Link href="/generate">
                               <BrushIcon
                                 animateOnHover
                                 className="h-4 w-4 mr-1"
                               />
-                              Token Designer
+                              Design Your AI-Friendly Tokens
                             </Link>
                           </Button>
                         </div>
                       </div>
                     </div>
-                    <div className="">
-                      {/*   <TokenDesignShowcaseV4 />
-                       */}
-                      {/* Alternate versions - kept for reference */}
-                      {/*  <TokenShowcasePanel /> */}
+                    <div className="mr-[-6]">
+                      {/* <TokenDesignShowcaseV4 /> */}
+                      {/* <TokenShowcasePanel /> */}
                       <TokenDesignShowcaseV1 />
-                      {/*  <TokenDesignShowcaseV2 />
+                      {/* <TokenDesignShowcaseV2 />
                       <TokenDesignShowcaseV3 /> */}
                     </div>
                   </div>
