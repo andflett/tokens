@@ -433,7 +433,7 @@ export function TokenGenerator({
     const data = tokenTypes[type];
     return (
       <div className="">
-        <h2 className="font-bold mb-2 text-2xl">{data.title}</h2>
+        <h2 className="font-serif font-medium mb-2 text-2xl">{data.title}</h2>
         <p className="text-foreground/90 mb-4">{data.description}</p>
         <ExamplePrompt type={type} />
       </div>
