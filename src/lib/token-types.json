@@ -1,8 +1,8 @@
 {
   "colors": {
     "title": "Colour",
-    "description": "Colours are organized in layers with semantic names. 'background' is your base, 'card' sits on top, 'popover' floats above. Each has a matching foreground color. Tell your AI which semantic color, not which hex code.",
-    "prompt": "Use semantic color tokens like bg-background, bg-card, bg-popover with their matching foreground colors. Don't use arbitrary hex codes or custom color values."
+    "description": "Colors use semantic tokens organized by layering (background, card, popover) and intent (primary, success, destructive, warning). Each color has foreground, subdued, and highlight variants for different emphasis levels. Always pair backgrounds with their matching foreground colors.",
+    "prompt": "Use semantic color tokens with proper foreground pairing: bg-primary with text-primary-foreground, bg-success-subdued with text-success-subdued-foreground. Use subdued variants for subtle backgrounds, highlight variants for emphasis. Never use hex codes or arbitrary color values."
   },
   "spacing": {
     "title": "Spacing",

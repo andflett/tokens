@@ -101,14 +101,14 @@ function AnimatedTabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "border border-primary-100/70 dark:border-border shadow-md  dark:shadow-none p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-full",
+        "border border-border/50 dark:border-border dark:shadow-none p-1.5 bg-card text-muted-foreground relative inline-flex w-fit items-center justify-center rounded-xl",
         className
       )}
       {...props}
     >
       {/* Animated pill background */}
       <div
-        className="cursor-pointer absolute h-8 rounded-full bg-primary-subdued transition-all duration-200 ease-out"
+        className="cursor-pointer absolute h-8 rounded-lg bg-primary-subdued transition-all duration-200 ease-out"
         style={{
           left: pillStyle.left,
           width: pillStyle.width,
@@ -129,7 +129,7 @@ function AnimatedTabsList({
             onValueChange?.(item.value);
           }}
           className={cn(
-            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-3 pr-4 py-1.5 text-sm whitespace-nowrap transition-colors",
+            "cursor-pointer relative z-10 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 pr-4 py-1.5 text-sm whitespace-nowrap transition-colors",
             activeIndex === index
               ? "text-primary-subdued-foreground"
               : "text-foreground/80 hover:text-foreground"

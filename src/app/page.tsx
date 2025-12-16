@@ -37,9 +37,10 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="max-w-2xl text-center mx-auto pb-7 pt-12 md:pt-14 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.15]  relative">
-          Why does everything I build with AI look like turd?
+      <section className="max-w-3xl text-center mx-auto pb-8 pt-12 md:pt-22 relative flex flex-col items-center gap-4">
+        <h1 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15] tracking-tight relative">
+          Why does everything I build with AI look like{" "}
+          <span className="text-primary-600">turd</span>?
         </h1>
       </section>
 
@@ -47,7 +48,7 @@ export default function HomePage() {
       <section className="pb-18">
         <div className="mx-auto max-w-3xl">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-10">
+            <div className="flex justify-center mb-9">
               <AnimatedTabsList
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -81,15 +82,15 @@ export default function HomePage() {
                     <div className="space-y-4">
                       <div className="flex flex-col items-start gap-6">
                         <div className="gap-3 flex flex-col">
-                          <h3 className="text-2xl font-bold">
+                          <h3 className="text-2xl font-serif font-medium">
                             Take control with design tokens
                           </h3>
-                          <p className="text-foreground/95 text-md leading-6.5">
+                          <p className="text-foreground/85 text-md leading-6.5">
                             Tokens are the blueprint for every color, spacing
                             value, and corner in your app. Not a theme, but a
                             foundational design layer that keeps things
-                            coherent. Without it, your AI's just going to design
-                            a sloppy mess.
+                            coherent. Without it, your AI's frontend will
+                            eventually turn into a sloppy mess.
                           </p>
                           <Button
                             intent="default"
@@ -126,10 +127,10 @@ export default function HomePage() {
                     <div className="space-y-4">
                       <div className="flex flex-col items-start gap-6">
                         <div className="gap-2 flex flex-col">
-                          <h3 className="text-2xl font-semibold mb-1">
+                          <h3 className="text-2xl font-medium font-serif mb-1">
                             Train your AI
                           </h3>
-                          <p className="text-foreground/80 text-md">
+                          <p className="text-foreground/85 text-md">
                             Integrate tokens into your AI workflows so
                             generators produce consistent, token-driven UI. Use
                             the MCP to programmatically generate token sets.
@@ -151,50 +152,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="pt-2 pb-0">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-20">
-          <div>
-            <div className="mt-1">
-              <AIInstructionsDemo />
-            </div>
+      <section className="py-14">
+        <div className="flex items-center gap-8 lg:gap-20">
+          <div className="shrink-0 w-1/2">
+            <AIInstructionsDemo />
           </div>
-          <div className="space-y-6">
-            <h2 className="text-4xl font-bold tracking-tight ">
-              Speak the same language as your AI
+          <div className="space-y-6 mt-[-0.5rem]">
+            <h2 className="text-4xl font-medium font-serif tracking-tight">
+              Keep your AI on track
             </h2>
-            <p className="text-md text-foreground leading-relaxed">
-              Once you've built your tokens, teach your AI to actually use them.
-              Copy these rules into your IDE or AI chat, and watch your
-              generated code stick to your system instead of making things up.
+            <p className="text-md text-foreground/85 leading-relaxed">
+              Even great AI designs drift over time. Tokens keep things
+              consistent, but only if you tell your AI to use them. Once you've
+              designed your tokens, instruct your AI to stick to them with our{" "}
+              <Term term="claude-skills">Claude Skill</Term> or GitHub{" "}
+              <Term term="copilot-instructions">Copilot Instructions</Term>
+              to stop your designs from degrading into a sloppy mess.
             </p>
-            <p className="text-md leading-relaxed text-foreground">
-              Examples below use <Term term="tailwind">Tailwind CSS</Term> and{" "}
-              <Term term="shadcn">shadcn/ui</Term> (the defaults for most AI
-              tools), but the same principles work with any{" "}
-              <Term term="styling-system">styling system</Term>.
+            <p className="text-md text-foreground/85 leading-relaxed">
+              Read on to learn more about how modern styling systems use design
+              tokens to create consistent, coherent UIs, and how to get your AI
+              to do the same.
             </p>
-            <p className="text-foreground/90 text-md">
-              Design your token system, integrate it into your AI workflow, or
-              read on to see how AI-generated code already uses tokens under the
-              hood.
-            </p>
-            <ExamplePrompt
-              prompt={
-                "What frontend framework and styling system are you using? "
-              }
-            />
           </div>
         </div>
       </section>
 
-      <div className="space-y-22 mt-20">
+      <div className="space-y-28 mt-20">
         <TokenSection
           id="colors"
           title={tokenTypes.colors.title}
           description={tokenTypes.colors.description}
           visual={<ColorVisual />}
-          tokenList={<ColorTokenList />}
           prompt={TOKEN_PROMPTS.colors}
+          index={0}
         />
 
         {/* Token type sections */}
@@ -203,8 +194,8 @@ export default function HomePage() {
           title={tokenTypes.spacing.title}
           description={tokenTypes.spacing.description}
           visual={<SpacingVisual />}
-          tokenList={<SpacingTokenList />}
           prompt={TOKEN_PROMPTS.spacing}
+          index={1}
         />
 
         <TokenSection
@@ -212,8 +203,8 @@ export default function HomePage() {
           title={tokenTypes.typography.title}
           description={tokenTypes.typography.description}
           visual={<TypographyVisual />}
-          tokenList={<TypographyTokenList />}
           prompt={TOKEN_PROMPTS.typography}
+          index={2}
         />
 
         <TokenSection
@@ -221,26 +212,17 @@ export default function HomePage() {
           title={tokenTypes.shadows.title}
           description={tokenTypes.shadows.description}
           visual={<ShadowVisual />}
-          tokenList={<ShadowTokenList />}
           prompt={TOKEN_PROMPTS.shadows}
+          index={3}
         />
-
-        {/* <TokenSection
-          id="layout"
-          title="Layout"
-          description="Layout tokens define breakpoints for different screen sizes and container widths. Tell your AI which container size to use and when layouts should change, instead of writing custom media queries or arbitrary widths."
-          visual={<LayoutVisual />}
-          tokenList={<LayoutTokenList />}
-          prompt={TOKEN_PROMPTS.layout}
-        /> */}
 
         <TokenSection
           id="borders"
           title={tokenTypes.borders.title}
           description={tokenTypes.borders.description}
           visual={<BorderVisual />}
-          tokenList={<BorderTokenList />}
           prompt={TOKEN_PROMPTS.borders}
+          index={4}
         />
       </div>
 

@@ -32,9 +32,9 @@ export function SiteHeader() {
     );
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-card rounded-full w-6xl mt-4 mx-auto px-4 shadow-sm">
-      <div className="flex h-14 items-center justify-between w-full">
-        <div className="flex items-start gap-0">
+    <header className="sticky top-0 z-50 border-b bg-card/100 backdrop-blur-sm w-full">
+      <div className="flex h-16 items-center justify-between w-full max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center gap-0">
           <Link href="/" aria-label="Home" className="flex items-center">
             <TurdLogo
               width={28}
@@ -116,7 +116,7 @@ export function SiteHeader() {
             : "max-h-0 opacity-0"
         )}
       >
-        <div className="mx-auto max-w-5xl px-6 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <nav className="flex flex-col">
             <Link
               href="/"
@@ -176,14 +176,6 @@ export function SiteHeader() {
                 </Link>
               </div>
             )}
-
-            <Link
-              href="/generate"
-              className={mobileNavLinkClass("/generate")}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Design your Tokens
-            </Link>
           </nav>
         </div>
       </div>

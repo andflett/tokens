@@ -121,7 +121,9 @@ export function AIInstructionsDemo() {
   const instructions =
     activeTab === "claude" ? CLAUDE_INSTRUCTIONS : COPILOT_INSTRUCTIONS;
   const filename =
-    activeTab === "claude" ? "claude.md" : ".github/copilot-instructions.md";
+    activeTab === "claude"
+      ? "claude-skill.md"
+      : ".github/copilot-instructions.md";
 
   useEffect(() => {
     setDisplayedText("");
@@ -165,17 +167,17 @@ export function AIInstructionsDemo() {
         <div className="flex-1 flex items-center justify-center gap-1">
           <button
             onClick={() => setActiveTab("claude")}
-            className={`px-3 py-1 text-xs font-mono transition-colors ${
+            className={`cursor-pointer px-3 py-1 text-xs font-mono transition-colors ${
               activeTab === "claude"
                 ? "text-neutral-200 bg-neutral-800"
                 : "text-neutral-500 hover:text-neutral-300"
             } rounded`}
           >
-            claude.md
+            claude-skill.md
           </button>
           <button
             onClick={() => setActiveTab("copilot")}
-            className={`px-3 py-1 text-xs font-mono transition-colors ${
+            className={`cursor-pointer px-3 py-1 text-xs font-mono transition-colors ${
               activeTab === "copilot"
                 ? "text-neutral-200 bg-neutral-800"
                 : "text-neutral-500 hover:text-neutral-300"

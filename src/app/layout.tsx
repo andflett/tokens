@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Figtree } from "next/font/google";
+import { JetBrains_Mono, Figtree, Lora } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -8,8 +8,14 @@ import { config } from "@/lib/config";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
-const mulish = Figtree({
+const figtree = Figtree({
   variable: "--font-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const lora = Lora({
+  variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
 });
@@ -47,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${mulish.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${figtree.variable} ${lora.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -55,12 +61,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col bg-[linear-gradient(to_bottom,theme(colors.primary.25),#fdfbff)] dark:bg-[linear-gradient(to_bottom,theme(colors.background),black)]">
-            {/* Subtle grid top of main layout */}
-            <div className="pointer-events-none absolute left-0 right-0 top-0 h-[90vh] z-0 bg-[linear-gradient(rgb(229_184_229_/_0.15)_1px,transparent_1px),linear-gradient(90deg,rgb(229_184_229_/_0.15)_1px,transparent_1px)] bg-[length:16px_16px] [mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] dark:bg-[linear-gradient(rgb(255_255_255_/_0.07)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255_/_0.07)_1px,transparent_1px)]" />
+          <div className="flex min-h-screen flex-col bg-[hsl(48_33.3%_97.1%)]">
             <SiteHeader />
             <main className="relative flex-1">
-              {/* Main content sits above grid */}
               <div className="relative z-10">{children}</div>
             </main>
             <SiteFooter />

@@ -55,6 +55,20 @@ export const glossary: Record<string, GlossaryTerm> = {
     full: "GitHub Copilot is an AI-powered coding assistant that integrates directly into code editors like VS Code. It can suggest code, answer questions about your project, and with MCP support, use external tools.",
     learnMoreUrl: "https://github.com/features/copilot",
   },
+  "copilot-instructions": {
+    term: "Copilot Instructions",
+    short: "Project-level rules that Copilot follows for every suggestion",
+    full: "Copilot Instructions let you define project-wide rules that GitHub Copilot will follow in all its code suggestions. Add them to a .github/copilot-instructions.md file in your repo, and Copilot will automatically apply them to keep your code consistent with your design tokens.",
+    learnMoreUrl:
+      "https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot",
+  },
+  "claude-skills": {
+    term: "Claude Skills",
+    short: "Reusable instructions that guide Claude's code generation",
+    full: "Claude Skills are custom instructions you can save and reuse to guide how Claude generates code. Add your token rules as a skill, and Claude will consistently apply them every time it generates UI components for you.",
+    learnMoreUrl:
+      "https://support.anthropic.com/en/articles/9779509-what-are-claude-ai-skills",
+  },
   "vs-code": {
     term: "VS Code",
     short: "Visual Studio Code - a popular code editor",

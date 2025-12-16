@@ -17,23 +17,21 @@ import {
  */
 export function TokenDesignShowcaseV1() {
   return (
-    <div className="border border-border dark:border-border dark:shadow-none shadow-lg bg-card rounded-xl p-4 space-y-4">
+    <div className="border border-border/50 dark:border-border dark:shadow-none shadow-lg rounded-lg bg-card p-4 space-y-4">
       {/* Color Scale */}
       <div className="space-y-2">
         <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-primary-500" />
-          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            Primary
-          </span>
+          <div className="h-2 w-2 rounded-full bg-primary-200" />
+          <p className="text-xs font-medium text-muted-foreground tracking-wide">
+            Colour scale
+          </p>
         </div>
         <div className="flex gap-1">
-          {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
+          {[50, 100, 200, 300, 400, 500, 600, 700, 800].map((shade) => (
             <div
               key={shade}
-              className="h-6 w-full rounded"
-              style={{
-                backgroundColor: `oklch(${100 - shade / 10}% 0.15 300)`,
-              }}
+              className={`h-6 flex-1 rounded bg-primary-${shade}`}
+              style={{ backgroundColor: `var(--primary-${shade})` }}
             />
           ))}
         </div>
@@ -41,7 +39,9 @@ export function TokenDesignShowcaseV1() {
 
       {/* Typography Controls */}
       <div className="space-y-2">
-        <p className="text-xs font-medium text-muted-foreground">Typography</p>
+        <p className="text-xs font-medium text-muted-foreground tracking-wide">
+          Typography
+        </p>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center gap-2 bg-muted/50 rounded px-2 py-1.5">
             <LineHeightIcon className="h-3 w-3 text-muted-foreground" />
@@ -56,7 +56,7 @@ export function TokenDesignShowcaseV1() {
 
       {/* Spacing & Borders */}
       <div className="space-y-2">
-        <p className="text-xs font-medium text-muted-foreground">
+        <p className="text-xs font-medium text-muted-foreground tracking-wide">
           Spacing & Borders
         </p>
         <div className="grid grid-cols-3 gap-2">

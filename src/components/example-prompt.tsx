@@ -42,20 +42,25 @@ export function ExamplePrompt({ type, prompt, className }: ExamplePromptProps) {
 
   return (
     <div
-      className={`border border-border rounded-2xl bg-card shadow-lg overflow-hidden ${
+      className={`border border-border/50 rounded-lg bg-card shadow-lg overflow-hidden ${
         className || ""
       }`}
     >
       {/* Input area */}
-      <div className="px-4 py-4">
-        <p className="text-sm text-foreground/90 leading-relaxed">
+      <div className="px-4 py-4 flex items-start gap-3">
+        <TerminalIcon
+          size={16}
+          className="text-primary mt-1 shrink-0"
+          animate
+          loop
+        />
+        <p className="text-sm text-foreground/90 italic leading-relaxed">
           {promptText}
         </p>
       </div>
       {/* Bottom toolbar */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-muted/30 border-t border-border/50">
         <div className="flex items-center gap-2 text-muted-foreground">
-          <TerminalIcon size={16} className="text-primary" animate loop />
           <span className="text-xs font-medium">Example prompt</span>
         </div>
         <Button
