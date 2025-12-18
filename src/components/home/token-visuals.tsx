@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -411,95 +412,257 @@ export function ShadowEditorMini() {
 // ANIMATION EDITOR MINI
 // ============================================================================
 
-export function AnimationEditorMini() {
-  const [duration, setDuration] = useState(300);
-  const [selectedCurve, setSelectedCurve] = useState("ease-out");
-  const [isAnimating, setIsAnimating] = useState(false);
+// Curve presets
+const CURVE_PRESETS = {
+  easeOut: [
+    { name: "Smooth", curve: { x1: 0, y1: 0, x2: 0.2, y2: 1 } },
+    { name: "Snappy", curve: { x1: 0, y1: 0, x2: 0.1, y2: 1 } },
+    { name: "Gentle", curve: { x1: 0, y1: 0, x2: 0.4, y2: 1 } },
+  ],
+  spring: [
+    { name: "Bouncy", curve: { x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 } },
+    { name: "Soft", curve: { x1: 0.22, y1: 1.2, x2: 0.36, y2: 1 } },
+    { name: "Elastic", curve: { x1: 0.68, y1: -0.55, x2: 0.27, y2: 1.55 } },
+  ],
+};
 
-  const curves = [
-    { name: "ease-out", value: "cubic-bezier(0, 0, 0.2, 1)" },
-    { name: "ease-in-out", value: "cubic-bezier(0.4, 0, 0.2, 1)" },
-    { name: "spring", value: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
-    { name: "linear", value: "linear" },
-  ];
+// Curve preview component
+function CurvePreview({
+  curve,
+  size = 48,
+  isActive = false,
+}: {
+  curve: { x1: number; y1: number; x2: number; y2: number };
+  size?: number;
+  isActive?: boolean;
+}) {
+  const padding = 6;
+  const graphSize = size - padding * 2;
+
+  const x1 = padding + curve.x1 * graphSize;
+  const y1 = padding + graphSize - curve.y1 * graphSize;
+  const x2 = padding + curve.x2 * graphSize;
+  const y2 = padding + graphSize - curve.y2 * graphSize;
+
+  const startX = padding;
+  const startY = padding + graphSize;
+  const endX = padding + graphSize;
+  const endY = padding;
+
+  return (
+    <svg width={size} height={size} className="overflow-visible">
+      <rect
+        x={padding}
+        y={padding}
+        width={graphSize}
+        height={graphSize}
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity={0.1}
+        rx={3}
+      />
+      <path
+        d={`M ${startX} ${startY} C ${x1} ${y1}, ${x2} ${y2}, ${endX} ${endY}`}
+        fill="none"
+        stroke={isActive ? "hsl(var(--primary))" : "currentColor"}
+        strokeWidth={2}
+        strokeOpacity={isActive ? 1 : 0.6}
+      />
+      <circle
+        cx={x1}
+        cy={y1}
+        r={2.5}
+        fill={isActive ? "hsl(var(--primary))" : "currentColor"}
+      />
+      <circle
+        cx={x2}
+        cy={y2}
+        r={2.5}
+        fill={isActive ? "hsl(var(--primary))" : "currentColor"}
+      />
+    </svg>
+  );
+}
+
+// Curve editor with expandable controls
+function MiniCurveEditor({
+  label,
+  curve,
+  onChange,
+  presets,
+}: {
+  label: string;
+  curve: { x1: number; y1: number; x2: number; y2: number };
+  onChange: (curve: { x1: number; y1: number; x2: number; y2: number }) => void;
+  presets: typeof CURVE_PRESETS.easeOut;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleAnimate = () => {
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), duration + 50);
+    setTimeout(() => setIsAnimating(false), 400);
   };
 
-  const currentCurve =
-    curves.find((c) => c.name === selectedCurve)?.value || curves[0].value;
-
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-card p-4 space-y-3">
-      {/* Controls */}
-      <div className="space-y-2.5">
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <Label className="text-xs text-muted-foreground">Duration</Label>
-            <span className="text-xs font-mono text-foreground">
-              {duration}ms
-            </span>
-          </div>
-          <Slider
-            value={[duration]}
-            onValueChange={([v]) => setDuration(v)}
-            min={100}
-            max={600}
-            step={50}
-            className="h-1.5"
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <Label className="text-xs text-muted-foreground">Easing Curve</Label>
-          <div className="grid grid-cols-2 gap-1.5">
-            {curves.map((curve) => (
-              <button
-                key={curve.name}
-                onClick={() => setSelectedCurve(curve.name)}
-                className={cn(
-                  "px-2 py-1.5 rounded text-xs font-medium border transition-colors",
-                  selectedCurve === curve.name
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted"
-                )}
-              >
-                {curve.name}
-              </button>
-            ))}
+    <div className="space-y-2 border border-border rounded-lg p-2.5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <CurvePreview curve={curve} size={40} isActive />
+          <div>
+            <div className="text-xs font-medium">{label}</div>
+            <div className="text-[9px] font-mono text-muted-foreground">
+              cubic-bezier({curve.x1}, {curve.y1}, {curve.x2}, {curve.y2})
+            </div>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setExpanded(!expanded)}
+          className="text-[10px] h-6 px-2"
+        >
+          {expanded ? "Less" : "Edit"}
+        </Button>
       </div>
 
-      {/* Preview */}
-      <div className="pt-2">
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <Label className="text-xs text-muted-foreground">Preview</Label>
-            <button
-              onClick={handleAnimate}
-              className="text-xs px-2 py-0.5 rounded bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              Animate
-            </button>
+      {expanded && (
+        <div className="space-y-3 pt-2">
+          {/* Presets */}
+          <div className="flex gap-1.5 flex-wrap">
+            {presets.map((preset) => (
+              <Button
+                key={preset.name}
+                variant="outline"
+                size="sm"
+                onClick={() => onChange(preset.curve)}
+                className="text-[10px] h-6 px-2"
+              >
+                {preset.name}
+              </Button>
+            ))}
           </div>
-          <div className="bg-muted/30 p-4 rounded-md">
-            <div className="flex gap-2">
+
+          {/* Custom controls */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-[10px]">Control Point 1</Label>
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-muted-foreground w-3">X</span>
+                  <Slider
+                    value={[curve.x1 * 100]}
+                    onValueChange={([v]) => onChange({ ...curve, x1: v / 100 })}
+                    min={0}
+                    max={100}
+                    step={1}
+                    className="flex-1 h-1"
+                  />
+                  <span className="text-[9px] font-mono w-8">
+                    {curve.x1.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-muted-foreground w-3">Y</span>
+                  <Slider
+                    value={[(curve.y1 + 1) * 50]}
+                    onValueChange={([v]) => onChange({ ...curve, y1: v / 50 - 1 })}
+                    min={0}
+                    max={150}
+                    step={1}
+                    className="flex-1 h-1"
+                  />
+                  <span className="text-[9px] font-mono w-8">
+                    {curve.y1.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px]">Control Point 2</Label>
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-muted-foreground w-3">X</span>
+                  <Slider
+                    value={[curve.x2 * 100]}
+                    onValueChange={([v]) => onChange({ ...curve, x2: v / 100 })}
+                    min={0}
+                    max={100}
+                    step={1}
+                    className="flex-1 h-1"
+                  />
+                  <span className="text-[9px] font-mono w-8">
+                    {curve.x2.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-muted-foreground w-3">Y</span>
+                  <Slider
+                    value={[(curve.y2 + 1) * 50]}
+                    onValueChange={([v]) => onChange({ ...curve, y2: v / 50 - 1 })}
+                    min={0}
+                    max={150}
+                    step={1}
+                    className="flex-1 h-1"
+                  />
+                  <span className="text-[9px] font-mono w-8">
+                    {curve.y2.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Preview panel */}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] text-muted-foreground">Preview</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleAnimate}
+                className="text-[10px] h-5 px-2"
+              >
+                Test
+              </Button>
+            </div>
+            <div className="bg-muted/30 px-3 py-2.5 rounded">
               <div
                 className={cn(
-                  "h-8 w-8 bg-primary rounded",
-                  isAnimating && "translate-x-[120px]"
+                  "h-3 w-3 bg-primary rounded-sm transition-transform",
+                  isAnimating && "translate-x-[100px]"
                 )}
                 style={{
-                  transition: `transform ${duration}ms ${currentCurve}`,
+                  transitionDuration: "400ms",
+                  transitionTimingFunction: `cubic-bezier(${curve.x1}, ${curve.y1}, ${curve.x2}, ${curve.y2})`,
                 }}
               />
             </div>
           </div>
         </div>
-      </div>
+      )}
+    </div>
+  );
+}
+
+export function AnimationEditorMini() {
+  const [easeOut, setEaseOut] = useState({ x1: 0, y1: 0, x2: 0.2, y2: 1 });
+  const [spring, setSpring] = useState({ x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 });
+
+  return (
+    <div className="border border-border rounded-lg overflow-hidden bg-card p-3 space-y-2.5">
+      <MiniCurveEditor
+        label="Ease Out"
+        curve={easeOut}
+        onChange={setEaseOut}
+        presets={CURVE_PRESETS.easeOut}
+      />
+      <MiniCurveEditor
+        label="Spring"
+        curve={spring}
+        onChange={setSpring}
+        presets={CURVE_PRESETS.spring}
+      />
     </div>
   );
 }

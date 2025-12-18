@@ -17,15 +17,13 @@ function BrowserWindow({ children }: { children: React.ReactNode }) {
           <div className="w-3 h-3 rounded-full bg-green-400/80" />
         </div>
         <div className="flex-1 mx-2">
-          <div className="bg-background/50 rounded-md px-3 py-1 text-[10px] text-muted-foreground font-mono text-center">
-            localhost:3000
+          <div className="bg-background/50 rounded-md px-0 py-1 text-[10px] text-muted-foreground font-mono text-right">
+            token.generator
           </div>
         </div>
       </div>
       {/* Content */}
-      <div className="p-4 h-[380px] overflow-hidden bg-background">
-        {children}
-      </div>
+      <div className="p-4 bg-background">{children}</div>
     </div>
   );
 }
