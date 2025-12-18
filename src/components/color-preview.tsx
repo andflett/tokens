@@ -507,9 +507,6 @@ export function SemanticColorEditable({
               >
                 Default
               </div>
-              <p className="text-center font-mono text-xs text-muted-foreground group-hover:text-primary transition-colors">
-                Click to edit
-              </p>
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-80" align="start">
@@ -591,9 +588,6 @@ export function SemanticColorEditable({
               >
                 Subdued
               </div>
-              <p className="text-center font-mono text-xs text-muted-foreground">
-                Auto-derived
-              </p>
             </div>
 
             {/* Highlight - auto-derived, shown for reference */}
@@ -607,9 +601,6 @@ export function SemanticColorEditable({
               >
                 Highlight
               </div>
-              <p className="text-center font-mono text-xs text-muted-foreground">
-                Auto-derived
-              </p>
             </div>
           </>
         ) : (
@@ -624,9 +615,6 @@ export function SemanticColorEditable({
             >
               Foreground
             </div>
-            <p className="text-center font-mono text-xs text-muted-foreground">
-              Auto-derived
-            </p>
           </div>
         )}
       </div>

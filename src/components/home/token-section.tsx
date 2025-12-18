@@ -17,7 +17,7 @@ function BrowserWindow({ children }: { children: React.ReactNode }) {
           <div className="w-3 h-3 rounded-full bg-green-400/80" />
         </div>
         <div className="flex-1 mx-2">
-          <div className="bg-background/50 rounded-md px-0 py-1 text-[10px] text-muted-foreground font-mono text-right">
+          <div className=" rounded-md px-0 py-1 text-[10px] text-muted-foreground font-mono text-right">
             token.generator
           </div>
         </div>

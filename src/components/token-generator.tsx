@@ -627,18 +627,8 @@ export function TokenGenerator({
                     </TabsContent>
 
                     <TabsContent value="semantic" className="mt-4">
-                      <div
-                        className="rounded-lg p-6"
-                        style={{
-                          backgroundColor:
-                            previewMode === "light" ? "#ffffff" : "#0a0a0a",
-                        }}
-                      >
-                        <p className="text-xs text-muted-foreground mb-4">
-                          Click on any semantic color to select from its related
-                          scale or customize with a color picker.
-                        </p>
-                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      <div>
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
                           {Object.entries(tokens.semantic[previewMode]).map(
                             ([name, color]) => {
                               const scaleName =
