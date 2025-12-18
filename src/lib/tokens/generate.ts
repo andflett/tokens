@@ -15,6 +15,8 @@ import type {
   SemanticTokens,
   ShadowSettings,
   LayoutTokens,
+  AnimationTokens,
+  AnimationSettings,
 } from "../types";
 
 /**
@@ -337,6 +339,89 @@ export function generateLayoutTokens(): LayoutTokens {
 }
 
 /**
+ * Default easing curves
+ */
+const DEFAULT_CURVES = {
+  easeOut: { x1: 0, y1: 0, x2: 0.2, y2: 1 },
+  easeInOut: { x1: 0.4, y1: 0, x2: 0.2, y2: 1 },
+  spring: { x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 },
+};
+
+/**
+ * Generate animation tokens with customizable settings
+ * Provides duration, easing, and keyframe presets for common UI animations
+ */
+export function generateAnimationTokens(
+  settings?: AnimationSettings
+): AnimationTokens {
+  const baseDuration = settings?.baseDuration ?? 200;
+  const multiplier = settings?.durationMultiplier ?? 1;
+
+  // Use custom curves or defaults
+  const easeOut = settings?.easeOut ?? DEFAULT_CURVES.easeOut;
+  const easeInOut = settings?.easeInOut ?? DEFAULT_CURVES.easeInOut;
+  const spring = settings?.spring ?? DEFAULT_CURVES.spring;
+
+  const duration = (factor: number) =>
+    `${Math.round(baseDuration * factor * multiplier)}ms`;
+  const curve = (c: { x1: number; y1: number; x2: number; y2: number }) =>
+    `cubic-bezier(${c.x1}, ${c.y1}, ${c.x2}, ${c.y2})`;
+
+  return {
+    duration: {
+      instant: duration(0),
+      fast: duration(0.75), // 150ms - micro-interactions, hovers
+      normal: duration(1), // 200ms - standard transitions
+      slow: duration(1.5), // 300ms - emphasis, larger movements
+      slower: duration(2.5), // 500ms - page transitions, modals
+    },
+    easing: {
+      linear: "linear",
+      "ease-in": "cubic-bezier(0.4, 0, 1, 1)",
+      "ease-out": curve(easeOut),
+      "ease-in-out": curve(easeInOut),
+      spring: curve(spring),
+      bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+      smooth: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    },
+    keyframes: {
+      fadeIn: {
+        "0%": { opacity: "0" },
+        "100%": { opacity: "1" },
+      },
+      fadeOut: {
+        "0%": { opacity: "1" },
+        "100%": { opacity: "0" },
+      },
+      slideInUp: {
+        "0%": { opacity: "0", transform: "translateY(10px)" },
+        "100%": { opacity: "1", transform: "translateY(0)" },
+      },
+      slideInDown: {
+        "0%": { opacity: "0", transform: "translateY(-10px)" },
+        "100%": { opacity: "1", transform: "translateY(0)" },
+      },
+      scaleIn: {
+        "0%": { opacity: "0", transform: "scale(0.95)" },
+        "100%": { opacity: "1", transform: "scale(1)" },
+      },
+      pulse: {
+        "0%, 100%": { opacity: "1" },
+        "50%": { opacity: "0.5" },
+      },
+      spin: {
+        "0%": { transform: "rotate(0deg)" },
+        "100%": { transform: "rotate(360deg)" },
+      },
+      bounce: {
+        "0%, 100%": { transform: "translateY(0)" },
+        "50%": { transform: "translateY(-10%)" },
+      },
+    },
+  };
+}
+
+/**
  * Generate a complete token system from brand colors
  */
 export function generateTokens(
@@ -379,6 +464,7 @@ export function generateTokens(
     shadows: generateShadows(primitives),
     borderColors: generateBorderColors(primitives),
     layout: generateLayoutTokens(),
+    animations: generateAnimationTokens(),
   };
 
   // If only one mode requested, we still generate both but could optimize later

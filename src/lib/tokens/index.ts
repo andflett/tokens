@@ -13,6 +13,7 @@ export {
   generateBorderColors,
   generateLayoutTokens,
   generateTypographyScale,
+  generateAnimationTokens,
 } from "./generate";
 export {
   generatePrimitivePalette,

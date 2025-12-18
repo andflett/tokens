@@ -13,6 +13,7 @@ import {
   SpacingVisual,
   BorderVisual,
   ShadowVisual,
+  AnimationVisual,
   SpacingTokenList,
   ColorTokenList,
   TypographyTokenList,
@@ -223,6 +224,15 @@ export default function HomePage() {
           visual={<BorderVisual />}
           prompt={TOKEN_PROMPTS.borders}
           index={4}
+        />
+
+        <TokenSection
+          id="animations"
+          title={tokenTypes.animations.title}
+          description={tokenTypes.animations.description}
+          visual={<AnimationVisual />}
+          prompt={TOKEN_PROMPTS.animations}
+          index={5}
         />
       </div>
 

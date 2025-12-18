@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { TerminalIcon } from "@/components/animate-ui/icons/terminal";
 import { Button } from "./ui/button";
+import { Check, Copy } from "lucide-react";
 
 export const TOKEN_PROMPTS: Record<string, string> = {
   colors:
@@ -19,6 +20,8 @@ export const TOKEN_PROMPTS: Record<string, string> = {
     "Add a default border to all cards, and use a thicker border with the primary color on the active card to highlight it",
   layout:
     "Set the main content container to our 4xl width token and center it. On tablet and larger, add more horizontal padding",
+  animations:
+    "Add a fast transition on button hover states, use normal duration for card expand/collapse, and slow duration with spring easing for modal entry",
 };
 
 interface ExamplePromptProps {
@@ -42,10 +45,23 @@ export function ExamplePrompt({ type, prompt, className }: ExamplePromptProps) {
 
   return (
     <div
-      className={`border border-border/50 rounded-lg bg-card shadow-lg overflow-hidden ${
+      className={`border border-border/50 rounded-lg bg-background shadow-lg overflow-hidden ${
         className || ""
       }`}
     >
+      {/* Top toolbar */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-card border-b border-border/50">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <span className="text-xs font-medium">Example prompt</span>
+        </div>
+        <Button variant="ghost" size="sm" onClick={handleCopy} className="h-7">
+          {copied ? (
+            <Check className="h-3.5 w-3.5" />
+          ) : (
+            <Copy className="h-3.5 w-3.5" />
+          )}
+        </Button>
+      </div>
       {/* Input area */}
       <div className="px-4 py-4 flex items-start gap-3">
         <TerminalIcon
@@ -57,57 +73,6 @@ export function ExamplePrompt({ type, prompt, className }: ExamplePromptProps) {
         <p className="text-sm text-foreground/90 italic leading-relaxed">
           {promptText}
         </p>
-      </div>
-      {/* Bottom toolbar */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-muted/30 border-t border-border/50">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <span className="text-xs font-medium">Example prompt</span>
-        </div>
-        <Button
-          variant={"ghost"}
-          size="sm"
-          intent={"secondary"}
-          onClick={handleCopy}
-          className={`transition-all flex items-center ${
-            copied
-              ? "bg-success-500 text-white hover:bg-success-500 hover:text-white focus:bg-success-500 focus:text-white"
-              : ""
-          }`}
-        >
-          {copied ? (
-            <>
-              <svg
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
-              </svg>
-            </>
-          ) : (
-            <>
-              <svg
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-                />
-              </svg>
-            </>
-          )}
-        </Button>
       </div>
     </div>
   );

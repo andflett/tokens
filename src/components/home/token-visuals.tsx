@@ -790,3 +790,200 @@ export function BorderTokenList() {
     </div>
   );
 }
+
+// Animation visual - interactive demo showing animation tokens in action
+export function AnimationVisual() {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [activeDemo, setActiveDemo] = useState<string | null>(null);
+  const active = hovered || "button";
+
+  const triggerDemo = (demo: string) => {
+    setActiveDemo(demo);
+    setTimeout(() => setActiveDemo(null), 600);
+  };
+
+  return (
+    <div className="flex items-center justify-center rounded-xl min-h-[320px]">
+      <div className="w-full max-w-sm">
+        <div className="bg-card border border-border rounded-lg p-4 shadow-sm space-y-4">
+          <div className="text-sm font-medium text-card-foreground">
+            Animation Tokens
+          </div>
+
+          {/* Button hover transition */}
+          <div className="space-y-2">
+            <div className="text-xs text-muted-foreground">
+              Hover transitions
+            </div>
+            <div
+              className={`relative transition-all cursor-pointer rounded ${
+                active === "button" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+              }`}
+              onMouseEnter={() => setHovered("button")}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <TokenLabel
+                label="duration-fast ease-out"
+                visible={active === "button"}
+              />
+              <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium transition-all duration-150 ease-out hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]">
+                Hover me
+              </button>
+            </div>
+          </div>
+
+          {/* Card scale on hover */}
+          <div
+            className={`relative transition-all cursor-pointer rounded ${
+              active === "card" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+            }`}
+            onMouseEnter={() => setHovered("card")}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <TokenLabel
+              label="duration-normal ease-in-out"
+              visible={active === "card"}
+            />
+            <div className="bg-muted/50 border border-border rounded-lg p-3 transition-all duration-200 ease-in-out hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5">
+              <div className="text-xs font-medium">Interactive card</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">
+                Smooth lift on hover
+              </div>
+            </div>
+          </div>
+
+          {/* Fade in demo */}
+          <div className="space-y-2">
+            <div className="text-xs text-muted-foreground">
+              Entrance animations
+            </div>
+            <div className="flex gap-2">
+              <div
+                className={`relative transition-all cursor-pointer rounded flex-1 ${
+                  active === "fade" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+                }`}
+                onMouseEnter={() => setHovered("fade")}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => triggerDemo("fade")}
+              >
+                <TokenLabel label="fadeIn" visible={active === "fade"} />
+                <div
+                  className={`bg-success-subdued border border-success rounded px-2 py-1.5 text-[10px] text-success-subdued-foreground text-center transition-opacity ${
+                    activeDemo === "fade" ? "animate-fade-in" : ""
+                  }`}
+                  style={{
+                    animation:
+                      activeDemo === "fade"
+                        ? "fadeIn 300ms ease-out"
+                        : undefined,
+                  }}
+                >
+                  Fade in
+                </div>
+              </div>
+
+              <div
+                className={`relative transition-all cursor-pointer rounded flex-1 ${
+                  active === "slide" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+                }`}
+                onMouseEnter={() => setHovered("slide")}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => triggerDemo("slide")}
+              >
+                <TokenLabel label="slideInUp" visible={active === "slide"} />
+                <div
+                  className="bg-primary-subdued border border-primary rounded px-2 py-1.5 text-[10px] text-primary-subdued-foreground text-center"
+                  style={{
+                    animation:
+                      activeDemo === "slide"
+                        ? "slideInUp 300ms ease-out"
+                        : undefined,
+                  }}
+                >
+                  Slide up
+                </div>
+              </div>
+
+              <div
+                className={`relative transition-all cursor-pointer rounded flex-1 ${
+                  active === "scale" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+                }`}
+                onMouseEnter={() => setHovered("scale")}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => triggerDemo("scale")}
+              >
+                <TokenLabel
+                  label="scaleIn spring"
+                  visible={active === "scale"}
+                />
+                <div
+                  className="bg-warning-subdued border border-warning rounded px-2 py-1.5 text-[10px] text-warning-subdued-foreground text-center"
+                  style={{
+                    animation:
+                      activeDemo === "scale"
+                        ? "scaleIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+                        : undefined,
+                  }}
+                >
+                  Scale
+                </div>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground text-center">
+              Click to replay
+            </p>
+          </div>
+
+          {/* Loading spinner */}
+          <div
+            className={`relative transition-all cursor-pointer rounded ${
+              active === "spin" ? "ring-2 ring-primary/20 p-1 -m-1" : ""
+            }`}
+            onMouseEnter={() => setHovered("spin")}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <TokenLabel
+              label="spin duration-slow"
+              visible={active === "spin"}
+            />
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span>Loading state</span>
+            </div>
+          </div>
+        </div>
+
+        <style jsx>{`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          @keyframes scaleIn {
+            from {
+              opacity: 0;
+              transform: scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+}

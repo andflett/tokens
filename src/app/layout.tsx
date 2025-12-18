@@ -61,7 +61,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col bg-[hsl(48_33.3%_97.1%)]">
+          <div className="flex min-h-screen flex-col bg-background">
             <SiteHeader />
             <main className="relative flex-1">
               <div className="relative z-10">{children}</div>

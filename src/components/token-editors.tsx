@@ -30,6 +30,60 @@ import type {
 } from "@/lib/types";
 
 // ============================================================================
+// LABELED SLIDER COMPONENT
+// ============================================================================
+
+interface LabeledSliderProps {
+  label: string;
+  value: number;
+  onValueChange: (value: number) => void;
+  min: number;
+  max: number;
+  step: number;
+  formatValue?: (value: number) => string;
+  description?: string;
+  className?: string;
+}
+
+/**
+ * Reusable slider component with label, value display, and optional description
+ */
+function LabeledSlider({
+  label,
+  value,
+  onValueChange,
+  min,
+  max,
+  step,
+  formatValue,
+  description,
+  className,
+}: LabeledSliderProps) {
+  const displayValue = formatValue ? formatValue(value) : value.toString();
+
+  return (
+    <div className={cn("space-y-2", className)}>
+      <div className="flex items-center justify-between">
+        <Label className="text-sm">{label}</Label>
+        <span className="text-xs text-muted-foreground font-mono">
+          {displayValue}
+        </span>
+      </div>
+      <Slider
+        value={[value]}
+        onValueChange={([v]) => onValueChange(v)}
+        min={min}
+        max={max}
+        step={step}
+      />
+      {description && (
+        <p className="text-xs text-muted-foreground">{description}</p>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // PALETTE COLOR PICKER COMPONENT
 // ============================================================================
 
@@ -207,30 +261,16 @@ export function SpacingEditor({
 }: SpacingEditorProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="space-y-2">
-        <Label className="text-sm">Base Unit (px)</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[baseUnit]}
-            onValueChange={([v]) => onBaseUnitChange(v)}
-            min={2}
-            max={8}
-            step={1}
-            className="flex-1"
-          />
-          <Input
-            type="number"
-            value={baseUnit}
-            onChange={(e) => onBaseUnitChange(parseInt(e.target.value) || 4)}
-            className="w-16 text-center"
-            min={2}
-            max={8}
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Spacing scale is calculated as multiples of the base unit
-        </p>
-      </div>
+      <LabeledSlider
+        label="Base Unit"
+        value={baseUnit}
+        onValueChange={onBaseUnitChange}
+        min={2}
+        max={8}
+        step={1}
+        formatValue={(v) => `${v}px`}
+        description="Spacing scale is calculated as multiples of the base unit"
+      />
     </div>
   );
 }
@@ -363,129 +403,49 @@ export function TypographyEditor({
 }: TypographyEditorProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="">
-        <div className="space-y-2">
-          <Label className="text-sm">Base Font Size (rem)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[baseFontSize * 16]}
-              onValueChange={([v]) => onBaseFontSizeChange(v / 16)}
-              min={14}
-              max={18}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={baseFontSize}
-              onChange={(e) =>
-                onBaseFontSizeChange(parseFloat(e.target.value) || 1)
-              }
-              className="w-20 text-center"
-              min={0.875}
-              max={1.125}
-              step={0.0625}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Base text size (1rem = 16px by default)
-          </p>
-        </div>
+      <LabeledSlider
+        label="Base Font Size"
+        value={baseFontSize * 16}
+        onValueChange={(v) => onBaseFontSizeChange(v / 16)}
+        min={14}
+        max={18}
+        step={1}
+        formatValue={(v) => `${(v / 16).toFixed(3)}rem`}
+        description="Base text size (1rem = 16px by default)"
+      />
 
-        <div className="space-y-2">
-          <Label className="text-sm">Scale Multiplier</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[multiplier * 10]}
-              onValueChange={([v]) => onMultiplierChange(v / 10)}
-              min={8}
-              max={15}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={multiplier}
-              onChange={(e) =>
-                onMultiplierChange(parseFloat(e.target.value) || 1)
-              }
-              className="w-20 text-center"
-              min={0.8}
-              max={1.5}
-              step={0.05}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Scales all typography sizes uniformly
-          </p>
-        </div>
-      </div>
+      <LabeledSlider
+        label="Scale Multiplier"
+        value={multiplier * 10}
+        onValueChange={(v) => onMultiplierChange(v / 10)}
+        min={8}
+        max={15}
+        step={1}
+        formatValue={(v) => `${(v / 10).toFixed(1)}×`}
+        description="Scales all typography sizes uniformly"
+      />
 
-      <div className="">
-        <div className="space-y-2">
-          <Label className="text-sm">Normal Tracking (letter-spacing)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[normalTracking * 100]}
-              onValueChange={([v]) => onNormalTrackingChange(v / 100)}
-              min={-10}
-              max={10}
-              step={1}
-              className="flex-1"
-            />
-            <LetterSpacingIcon />
-            <Input
-              type="number"
-              value={normalTracking ?? 0}
-              onChange={(e) => {
-                const val = parseFloat(e.target.value);
-                onNormalTrackingChange(isNaN(val) ? 0 : val);
-              }}
-              className="w-20 text-center"
-              min={-0.1}
-              max={0.1}
-              step={0.005}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Generates tracking scale (0em default)
-          </p>
-        </div>
+      <LabeledSlider
+        label="Normal Tracking"
+        value={normalTracking * 100}
+        onValueChange={(v) => onNormalTrackingChange(v / 100)}
+        min={-10}
+        max={10}
+        step={1}
+        formatValue={(v) => `${(v / 100).toFixed(2)}em`}
+        description="Generates tracking scale (0em default)"
+      />
 
-        <div className="space-y-2">
-          <Label className="text-sm">
-            Normal Leading (line-height utility)
-          </Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[normalLeading * 10]}
-              onValueChange={([v]) => onNormalLeadingChange(v / 10)}
-              min={10}
-              max={25}
-              step={1}
-              className="flex-1"
-            />
-            <LineHeightIcon />
-
-            <Input
-              type="number"
-              value={normalLeading ?? 1.5}
-              onChange={(e) => {
-                const val = parseFloat(e.target.value);
-                onNormalLeadingChange(isNaN(val) ? 1.5 : val);
-              }}
-              className="w-20 text-center"
-              min={1}
-              max={2.5}
-              step={0.05}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Generates leading scale (1.5 default, separate from per-size
-            line-heights)
-          </p>
-        </div>
-      </div>
+      <LabeledSlider
+        label="Normal Leading"
+        value={normalLeading * 10}
+        onValueChange={(v) => onNormalLeadingChange(v / 10)}
+        min={10}
+        max={25}
+        step={1}
+        formatValue={(v) => `${(v / 10).toFixed(1)}`}
+        description="Generates leading scale (1.5 default, separate from per-size line-heights)"
+      />
     </div>
   );
 }
@@ -506,8 +466,11 @@ export function RadiiPreview({
   className,
 }: RadiiPreviewProps) {
   const bgColor = previewMode === "light" ? "#ffffff" : "#0a0a0a";
+  const cardBg = previewMode === "light" ? "#f9fafb" : "#111111";
   const boxBg = previewMode === "light" ? "#e5e7eb" : "#374151";
   const borderColor = previewMode === "light" ? "#d1d5db" : "#4b5563";
+  const textColor = previewMode === "light" ? "#0a0a0a" : "#fafafa";
+  const mutedColor = previewMode === "light" ? "#6b7280" : "#9ca3af";
 
   const displayKeys = [
     "none",
@@ -522,37 +485,261 @@ export function RadiiPreview({
     "full",
   ];
 
+  // Helper to parse rem values to px (assuming 16px base)
+  const remToPx = (remStr: string): number => {
+    if (remStr === "9999px") return 9999; // full
+    const match = remStr.match(/([\d.]+)rem/);
+    return match ? parseFloat(match[1]) * 16 : 0;
+  };
+
+  // Helper to format px back to rem
+  const pxToRem = (px: number): string => {
+    if (px >= 9999) return "9999px";
+    return `${(px / 16).toFixed(3)}rem`;
+  };
+
   return (
     <div
-      className={cn("rounded-lg p-6", className)}
-      style={{ backgroundColor: bgColor }}
+      className={cn("rounded-lg p-6 space-y-8", className)}
+      style={{ backgroundColor: bgColor, color: textColor }}
     >
-      <div className="flex flex-wrap gap-4">
-        {displayKeys.map((key) => {
-          const value = radii[key];
-          if (!value) return null;
+      {/* Concentric Border Radius Demonstration */}
+      <div className="space-y-4">
+        <div>
+          <h4 className="text-sm font-medium mb-1">Concentric Border Radius</h4>
+          <p className="text-xs" style={{ color: mutedColor }}>
+            Our tokens use a consistent scale where{" "}
+            <span className="font-mono">
+              outer_radius = inner_radius + padding
+            </span>
+            . This creates visually balanced nested elements.
+          </p>
+        </div>
 
-          return (
-            <div key={key} className="flex flex-col items-center gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Example 1: Card with nested content */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium" style={{ color: mutedColor }}>
+              Card (lg) → Content (md)
+            </div>
+            <div
+              className="p-4"
+              style={{
+                backgroundColor: cardBg,
+                borderRadius: radii.lg,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
               <div
-                className="h-14 w-14"
+                className="p-3"
                 style={{
                   backgroundColor: boxBg,
-                  borderRadius: value,
-                  border: `2px solid ${borderColor}`,
+                  borderRadius: radii.md,
                 }}
-              />
-              <div className="text-center">
-                <div className="font-mono text-xs text-muted-foreground">
-                  {key === "DEFAULT" ? "default" : key}
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground/50">
-                  {value}
-                </div>
+              >
+                <div className="text-xs">Inner content</div>
+              </div>
+              <div
+                className="mt-2 text-[10px] font-mono"
+                style={{ color: mutedColor }}
+              >
+                {radii.lg} outer, {radii.md} inner
               </div>
             </div>
-          );
-        })}
+          </div>
+
+          {/* Example 2: Larger card with multiple nesting */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium" style={{ color: mutedColor }}>
+              Card (xl) → Content (lg) → Item (md)
+            </div>
+            <div
+              className="p-4"
+              style={{
+                backgroundColor: cardBg,
+                borderRadius: radii.xl,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div
+                className="p-3"
+                style={{
+                  backgroundColor: boxBg,
+                  borderRadius: radii.lg,
+                }}
+              >
+                <div
+                  className="p-2 text-xs"
+                  style={{
+                    backgroundColor: bgColor,
+                    borderRadius: radii.md,
+                  }}
+                >
+                  Deeply nested
+                </div>
+              </div>
+              <div
+                className="mt-2 text-[10px] font-mono"
+                style={{ color: mutedColor }}
+              >
+                {radii.xl} → {radii.lg} → {radii.md}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Visual formula demonstration */}
+        <div
+          className="p-4 rounded-lg border"
+          style={{
+            backgroundColor: cardBg,
+            borderColor: borderColor,
+          }}
+        >
+          <div className="flex items-center gap-3 text-xs flex-wrap">
+            <span style={{ color: mutedColor }}>Formula:</span>
+            <div className="flex items-center gap-2">
+              <span
+                className="font-mono px-2 py-1 rounded"
+                style={{ backgroundColor: boxBg }}
+              >
+                outer_radius
+              </span>
+              <span>=</span>
+              <span
+                className="font-mono px-2 py-1 rounded"
+                style={{ backgroundColor: boxBg }}
+              >
+                inner_radius
+              </span>
+              <span>+</span>
+              <span
+                className="font-mono px-2 py-1 rounded"
+                style={{ backgroundColor: boxBg }}
+              >
+                padding
+              </span>
+            </div>
+          </div>
+          <div
+            className="mt-3 text-[10px] leading-relaxed"
+            style={{ color: mutedColor }}
+          >
+            Each step in our radius scale (sm → md → lg → xl) is designed to
+            work with our spacing tokens. When you use consistent padding, the
+            radii naturally maintain proper concentric relationships.
+          </div>
+        </div>
+      </div>
+
+      {/* Token Scale Reference */}
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium">Radius Scale</h4>
+        <div className="flex flex-wrap gap-4">
+          {displayKeys.map((key) => {
+            const value = radii[key];
+            if (!value) return null;
+
+            return (
+              <div key={key} className="flex flex-col items-center gap-2">
+                <div
+                  className="h-14 w-14"
+                  style={{
+                    backgroundColor: boxBg,
+                    borderRadius: value,
+                    border: `2px solid ${borderColor}`,
+                  }}
+                />
+                <div className="text-center">
+                  <div className="font-mono text-xs text-muted-foreground">
+                    {key === "DEFAULT" ? "default" : key}
+                  </div>
+                  <div className="font-mono text-[10px] text-muted-foreground/50">
+                    {value}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Comparison: Wrong vs Right */}
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium">Why Concentric Matters</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Wrong: Random radii */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-destructive/20 border border-destructive flex items-center justify-center">
+                <span className="text-[10px] text-destructive">✕</span>
+              </div>
+              <div
+                className="text-xs font-medium"
+                style={{ color: mutedColor }}
+              >
+                Mismatched radii
+              </div>
+            </div>
+            <div
+              className="p-4"
+              style={{
+                backgroundColor: cardBg,
+                borderRadius: radii.xl,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div
+                className="p-3"
+                style={{
+                  backgroundColor: boxBg,
+                  borderRadius: radii.sm, // Wrong: too small
+                }}
+              >
+                <div className="text-xs">Awkward corners</div>
+              </div>
+              <div className="mt-2 text-[10px]" style={{ color: mutedColor }}>
+                Inner radius too small for outer
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Concentric */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-success/20 border border-success flex items-center justify-center">
+                <span className="text-[10px] text-success">✓</span>
+              </div>
+              <div
+                className="text-xs font-medium"
+                style={{ color: mutedColor }}
+              >
+                Concentric radii
+              </div>
+            </div>
+            <div
+              className="p-4"
+              style={{
+                backgroundColor: cardBg,
+                borderRadius: radii.xl,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div
+                className="p-3"
+                style={{
+                  backgroundColor: boxBg,
+                  borderRadius: radii.lg, // Right: proper scale step
+                }}
+              >
+                <div className="text-xs">Balanced curves</div>
+              </div>
+              <div className="mt-2 text-[10px]" style={{ color: mutedColor }}>
+                Visually consistent and harmonious
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -575,61 +762,27 @@ export function RadiiEditor({
 }: RadiiEditorProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="space-y-2">
-        <Label className="text-sm">Base Radius (rem)</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[baseRadius * 100]}
-            onValueChange={([v]) => onBaseRadiusChange(v / 100)}
-            min={0}
-            max={100}
-            step={5}
-            className="flex-1"
-          />
-          <Input
-            type="number"
-            value={baseRadius}
-            onChange={(e) =>
-              onBaseRadiusChange(parseFloat(e.target.value) || 0.25)
-            }
-            className="w-20 text-center"
-            min={0}
-            max={1}
-            step={0.05}
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Base value used as sm (1x multiplier)
-        </p>
-      </div>
+      <LabeledSlider
+        label="Base Radius"
+        value={baseRadius * 100}
+        onValueChange={(v) => onBaseRadiusChange(v / 100)}
+        min={0}
+        max={100}
+        step={5}
+        formatValue={(v) => `${(v / 100).toFixed(2)}rem`}
+        description="Base value used as sm (1x multiplier)"
+      />
 
-      <div className="space-y-2">
-        <Label className="text-sm">Scale Multiplier</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[multiplier * 10]}
-            onValueChange={([v]) => onMultiplierChange(v / 10)}
-            min={5}
-            max={20}
-            step={1}
-            className="flex-1"
-          />
-          <Input
-            type="number"
-            value={multiplier}
-            onChange={(e) =>
-              onMultiplierChange(parseFloat(e.target.value) || 1)
-            }
-            className="w-20 text-center"
-            min={0.5}
-            max={2}
-            step={0.1}
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Scales all radius values (capped at 10rem)
-        </p>
-      </div>
+      <LabeledSlider
+        label="Scale Multiplier"
+        value={multiplier * 10}
+        onValueChange={(v) => onMultiplierChange(v / 10)}
+        min={5}
+        max={20}
+        step={1}
+        formatValue={(v) => `${(v / 10).toFixed(1)}×`}
+        description="Scales all radius values (capped at 10rem)"
+      />
     </div>
   );
 }
@@ -698,25 +851,16 @@ export function ShadowsEditor({
 }: ShadowsEditorProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="space-y-2">
-        <Label className="text-sm">Shadow Intensity</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[shadowIntensity * 100]}
-            onValueChange={([v]) => onShadowIntensityChange(v / 100)}
-            min={0}
-            max={200}
-            step={10}
-            className="flex-1"
-          />
-          <div className="w-16 text-center font-mono text-sm">
-            {Math.round(shadowIntensity * 100)}%
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Adjust the overall intensity of shadow effects
-        </p>
-      </div>
+      <LabeledSlider
+        label="Shadow Intensity"
+        value={shadowIntensity * 100}
+        onValueChange={(v) => onShadowIntensityChange(v / 100)}
+        min={0}
+        max={200}
+        step={10}
+        formatValue={(v) => `${Math.round(v)}%`}
+        description="Adjust the overall intensity of shadow effects"
+      />
     </div>
   );
 }
@@ -980,119 +1124,60 @@ export function ShadowsEditorAdvanced({
     <div className={cn("space-y-6", className)}>
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Offset X */}
-        <div className="space-y-2">
-          <Label className="text-sm">Offset X (px)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[settings.offsetX]}
-              onValueChange={([v]) => updateSetting("offsetX", v)}
-              min={-20}
-              max={20}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={settings.offsetX}
-              onChange={(e) =>
-                updateSetting("offsetX", parseFloat(e.target.value) || 0)
-              }
-              className="w-16 text-center"
-            />
-          </div>
-        </div>
+        <LabeledSlider
+          label="Offset X"
+          value={settings.offsetX}
+          onValueChange={(v) => updateSetting("offsetX", v)}
+          min={-20}
+          max={20}
+          step={1}
+          formatValue={(v) => `${v}px`}
+        />
 
         {/* Offset Y */}
-        <div className="space-y-2">
-          <Label className="text-sm">Offset Y (px)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[settings.offsetY]}
-              onValueChange={([v]) => updateSetting("offsetY", v)}
-              min={-20}
-              max={20}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={settings.offsetY}
-              onChange={(e) =>
-                updateSetting("offsetY", parseFloat(e.target.value) || 0)
-              }
-              className="w-16 text-center"
-            />
-          </div>
-        </div>
+        <LabeledSlider
+          label="Offset Y"
+          value={settings.offsetY}
+          onValueChange={(v) => updateSetting("offsetY", v)}
+          min={-20}
+          max={20}
+          step={1}
+          formatValue={(v) => `${v}px`}
+        />
 
         {/* Blur */}
-        <div className="space-y-2">
-          <Label className="text-sm">Blur (px)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[settings.blur]}
-              onValueChange={([v]) => updateSetting("blur", v)}
-              min={0}
-              max={50}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={settings.blur}
-              onChange={(e) =>
-                updateSetting("blur", parseFloat(e.target.value) || 0)
-              }
-              className="w-16 text-center"
-            />
-          </div>
-        </div>
+        <LabeledSlider
+          label="Blur"
+          value={settings.blur}
+          onValueChange={(v) => updateSetting("blur", v)}
+          min={0}
+          max={50}
+          step={1}
+          formatValue={(v) => `${v}px`}
+        />
 
         {/* Spread */}
-        <div className="space-y-2">
-          <Label className="text-sm">Spread (px)</Label>
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[settings.spread]}
-              onValueChange={([v]) => updateSetting("spread", v)}
-              min={-20}
-              max={20}
-              step={1}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={settings.spread}
-              onChange={(e) =>
-                updateSetting("spread", parseFloat(e.target.value) || 0)
-              }
-              className="w-16 text-center"
-            />
-          </div>
-        </div>
+        <LabeledSlider
+          label="Spread"
+          value={settings.spread}
+          onValueChange={(v) => updateSetting("spread", v)}
+          min={-20}
+          max={20}
+          step={1}
+          formatValue={(v) => `${v}px`}
+        />
       </div>
 
       {/* Opacity */}
-      <div className="space-y-2">
-        <Label className="text-sm">Opacity</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[settings.opacity * 100]}
-            onValueChange={([v]) => updateSetting("opacity", v / 100)}
-            min={0}
-            max={100}
-            step={5}
-            className="flex-1"
-          />
-          <div className="w-16 text-center font-mono text-sm">
-            {Math.round(settings.opacity * 100)}%
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Control the shadow appearance by adjusting offset, blur, spread, and
-          opacity
-        </p>
-      </div>
+      <LabeledSlider
+        label="Opacity"
+        value={settings.opacity * 100}
+        onValueChange={(v) => updateSetting("opacity", v / 100)}
+        min={0}
+        max={100}
+        step={5}
+        formatValue={(v) => `${Math.round(v)}%`}
+      />
     </div>
   );
 }
@@ -1148,28 +1233,16 @@ export function BorderColorsEditor({
   return (
     <div className={cn("space-y-6", className)}>
       {/* Border Width */}
-      <div className="space-y-2">
-        <Label className="text-sm">Default Border Width</Label>
-        <div className="flex items-center gap-4">
-          <Slider
-            value={[widthPx * 2]}
-            onValueChange={([v]) => onBorderWidthChange(`${v / 2}px`)}
-            min={0}
-            max={10}
-            step={1}
-            className="flex-1"
-          />
-          <Input
-            type="text"
-            value={borderWidth}
-            onChange={(e) => onBorderWidthChange(e.target.value || "1px")}
-            className="w-20 text-center"
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Base width for borders (usually 1px)
-        </p>
-      </div>
+      <LabeledSlider
+        label="Default Border Width"
+        value={widthPx * 2}
+        onValueChange={(v) => onBorderWidthChange(`${v / 2}px`)}
+        min={0}
+        max={10}
+        step={1}
+        formatValue={(v) => `${v / 2}px`}
+        description="Base width for borders (usually 1px)"
+      />
 
       {/* Border Colors */}
       <div className="space-y-4">
@@ -2128,6 +2201,940 @@ export function ComponentPreview({
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// ANIMATION EDITOR & PREVIEW
+// ============================================================================
+
+// Helper component for scale demo
+function ScaleDemo({
+  label,
+  easing,
+  duration,
+  cardBg,
+  borderColor,
+  mutedColor,
+}: {
+  label: string;
+  easing: string;
+  duration: string;
+  cardBg: string;
+  borderColor: string;
+  mutedColor: string;
+}) {
+  const [isScaled, setIsScaled] = React.useState(false);
+
+  return (
+    <button
+      onClick={() => setIsScaled(!isScaled)}
+      className="p-4 rounded-lg text-center cursor-pointer"
+      style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}` }}
+    >
+      <div
+        className="w-12 h-12 rounded-lg bg-primary/80 mx-auto transition-transform"
+        style={{
+          transform: isScaled ? "scale(1.3)" : "scale(1)",
+          transitionDuration: duration,
+          transitionTimingFunction: easing,
+        }}
+      />
+      <div className="text-xs font-medium mt-2">{label}</div>
+      <div className="text-[10px] mt-1" style={{ color: mutedColor }}>
+        Click to toggle
+      </div>
+    </button>
+  );
+}
+
+// Helper component for stagger animation
+function StaggerDemo({
+  easing,
+  duration,
+  cardBg,
+  borderColor,
+}: {
+  easing: string;
+  duration: string;
+  cardBg: string;
+  borderColor: string;
+}) {
+  const [key, setKey] = React.useState(0);
+
+  return (
+    <div
+      className="p-4 rounded-lg cursor-pointer"
+      style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}` }}
+      onMouseEnter={() => setKey((prev) => prev + 1)}
+    >
+      <div className="flex gap-2 justify-center" key={key}>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="w-8 h-8 rounded-lg bg-primary/70"
+            style={{
+              animation: `slideInUp ${duration} ${easing} ${i * 50}ms both`,
+            }}
+          />
+        ))}
+      </div>
+      <style jsx>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+interface AnimationPreviewProps {
+  animations: {
+    duration: Record<string, string>;
+    easing: Record<string, string>;
+    keyframes: Record<string, Record<string, Record<string, string>>>;
+  };
+  previewMode: "light" | "dark";
+  className?: string;
+}
+
+export function AnimationPreview({
+  animations,
+  previewMode,
+  className,
+}: AnimationPreviewProps) {
+  const [activeDemo, setActiveDemo] = React.useState<string | null>(null);
+  const bgColor = previewMode === "light" ? "#ffffff" : "#0a0a0a";
+  const textColor = previewMode === "light" ? "#0a0a0a" : "#fafafa";
+  const mutedColor = previewMode === "light" ? "#6b7280" : "#9ca3af";
+  const borderColor = previewMode === "light" ? "#e5e7eb" : "#374151";
+  const cardBg = previewMode === "light" ? "#f9fafb" : "#111111";
+
+  const triggerDemo = (demo: string) => {
+    setActiveDemo(null);
+    // Force re-render to restart animation
+    requestAnimationFrame(() => {
+      setActiveDemo(demo);
+      setTimeout(() => setActiveDemo(null), 1000);
+    });
+  };
+
+  return (
+    <div
+      className={cn("rounded-lg p-6 space-y-6", className)}
+      style={{ backgroundColor: bgColor, color: textColor }}
+    >
+      {/* Duration tokens */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Duration Tokens
+        </h4>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {Object.entries(animations.duration).map(([name, value]) => (
+            <div
+              key={name}
+              className="p-3 rounded-lg text-center"
+              style={{
+                backgroundColor: cardBg,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div className="text-sm font-medium">{name}</div>
+              <div
+                className="text-xs font-mono mt-1"
+                style={{ color: mutedColor }}
+              >
+                {value}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Easing tokens */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Easing Curves
+        </h4>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {Object.entries(animations.easing)
+            .slice(0, 8)
+            .map(([name, value]) => (
+              <div
+                key={name}
+                className="p-3 rounded-lg group cursor-pointer hover:border-primary/50 transition-colors"
+                style={{
+                  backgroundColor: cardBg,
+                  border: `1px solid ${borderColor}`,
+                }}
+              >
+                <div className="text-sm font-medium">{name}</div>
+                <div className="h-8 mt-2 flex items-end">
+                  <div
+                    className="w-full h-2 rounded-full bg-primary/60 origin-left group-hover:scale-x-100"
+                    style={{
+                      transform: "scaleX(0.3)",
+                      transition: `transform 500ms ${value}`,
+                    }}
+                  />
+                </div>
+                <div
+                  className="text-[10px] font-mono mt-2 truncate"
+                  style={{ color: mutedColor }}
+                >
+                  {value === "linear" ? "linear" : value.slice(0, 25) + "..."}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Interactive Demos */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Keyframe Animations (Click to play)
+        </h4>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {Object.keys(animations.keyframes).map((name) => (
+            <button
+              key={name}
+              onClick={() => triggerDemo(name)}
+              className="p-4 rounded-lg text-left hover:border-primary/50 transition-colors"
+              style={{
+                backgroundColor: cardBg,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-lg bg-primary/80 mx-auto"
+                style={{
+                  animation:
+                    activeDemo === name
+                      ? `${name} 500ms ${animations.easing["ease-out"]}`
+                      : undefined,
+                }}
+              />
+              <div className="text-xs font-medium text-center mt-2">{name}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Common UI Patterns */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Common UI Patterns
+        </h4>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Button hover */}
+          <div className="space-y-2">
+            <div className="text-xs" style={{ color: mutedColor }}>
+              Button Hover
+            </div>
+            <button
+              className="w-full px-4 py-2 rounded-lg font-medium text-sm text-white bg-primary transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
+              style={{ transitionDuration: animations.duration.fast }}
+            >
+              Hover me
+            </button>
+            <div
+              className="text-[10px] font-mono"
+              style={{ color: mutedColor }}
+            >
+              duration-fast + scale
+            </div>
+          </div>
+
+          {/* Card lift */}
+          <div className="space-y-2">
+            <div className="text-xs" style={{ color: mutedColor }}>
+              Card Lift
+            </div>
+            <div
+              className="p-3 rounded-lg cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5"
+              style={{
+                backgroundColor: cardBg,
+                border: `1px solid ${borderColor}`,
+                transitionDuration: animations.duration.normal,
+                transitionTimingFunction: animations.easing["ease-out"],
+              }}
+            >
+              <div className="text-sm font-medium">Interactive</div>
+              <div className="text-xs" style={{ color: mutedColor }}>
+                Hover to lift
+              </div>
+            </div>
+            <div
+              className="text-[10px] font-mono"
+              style={{ color: mutedColor }}
+            >
+              duration-normal + ease-out
+            </div>
+          </div>
+
+          {/* Loading spinner */}
+          <div className="space-y-2">
+            <div className="text-xs" style={{ color: mutedColor }}>
+              Loading State
+            </div>
+            <div
+              className="flex items-center gap-2 p-3 rounded-lg"
+              style={{
+                backgroundColor: cardBg,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-sm">Loading...</span>
+            </div>
+            <div
+              className="text-[10px] font-mono"
+              style={{ color: mutedColor }}
+            >
+              spin animation
+            </div>
+          </div>
+
+          {/* Pulse effect */}
+          <div className="space-y-2">
+            <div className="text-xs" style={{ color: mutedColor }}>
+              Skeleton Pulse
+            </div>
+            <div
+              className="p-3 rounded-lg space-y-2"
+              style={{
+                backgroundColor: cardBg,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              <div className="h-3 bg-muted rounded animate-pulse" />
+              <div className="h-3 bg-muted rounded w-2/3 animate-pulse" />
+            </div>
+            <div
+              className="text-[10px] font-mono"
+              style={{ color: mutedColor }}
+            >
+              pulse animation
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Curve Comparison Demos */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Easing Curve Comparison (Hover to animate)
+        </h4>
+        <div className="space-y-3">
+          {/* Ease-out demo */}
+          <div
+            className="p-4 rounded-lg group cursor-pointer"
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+            }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">ease-out</div>
+              <div
+                className="text-[10px] font-mono"
+                style={{ color: mutedColor }}
+              >
+                Elements entering • Hover states
+              </div>
+            </div>
+            <div
+              className="relative h-8 rounded-full overflow-hidden"
+              style={{ backgroundColor: borderColor }}
+            >
+              <div
+                className="absolute left-0 top-0 h-full w-12 bg-primary rounded-full transition-all group-hover:translate-x-[calc(100%-3rem)]"
+                style={{
+                  transitionDuration: animations.duration.slow,
+                  transitionTimingFunction: animations.easing["ease-out"],
+                  width: "3rem",
+                }}
+              />
+              <div
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ color: mutedColor }}
+              >
+                Fast start, gradual stop
+              </div>
+            </div>
+          </div>
+
+          {/* Ease-in-out demo */}
+          <div
+            className="p-4 rounded-lg group cursor-pointer"
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+            }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">ease-in-out</div>
+              <div
+                className="text-[10px] font-mono"
+                style={{ color: mutedColor }}
+              >
+                State transitions • Toggles
+              </div>
+            </div>
+            <div
+              className="relative h-8 rounded-full overflow-hidden"
+              style={{ backgroundColor: borderColor }}
+            >
+              <div
+                className="absolute left-0 top-0 h-full w-12 bg-secondary rounded-full transition-all group-hover:translate-x-[calc(100%-3rem)]"
+                style={{
+                  transitionDuration: animations.duration.slow,
+                  transitionTimingFunction: animations.easing["ease-in-out"],
+                  width: "3rem",
+                }}
+              />
+              <div
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ color: mutedColor }}
+              >
+                Smooth acceleration & deceleration
+              </div>
+            </div>
+          </div>
+
+          {/* Spring demo */}
+          <div
+            className="p-4 rounded-lg group cursor-pointer"
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+            }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">spring</div>
+              <div
+                className="text-[10px] font-mono"
+                style={{ color: mutedColor }}
+              >
+                Playful • Attention-grabbing
+              </div>
+            </div>
+            <div
+              className="relative h-8 rounded-full overflow-hidden"
+              style={{ backgroundColor: borderColor }}
+            >
+              <div
+                className="absolute left-0 top-0 h-full w-12 bg-success rounded-full transition-all group-hover:translate-x-[calc(100%-3rem)]"
+                style={{
+                  transitionDuration: animations.duration.slow,
+                  transitionTimingFunction: animations.easing["spring"],
+                  width: "3rem",
+                }}
+              />
+              <div
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ color: mutedColor }}
+              >
+                Overshoots then settles
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Interactive Scale Demo */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Scale Animations (Click to toggle)
+        </h4>
+        <div className="grid grid-cols-3 gap-3">
+          <ScaleDemo
+            label="ease-out"
+            easing={animations.easing["ease-out"]}
+            duration={animations.duration.normal}
+            cardBg={cardBg}
+            borderColor={borderColor}
+            mutedColor={mutedColor}
+          />
+          <ScaleDemo
+            label="ease-in-out"
+            easing={animations.easing["ease-in-out"]}
+            duration={animations.duration.normal}
+            cardBg={cardBg}
+            borderColor={borderColor}
+            mutedColor={mutedColor}
+          />
+          <ScaleDemo
+            label="spring"
+            easing={animations.easing["spring"]}
+            duration={animations.duration.normal}
+            cardBg={cardBg}
+            borderColor={borderColor}
+            mutedColor={mutedColor}
+          />
+        </div>
+      </div>
+
+      {/* Stagger Animation Demo */}
+      <div className="space-y-4">
+        <h4
+          className="text-xs font-medium uppercase tracking-wider"
+          style={{ color: mutedColor }}
+        >
+          Stagger Animation (Hover to replay)
+        </h4>
+        <StaggerDemo
+          easing={animations.easing["ease-out"]}
+          duration={animations.duration.normal}
+          cardBg={cardBg}
+          borderColor={borderColor}
+        />
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes fadeOut {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
+        }
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes slideInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes bounce {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10%);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+interface AnimationEditorProps {
+  baseDuration: number;
+  onBaseDurationChange: (value: number) => void;
+  durationMultiplier: number;
+  onDurationMultiplierChange: (value: number) => void;
+  easeOut: { x1: number; y1: number; x2: number; y2: number };
+  onEaseOutChange: (value: {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }) => void;
+  easeInOut: { x1: number; y1: number; x2: number; y2: number };
+  onEaseInOutChange: (value: {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }) => void;
+  spring: { x1: number; y1: number; x2: number; y2: number };
+  onSpringChange: (value: {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }) => void;
+  className?: string;
+}
+
+// Easing curve presets
+const CURVE_PRESETS = {
+  easeOut: [
+    { name: "Smooth", curve: { x1: 0, y1: 0, x2: 0.2, y2: 1 } },
+    { name: "Snappy", curve: { x1: 0, y1: 0, x2: 0.1, y2: 1 } },
+    { name: "Gentle", curve: { x1: 0, y1: 0, x2: 0.4, y2: 1 } },
+    { name: "Material", curve: { x1: 0, y1: 0, x2: 0.2, y2: 0.9 } },
+  ],
+  easeInOut: [
+    { name: "Standard", curve: { x1: 0.4, y1: 0, x2: 0.2, y2: 1 } },
+    { name: "Emphasized", curve: { x1: 0.2, y1: 0, x2: 0, y2: 1 } },
+    { name: "Soft", curve: { x1: 0.42, y1: 0, x2: 0.58, y2: 1 } },
+    { name: "Sharp", curve: { x1: 0.6, y1: 0, x2: 0.1, y2: 1 } },
+  ],
+  spring: [
+    { name: "Bouncy", curve: { x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 } },
+    { name: "Soft Spring", curve: { x1: 0.22, y1: 1.2, x2: 0.36, y2: 1 } },
+    { name: "Stiff", curve: { x1: 0.5, y1: 1.8, x2: 0.7, y2: 1 } },
+    { name: "Elastic", curve: { x1: 0.68, y1: -0.55, x2: 0.27, y2: 1.55 } },
+  ],
+};
+
+// Visual curve preview component
+function CurvePreview({
+  curve,
+  size = 80,
+  isActive = false,
+}: {
+  curve: { x1: number; y1: number; x2: number; y2: number };
+  size?: number;
+  isActive?: boolean;
+}) {
+  const padding = 8;
+  const graphSize = size - padding * 2;
+
+  // Convert bezier control points to SVG coordinates
+  const x1 = padding + curve.x1 * graphSize;
+  const y1 = padding + graphSize - curve.y1 * graphSize;
+  const x2 = padding + curve.x2 * graphSize;
+  const y2 = padding + graphSize - curve.y2 * graphSize;
+
+  const startX = padding;
+  const startY = padding + graphSize;
+  const endX = padding + graphSize;
+  const endY = padding;
+
+  return (
+    <svg width={size} height={size} className="overflow-visible">
+      {/* Grid */}
+      <rect
+        x={padding}
+        y={padding}
+        width={graphSize}
+        height={graphSize}
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity={0.1}
+        rx={4}
+      />
+      {/* Diagonal reference line */}
+      <line
+        x1={startX}
+        y1={startY}
+        x2={endX}
+        y2={endY}
+        stroke="currentColor"
+        strokeOpacity={0.1}
+        strokeDasharray="2 2"
+      />
+      {/* Control point lines */}
+      <line
+        x1={startX}
+        y1={startY}
+        x2={x1}
+        y2={y1}
+        stroke="currentColor"
+        strokeOpacity={0.3}
+        strokeWidth={1}
+      />
+      <line
+        x1={endX}
+        y1={endY}
+        x2={x2}
+        y2={y2}
+        stroke="currentColor"
+        strokeOpacity={0.3}
+        strokeWidth={1}
+      />
+      {/* Bezier curve */}
+      <path
+        d={`M ${startX} ${startY} C ${x1} ${y1}, ${x2} ${y2}, ${endX} ${endY}`}
+        fill="none"
+        stroke={isActive ? "hsl(var(--primary))" : "currentColor"}
+        strokeWidth={2}
+        strokeOpacity={isActive ? 1 : 0.6}
+      />
+      {/* Control points */}
+      <circle
+        cx={x1}
+        cy={y1}
+        r={3}
+        fill={isActive ? "hsl(var(--primary))" : "currentColor"}
+      />
+      <circle
+        cx={x2}
+        cy={y2}
+        r={3}
+        fill={isActive ? "hsl(var(--primary))" : "currentColor"}
+      />
+    </svg>
+  );
+}
+
+// Curve editor with sliders
+function CurveEditor({
+  label,
+  curve,
+  onChange,
+  presets,
+}: {
+  label: string;
+  curve: { x1: number; y1: number; x2: number; y2: number };
+  onChange: (curve: { x1: number; y1: number; x2: number; y2: number }) => void;
+  presets: typeof CURVE_PRESETS.easeOut;
+}) {
+  const [expanded, setExpanded] = React.useState(false);
+
+  return (
+    <div className="space-y-3 border border-border rounded-lg p-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <CurvePreview curve={curve} size={48} isActive />
+          <div>
+            <div className="text-sm font-medium">{label}</div>
+            <div className="text-[10px] font-mono text-muted-foreground">
+              cubic-bezier({curve.x1}, {curve.y1}, {curve.x2}, {curve.y2})
+            </div>
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setExpanded(!expanded)}
+          className="text-xs"
+        >
+          {expanded ? "Less" : "Edit"}
+        </Button>
+      </div>
+
+      {expanded && (
+        <div className="space-y-4 pt-2">
+          {/* Presets */}
+          <div className="flex gap-2 flex-wrap">
+            {presets.map((preset) => (
+              <Button
+                key={preset.name}
+                variant="outline"
+                size="sm"
+                onClick={() => onChange(preset.curve)}
+                className="text-xs h-7"
+              >
+                {preset.name}
+              </Button>
+            ))}
+          </div>
+
+          {/* Custom controls */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-xs">Control Point 1</Label>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-muted-foreground w-4">
+                    X
+                  </span>
+                  <Slider
+                    value={[curve.x1 * 100]}
+                    onValueChange={([v]) => onChange({ ...curve, x1: v / 100 })}
+                    min={0}
+                    max={100}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <span className="text-[10px] font-mono w-8">
+                    {curve.x1.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-muted-foreground w-4">
+                    Y
+                  </span>
+                  <Slider
+                    value={[(curve.y1 + 1) * 50]}
+                    onValueChange={([v]) =>
+                      onChange({ ...curve, y1: v / 50 - 1 })
+                    }
+                    min={0}
+                    max={150}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <span className="text-[10px] font-mono w-8">
+                    {curve.y1.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Control Point 2</Label>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-muted-foreground w-4">
+                    X
+                  </span>
+                  <Slider
+                    value={[curve.x2 * 100]}
+                    onValueChange={([v]) => onChange({ ...curve, x2: v / 100 })}
+                    min={0}
+                    max={100}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <span className="text-[10px] font-mono w-8">
+                    {curve.x2.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-muted-foreground w-4">
+                    Y
+                  </span>
+                  <Slider
+                    value={[(curve.y2 + 1) * 50]}
+                    onValueChange={([v]) =>
+                      onChange({ ...curve, y2: v / 50 - 1 })
+                    }
+                    min={0}
+                    max={150}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <span className="text-[10px] font-mono w-8">
+                    {curve.y2.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function AnimationEditor({
+  baseDuration,
+  onBaseDurationChange,
+  durationMultiplier,
+  onDurationMultiplierChange,
+  easeOut,
+  onEaseOutChange,
+  easeInOut,
+  onEaseInOutChange,
+  spring,
+  onSpringChange,
+  className,
+}: AnimationEditorProps) {
+  return (
+    <div className={cn("space-y-6", className)}>
+      <LabeledSlider
+        label="Base Duration"
+        value={baseDuration}
+        onValueChange={onBaseDurationChange}
+        min={100}
+        max={400}
+        step={25}
+        formatValue={(v) => `${v}ms`}
+        description='Base timing for "normal" duration (recommended: 150-250ms)'
+      />
+
+      <LabeledSlider
+        label="Duration Multiplier"
+        value={durationMultiplier * 10}
+        onValueChange={(v) => onDurationMultiplierChange(v / 10)}
+        min={5}
+        max={20}
+        step={1}
+        formatValue={(v) => `${(v / 10).toFixed(1)}×`}
+        description="Scale all durations (1 = default, lower = snappier, higher = slower)"
+      />
+
+      <div className="pt-4 border-t border-border space-y-3">
+        <h4 className="text-sm font-medium">Easing Curves</h4>
+        <CurveEditor
+          label="Ease Out"
+          curve={easeOut}
+          onChange={onEaseOutChange}
+          presets={CURVE_PRESETS.easeOut}
+        />
+        <CurveEditor
+          label="Ease In-Out"
+          curve={easeInOut}
+          onChange={onEaseInOutChange}
+          presets={CURVE_PRESETS.easeInOut}
+        />
+        <CurveEditor
+          label="Spring"
+          curve={spring}
+          onChange={onSpringChange}
+          presets={CURVE_PRESETS.spring}
+        />
       </div>
     </div>
   );

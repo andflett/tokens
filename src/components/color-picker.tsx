@@ -42,8 +42,8 @@ export function ColorPicker({
             intent="secondary"
             variant="outline"
             className={cn(
-              "border-border w-full justify-start gap-2 font-mono text-sm",
-              !value && "text-muted-foreground"
+              "border-border w-full justify-start gap-2 font-mono text-sm text-foreground",
+              !value && "text-foreground"
             )}
           >
             <div

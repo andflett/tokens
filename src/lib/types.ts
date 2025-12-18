@@ -62,6 +62,28 @@ export interface LayoutTokens {
   containers: Record<string, string>;
 }
 
+export interface AnimationTokens {
+  duration: Record<string, string>;
+  easing: Record<string, string>;
+  keyframes: Record<string, Record<string, Record<string, string>>>;
+}
+
+export interface EasingCurve {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+export interface AnimationSettings {
+  baseDuration: number; // in ms
+  durationMultiplier: number;
+  // Custom easing curves
+  easeOut: EasingCurve;
+  easeInOut: EasingCurve;
+  spring: EasingCurve;
+}
+
 export interface TokenSystem {
   primitives: {
     black: string;
@@ -98,6 +120,7 @@ export interface TokenSystem {
     dark: BorderColors;
   };
   layout?: LayoutTokens;
+  animations?: AnimationTokens;
 }
 
 export type ColorFormat = "oklch" | "rgb" | "hsl" | "hex";

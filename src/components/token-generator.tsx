@@ -33,6 +33,8 @@ import {
   BorderColorsEditor,
   LayoutEditor,
   LayoutPreview,
+  AnimationPreview,
+  AnimationEditor,
   // TailwindUsageExample,
 } from "@/components/token-editors";
 import { ExamplePrompt } from "@/components/example-prompt";
@@ -45,6 +47,7 @@ import {
   generateLayoutTokens,
   generateTypographyScale,
   generateBorderColors,
+  generateAnimationTokens,
 } from "@/lib/tokens";
 import { config } from "@/lib/config";
 import type {
@@ -54,6 +57,7 @@ import type {
   BorderColors,
   LayoutTokens,
   ColorScale,
+  AnimationSettings,
 } from "@/lib/types";
 import type { PrimitivePalette } from "@/lib/tokens/primitives";
 import { cn } from "@/lib/utils";
@@ -65,6 +69,7 @@ import {
   StopIcon,
   ViewColumnsIcon,
   ArrowUpCircleIcon,
+  BoltIcon,
 } from "@heroicons/react/24/outline";
 import { Term } from "@/components/term";
 import tokenTypes from "@/lib/token-types.json";
@@ -102,6 +107,7 @@ const STORAGE_KEYS = {
   TYPOGRAPHY_SETTINGS: "toke-typography-settings",
   SHADOW_SETTINGS: "toke-shadow-settings",
   LAYOUT_TOKENS: "toke-layout-tokens",
+  ANIMATION_SETTINGS: "toke-animation-settings",
   COLOR_EDITS: "toke-color-edits",
   COLOR_HISTORY: "toke-color-history",
   // Deprecated keys (for migration)
@@ -169,6 +175,7 @@ export function TokenGenerator({
     "shadows",
     "borders",
     "layout",
+    "animations",
   ];
   const [tokenTab, setTokenTab] = React.useState<string>(
     initialTab && validTabs.includes(initialTab) ? initialTab : "colors"
@@ -219,6 +226,30 @@ export function TokenGenerator({
     loadFromStorage(STORAGE_KEYS.LAYOUT_TOKENS, generateLayoutTokens())
   );
 
+  // Animation settings state
+  const [animationSettings, setAnimationSettings] =
+    React.useState<AnimationSettings>(() => {
+      const defaultSettings: AnimationSettings = {
+        baseDuration: 200,
+        durationMultiplier: 1,
+        easeOut: { x1: 0, y1: 0, x2: 0.2, y2: 1 },
+        easeInOut: { x1: 0.4, y1: 0, x2: 0.2, y2: 1 },
+        spring: { x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 },
+      };
+      const stored = loadFromStorage(
+        STORAGE_KEYS.ANIMATION_SETTINGS,
+        defaultSettings
+      );
+      // Merge stored with defaults to ensure all required properties exist
+      return {
+        ...defaultSettings,
+        ...stored,
+        easeOut: stored.easeOut || defaultSettings.easeOut,
+        easeInOut: stored.easeInOut || defaultSettings.easeInOut,
+        spring: stored.spring || defaultSettings.spring,
+      };
+    });
+
   // Color edits tracking
   const [colorEdits, setColorEdits] = React.useState<
     Record<string, Record<number, string>>
@@ -252,6 +283,10 @@ export function TokenGenerator({
   React.useEffect(() => {
     saveToStorage(STORAGE_KEYS.LAYOUT_TOKENS, layoutTokens);
   }, [layoutTokens]);
+
+  React.useEffect(() => {
+    saveToStorage(STORAGE_KEYS.ANIMATION_SETTINGS, animationSettings);
+  }, [animationSettings]);
 
   React.useEffect(() => {
     saveToStorage(STORAGE_KEYS.COLOR_EDITS, colorEdits);
@@ -320,6 +355,7 @@ export function TokenGenerator({
         borderColors,
         borderWidth: borderSettings.width,
         layout: layoutTokens,
+        animations: generateAnimationTokens(animationSettings),
       };
 
       setTokens(customizedTokens);
@@ -337,6 +373,7 @@ export function TokenGenerator({
     typographySettings,
     shadowSettings,
     layoutTokens,
+    animationSettings,
     colorEdits,
     onGenerate,
   ]);
@@ -361,6 +398,7 @@ export function TokenGenerator({
     typographySettings,
     shadowSettings,
     layoutTokens,
+    animationSettings,
     colorEdits,
   ]);
 
@@ -433,8 +471,8 @@ export function TokenGenerator({
     const data = tokenTypes[type];
     return (
       <div className="">
-        <h2 className="font-serif font-medium mb-2 text-2xl">{data.title}</h2>
-        <p className="text-foreground/90 mb-4">{data.description}</p>
+        <h2 className="font-serif font-medium mb-3 text-2xl">{data.title}</h2>
+        <p className="text-foreground/90 mb-6">{data.description}</p>
         <ExamplePrompt type={type} />
       </div>
     );
@@ -504,6 +542,15 @@ export function TokenGenerator({
                     </>
                   ),
                 },
+                {
+                  value: "animations",
+                  label: (
+                    <>
+                      <BoltIcon className="h-4 w-4" />
+                      Motion
+                    </>
+                  ),
+                },
                 /* {
                   value: "layout",
                   label: (
@@ -519,10 +566,14 @@ export function TokenGenerator({
           </Tabs>
         )}
         <div className="flex items-center gap-3">
-          <Button onClick={() => setShowPreview(true)} className="">
+          <Button
+            variant="ghost"
+            onClick={() => setShowPreview(true)}
+            className=""
+          >
             <MonitorSmartphoneIcon />
           </Button>
-          <Button onClick={() => setExportOpen(true)}>
+          <Button variant="ghost" onClick={() => setExportOpen(true)}>
             <ArrowUpCircleIcon className="!h-5 !w-5 mr-0.5" />
             Use Your Tokens
           </Button>
@@ -634,7 +685,7 @@ export function TokenGenerator({
               {/* Editor Card */}
               <Card className="w-full lg:w-96">
                 <CardHeader className="gap-1">
-                  <CardTitle className="text-lg font-semibold">
+                  <CardTitle className="text-lg font-serif font-medium mt-[-1]">
                     Generate new colour tokens
                   </CardTitle>
                   <CardDescription>
@@ -662,13 +713,6 @@ export function TokenGenerator({
                       <Paintbrush className="h-4 w-4" animateOnHover />
                       Generate
                     </Button>
-                    {/*    <Button
-                      intent="secondary"
-                      variant="outline"
-                      onClick={handleResetColors}
-                    >
-                      Reset
-                    </Button> */}
                   </div>
                   {colorHistory.length > 0 && (
                     <div className="flex gap-2 flex-row items-center">
@@ -719,7 +763,7 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="typography" />
                   {/* ExamplePrompt moved to IntroPanel */}
                   <TypographyPreview
@@ -730,13 +774,7 @@ export function TokenGenerator({
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
-                <CardHeader>
-                  <CardTitle>Typography Settings</CardTitle>
-                  <CardDescription>
-                    Adjust font sizes, scales, and spacing to match your design.
-                  </CardDescription>
-                </CardHeader>
+              <Card className="w-full lg:w-96">
                 <CardContent>
                   <TypographyEditor
                     baseFontSize={typographySettings.baseFontSize}
@@ -778,7 +816,7 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="spacing" />
                   {/* ExamplePrompt moved to IntroPanel */}
                   <SpacingPreview spacing={tokens.spacing} />
@@ -786,13 +824,7 @@ export function TokenGenerator({
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
-                <CardHeader>
-                  <CardTitle>Spacing Settings</CardTitle>
-                  <CardDescription>
-                    Configure the base unit for your spacing scale.
-                  </CardDescription>
-                </CardHeader>
+              <Card className="w-full lg:w-96">
                 <CardContent>
                   <SpacingEditor
                     baseUnit={spacingBaseUnit}
@@ -808,7 +840,7 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="radii" />
                   {/* ExamplePrompt moved to IntroPanel */}
                   <RadiiPreview
@@ -819,13 +851,7 @@ export function TokenGenerator({
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
-                <CardHeader>
-                  <CardTitle>Border Radius Settings</CardTitle>
-                  <CardDescription>
-                    Adjust the base radius and scale for rounded corners.
-                  </CardDescription>
-                </CardHeader>
+              <Card className="w-full lg:w-96">
                 <CardContent>
                   <RadiiEditor
                     baseRadius={radiiSettings.base}
@@ -853,7 +879,7 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="shadows" />
                   {/* ExamplePrompt moved to IntroPanel */}
                   <ShadowsPreview
@@ -864,13 +890,7 @@ export function TokenGenerator({
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
-                <CardHeader>
-                  <CardTitle>Shadow Settings</CardTitle>
-                  <CardDescription>
-                    Fine-tune shadow appearance with offset, blur, and opacity.
-                  </CardDescription>
-                </CardHeader>
+              <Card className="w-full lg:w-96">
                 <CardContent>
                   <ShadowsEditorAdvanced
                     settings={shadowSettings}
@@ -886,7 +906,7 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="borders" />
                   {/* ExamplePrompt moved to IntroPanel */}
                   <BordersPreview
@@ -898,7 +918,7 @@ export function TokenGenerator({
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+              <Card className="w-full lg:w-96">
                 <CardContent>
                   <BorderColorsEditor
                     borderColors={
@@ -930,14 +950,14 @@ export function TokenGenerator({
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
               {/* Main Content */}
               <Card>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-6">
                   <IntroPanel type="layout" />
                   <LayoutPreview layout={layoutTokens} />
                   {/* <TailwindUsageExample type="layout" /> */}
                 </CardContent>
               </Card>
               {/* Editor Card */}
-              <Card className="w-full lg:w-96 lg:sticky lg:top-6">
+              <Card className="w-full lg:w-96">
                 <CardHeader>
                   <CardTitle>Layout Settings</CardTitle>
                   <CardDescription>
@@ -948,6 +968,66 @@ export function TokenGenerator({
                   <LayoutEditor
                     layout={layoutTokens}
                     onLayoutChange={setLayoutTokens}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Animations Tab */}
+          <TabsContent value="animations" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+              {/* Main Content */}
+              <Card>
+                <CardContent className="space-y-6">
+                  <IntroPanel type="animations" />
+                  {tokens.animations && (
+                    <AnimationPreview
+                      animations={tokens.animations}
+                      previewMode={previewMode}
+                    />
+                  )}
+                </CardContent>
+              </Card>
+              {/* Editor Card */}
+              <Card className="w-full lg:w-96">
+                <CardContent>
+                  <AnimationEditor
+                    baseDuration={animationSettings.baseDuration}
+                    onBaseDurationChange={(value) =>
+                      setAnimationSettings((prev) => ({
+                        ...prev,
+                        baseDuration: value,
+                      }))
+                    }
+                    durationMultiplier={animationSettings.durationMultiplier}
+                    onDurationMultiplierChange={(value) =>
+                      setAnimationSettings((prev) => ({
+                        ...prev,
+                        durationMultiplier: value,
+                      }))
+                    }
+                    easeOut={animationSettings.easeOut}
+                    onEaseOutChange={(value) =>
+                      setAnimationSettings((prev) => ({
+                        ...prev,
+                        easeOut: value,
+                      }))
+                    }
+                    easeInOut={animationSettings.easeInOut}
+                    onEaseInOutChange={(value) =>
+                      setAnimationSettings((prev) => ({
+                        ...prev,
+                        easeInOut: value,
+                      }))
+                    }
+                    spring={animationSettings.spring}
+                    onSpringChange={(value) =>
+                      setAnimationSettings((prev) => ({
+                        ...prev,
+                        spring: value,
+                      }))
+                    }
                   />
                 </CardContent>
               </Card>

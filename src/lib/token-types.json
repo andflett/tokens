@@ -16,8 +16,8 @@
   },
   "radii": {
     "title": "Border Radius",
-    "description": "Border radius uses a named scale for rounded corners. Use semantic names like rounded-sm, rounded, rounded-md, rounded-lg instead of arbitrary values.",
-    "prompt": "Use border radius tokens: rounded-none, rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl, rounded-3xl, rounded-full. Don't use arbitrary radius values."
+    "description": "Border radius uses a named scale designed for concentric nesting. Each step works with our spacing tokens following the formula: outer_radius = inner_radius + padding. This creates visually balanced curves when nesting elements, avoiding the awkward mismatched corners that happen with arbitrary radius values.",
+    "prompt": "Use border radius tokens: rounded-none, rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl, rounded-3xl, rounded-full. For nested elements, step up one size (e.g., outer rounded-lg with inner rounded-md and p-4 padding) to maintain concentric curves. Don't use arbitrary radius values."
   },
   "shadows": {
     "title": "Shadows",
@@ -33,5 +33,10 @@
     "title": "Layout",
     "description": "Layout tokens define breakpoints for different screen sizes and container widths. Tell your AI which container size to use and when layouts should change, instead of writing custom media queries or arbitrary widths.",
     "prompt": "Use layout tokens: container classes with max-w-sm/md/lg/xl/2xl, and responsive breakpoints sm:, md:, lg:, xl:, 2xl:. Don't use arbitrary widths or custom media queries."
+  },
+  "animations": {
+    "title": "Animations",
+    "description": "Animation tokens define consistent motion for UI elements. Use duration tokens (fast, normal, slow) for timing, and easing tokens (ease-out, ease-in-out, spring) for natural movement. Apply these to transitions, hover states, and micro-interactions to create polished, professional interfaces.",
+    "prompt": "Use animation tokens: duration-fast (150ms) for micro-interactions, duration-normal (200ms) for standard transitions, duration-slow (300ms) for larger movements. Use ease-out for exits, ease-in-out for state changes, and spring for playful bounces. Always use transition utilities like transition-colors, transition-transform with proper duration."
   }
 }
