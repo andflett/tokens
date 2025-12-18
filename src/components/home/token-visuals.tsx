@@ -549,7 +549,9 @@ function MiniCurveEditor({
               <Label className="text-[10px]">Control Point 1</Label>
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] text-muted-foreground w-3">X</span>
+                  <span className="text-[9px] text-muted-foreground w-3">
+                    X
+                  </span>
                   <Slider
                     value={[curve.x1 * 100]}
                     onValueChange={([v]) => onChange({ ...curve, x1: v / 100 })}
@@ -563,10 +565,14 @@ function MiniCurveEditor({
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] text-muted-foreground w-3">Y</span>
+                  <span className="text-[9px] text-muted-foreground w-3">
+                    Y
+                  </span>
                   <Slider
                     value={[(curve.y1 + 1) * 50]}
-                    onValueChange={([v]) => onChange({ ...curve, y1: v / 50 - 1 })}
+                    onValueChange={([v]) =>
+                      onChange({ ...curve, y1: v / 50 - 1 })
+                    }
                     min={0}
                     max={150}
                     step={1}
@@ -582,7 +588,9 @@ function MiniCurveEditor({
               <Label className="text-[10px]">Control Point 2</Label>
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] text-muted-foreground w-3">X</span>
+                  <span className="text-[9px] text-muted-foreground w-3">
+                    X
+                  </span>
                   <Slider
                     value={[curve.x2 * 100]}
                     onValueChange={([v]) => onChange({ ...curve, x2: v / 100 })}
@@ -596,10 +604,14 @@ function MiniCurveEditor({
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] text-muted-foreground w-3">Y</span>
+                  <span className="text-[9px] text-muted-foreground w-3">
+                    Y
+                  </span>
                   <Slider
                     value={[(curve.y2 + 1) * 50]}
-                    onValueChange={([v]) => onChange({ ...curve, y2: v / 50 - 1 })}
+                    onValueChange={([v]) =>
+                      onChange({ ...curve, y2: v / 50 - 1 })
+                    }
                     min={0}
                     max={150}
                     step={1}
@@ -616,7 +628,9 @@ function MiniCurveEditor({
           {/* Preview panel */}
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between">
-              <Label className="text-[10px] text-muted-foreground">Preview</Label>
+              <Label className="text-[10px] text-muted-foreground">
+                Preview
+              </Label>
               <Button
                 variant="ghost"
                 size="sm"
