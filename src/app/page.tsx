@@ -8,17 +8,12 @@ import { BoltIcon } from "@heroicons/react/24/outline";
 // Import home page components
 import { TokenSection } from "@/components/home/token-section";
 import {
-  ColorVisual,
-  TypographyVisual,
-  SpacingVisual,
-  BorderVisual,
-  ShadowVisual,
-  AnimationVisual,
-  SpacingTokenList,
-  ColorTokenList,
-  TypographyTokenList,
-  ShadowTokenList,
-  BorderTokenList,
+  ColorEditorMini,
+  SpacingEditorMini,
+  TypographyEditorMini,
+  BorderRadiusEditorMini,
+  ShadowEditorMini,
+  AnimationEditorMini,
 } from "@/components/home/token-visuals";
 import { AnimatedTabsList } from "@/components/ui/tabs";
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
@@ -184,7 +179,7 @@ export default function HomePage() {
           id="colors"
           title={tokenTypes.colors.title}
           description={tokenTypes.colors.description}
-          visual={<ColorVisual />}
+          visual={<ColorEditorMini />}
           prompt={TOKEN_PROMPTS.colors}
           index={0}
         />
@@ -194,7 +189,7 @@ export default function HomePage() {
           id="spacing"
           title={tokenTypes.spacing.title}
           description={tokenTypes.spacing.description}
-          visual={<SpacingVisual />}
+          visual={<SpacingEditorMini />}
           prompt={TOKEN_PROMPTS.spacing}
           index={1}
         />
@@ -203,7 +198,7 @@ export default function HomePage() {
           id="typography"
           title={tokenTypes.typography.title}
           description={tokenTypes.typography.description}
-          visual={<TypographyVisual />}
+          visual={<TypographyEditorMini />}
           prompt={TOKEN_PROMPTS.typography}
           index={2}
         />
@@ -212,7 +207,7 @@ export default function HomePage() {
           id="shadows"
           title={tokenTypes.shadows.title}
           description={tokenTypes.shadows.description}
-          visual={<ShadowVisual />}
+          visual={<ShadowEditorMini />}
           prompt={TOKEN_PROMPTS.shadows}
           index={3}
         />
@@ -221,7 +216,7 @@ export default function HomePage() {
           id="borders"
           title={tokenTypes.borders.title}
           description={tokenTypes.borders.description}
-          visual={<BorderVisual />}
+          visual={<BorderRadiusEditorMini />}
           prompt={TOKEN_PROMPTS.borders}
           index={4}
         />
@@ -230,7 +225,7 @@ export default function HomePage() {
           id="animations"
           title={tokenTypes.animations.title}
           description={tokenTypes.animations.description}
-          visual={<AnimationVisual />}
+          visual={<AnimationEditorMini />}
           prompt={TOKEN_PROMPTS.animations}
           index={5}
         />
