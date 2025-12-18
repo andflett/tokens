@@ -152,7 +152,7 @@ function PaletteColorPicker({
           <Button
             intent="secondary"
             variant="outline"
-            className="w-full justify-start gap-2 font-mono text-sm"
+            className="w-full justify-start text-foregound gap-2 font-mono text-xs"
           >
             <div
               className="h-5 w-5 rounded border border-border"
@@ -296,15 +296,10 @@ export function TypographyPreview({
   const sizeKeys = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"];
 
   return (
-    <div
-      className={cn("rounded-lg p-6 space-y-6", className)}
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className={cn("rounded-lg space-y-6", className)}>
       {/* Font Sizes */}
       <div className="space-y-4">
-        <h4 className="text-xs font-medium uppercase tracking-wider opacity-50">
-          Font Sizes (xs - 9xl)
-        </h4>
+        <h4 className="text-sm font-medium">Font Sizes (xs - 9xl)</h4>
         <div className="space-y-3">
           {sizeKeys.map((name) => {
             const size = typography.fontSize[name];
@@ -328,7 +323,7 @@ export function TypographyPreview({
 
       {/* Font Weights */}
       <div className="space-y-4">
-        <h4 className="text-xs font-medium uppercase tracking-wider opacity-50">
+        <h4 className="text-sm font-medium">
           Font Weights (All Standard Values)
         </h4>
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
@@ -347,9 +342,7 @@ export function TypographyPreview({
       {/* Tracking & Leading */}
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
-          <h4 className="text-xs font-medium uppercase tracking-wider opacity-50">
-            Tracking (Letter Spacing)
-          </h4>
+          <h4 className="text-sm font-medium">Tracking (Letter Spacing)</h4>
           <div className="space-y-1 text-sm">
             {Object.entries(typography.tracking).map(([name, value]) => (
               <div key={name} style={{ letterSpacing: value }}>
@@ -359,7 +352,7 @@ export function TypographyPreview({
           </div>
         </div>
         <div className="space-y-2">
-          <h4 className="text-xs font-medium uppercase tracking-wider opacity-50">
+          <h4 className="text-sm font-medium">
             Leading (Line Height Utilities)
           </h4>
           <div className="space-y-1 text-sm">
@@ -499,14 +492,11 @@ export function RadiiPreview({
   };
 
   return (
-    <div
-      className={cn("rounded-lg p-6 space-y-8", className)}
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className={cn("space-y-8", className)}>
       {/* Concentric Border Radius Demonstration */}
       <div className="space-y-4">
         <div>
-          <h4 className="text-sm font-medium mb-1">Concentric Border Radius</h4>
+          <h4 className="text-sm font-medium mb-1">Border Radius</h4>
           <p className="text-xs" style={{ color: mutedColor }}>
             Our tokens use a consistent scale where{" "}
             <span className="font-mono">
@@ -587,49 +577,6 @@ export function RadiiPreview({
             </div>
           </div>
         </div>
-
-        {/* Visual formula demonstration */}
-        <div
-          className="p-4 rounded-lg border"
-          style={{
-            backgroundColor: cardBg,
-            borderColor: borderColor,
-          }}
-        >
-          <div className="flex items-center gap-3 text-xs flex-wrap">
-            <span style={{ color: mutedColor }}>Formula:</span>
-            <div className="flex items-center gap-2">
-              <span
-                className="font-mono px-2 py-1 rounded"
-                style={{ backgroundColor: boxBg }}
-              >
-                outer_radius
-              </span>
-              <span>=</span>
-              <span
-                className="font-mono px-2 py-1 rounded"
-                style={{ backgroundColor: boxBg }}
-              >
-                inner_radius
-              </span>
-              <span>+</span>
-              <span
-                className="font-mono px-2 py-1 rounded"
-                style={{ backgroundColor: boxBg }}
-              >
-                padding
-              </span>
-            </div>
-          </div>
-          <div
-            className="mt-3 text-[10px] leading-relaxed"
-            style={{ color: mutedColor }}
-          >
-            Each step in our radius scale (sm → md → lg → xl) is designed to
-            work with our spacing tokens. When you use consistent padding, the
-            radii naturally maintain proper concentric relationships.
-          </div>
-        </div>
       </div>
 
       {/* Token Scale Reference */}
@@ -661,84 +608,6 @@ export function RadiiPreview({
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* Comparison: Wrong vs Right */}
-      <div className="space-y-4">
-        <h4 className="text-sm font-medium">Why Concentric Matters</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Wrong: Random radii */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-destructive/20 border border-destructive flex items-center justify-center">
-                <span className="text-[10px] text-destructive">✕</span>
-              </div>
-              <div
-                className="text-xs font-medium"
-                style={{ color: mutedColor }}
-              >
-                Mismatched radii
-              </div>
-            </div>
-            <div
-              className="p-4"
-              style={{
-                backgroundColor: cardBg,
-                borderRadius: radii.xl,
-                border: `1px solid ${borderColor}`,
-              }}
-            >
-              <div
-                className="p-3"
-                style={{
-                  backgroundColor: boxBg,
-                  borderRadius: radii.sm, // Wrong: too small
-                }}
-              >
-                <div className="text-xs">Awkward corners</div>
-              </div>
-              <div className="mt-2 text-[10px]" style={{ color: mutedColor }}>
-                Inner radius too small for outer
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Concentric */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-success/20 border border-success flex items-center justify-center">
-                <span className="text-[10px] text-success">✓</span>
-              </div>
-              <div
-                className="text-xs font-medium"
-                style={{ color: mutedColor }}
-              >
-                Concentric radii
-              </div>
-            </div>
-            <div
-              className="p-4"
-              style={{
-                backgroundColor: cardBg,
-                borderRadius: radii.xl,
-                border: `1px solid ${borderColor}`,
-              }}
-            >
-              <div
-                className="p-3"
-                style={{
-                  backgroundColor: boxBg,
-                  borderRadius: radii.lg, // Right: proper scale step
-                }}
-              >
-                <div className="text-xs">Balanced curves</div>
-              </div>
-              <div className="mt-2 text-[10px]" style={{ color: mutedColor }}>
-                Visually consistent and harmonious
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -893,13 +762,10 @@ export function BordersPreview({
     borderColors?.ring || (previewMode === "light" ? "#3b82f6" : "#60a5fa");
 
   return (
-    <div
-      className={cn("rounded-lg p-6 space-y-8", className)}
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className={cn("rounded-lg space-y-8", className)}>
       {/* Border Colors Swatches */}
       <div className="space-y-3">
-        <h4 className="text-xs font-mediumr">Border Color Tokens</h4>
+        <h4 className="text-sm font-medium">Border Color Tokens</h4>
         <div className="flex gap-6">
           <div className="flex flex-col items-center gap-2">
             <div
@@ -944,12 +810,7 @@ export function BordersPreview({
 
       {/* Real-world Examples */}
       <div className="space-y-3">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedTextColor }}
-        >
-          Form Elements Preview
-        </h4>
+        <h4 className="text-sm font-medium">Form Elements Preview</h4>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Input field */}
           <div className="space-y-2">
@@ -1027,12 +888,7 @@ export function BordersPreview({
 
       {/* Button with ring focus state */}
       <div className="space-y-3">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedTextColor }}
-        >
-          Focus Ring Example
-        </h4>
+        <h4 className="text-sm font-medium">Focus Ring Example</h4>
         <div className="flex gap-4">
           <button
             className="px-4 py-2 rounded-md text-sm font-medium"
@@ -1246,24 +1102,23 @@ export function BorderColorsEditor({
 
       {/* Border Colors */}
       <div className="space-y-4">
-        <Label className="text-sm">Border Colors ({previewMode} mode)</Label>
         <div className="grid gap-4">
           <PaletteColorPicker
-            label="Border (--border)"
+            label="Border"
             value={currentColors.default}
             onChange={(color) => updateColor("default", color)}
             onReset={() => resetColor("default")}
             primitives={primitives}
           />
           <PaletteColorPicker
-            label="Input Border (--input)"
+            label="Input Border"
             value={currentColors.input}
             onChange={(color) => updateColor("input", color)}
             onReset={() => resetColor("input")}
             primitives={primitives}
           />
           <PaletteColorPicker
-            label="Focus Ring (--ring)"
+            label="Focus Ring"
             value={currentColors.ring}
             onChange={(color) => updateColor("ring", color)}
             onReset={() => resetColor("ring")}
@@ -2107,9 +1962,7 @@ export function ComponentPreview({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Preview
-      </h4>
+      <h4 className="text-sm font-medium">Preview</h4>
 
       {/* Browser-like window */}
       <div className="rounded-lg border overflow-hidden">
@@ -2128,10 +1981,7 @@ export function ComponentPreview({
         </div>
 
         {/* Preview content */}
-        <div
-          className="p-6"
-          style={{ backgroundColor: bgColor, color: textColor }}
-        >
+        <div className="">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Stats Card */}
             <div
@@ -2329,18 +2179,10 @@ export function AnimationPreview({
   };
 
   return (
-    <div
-      className={cn("rounded-lg p-6 space-y-6", className)}
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className={cn("rounded-lg space-y-6", className)}>
       {/* Duration tokens */}
       <div className="space-y-4">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedColor }}
-        >
-          Duration Tokens
-        </h4>
+        <h4 className="text-sm font-medium">Duration Tokens</h4>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {Object.entries(animations.duration).map(([name, value]) => (
             <div
@@ -2365,12 +2207,7 @@ export function AnimationPreview({
 
       {/* Easing tokens */}
       <div className="space-y-4">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedColor }}
-        >
-          Easing Curves
-        </h4>
+        <h4 className="text-sm font-medium">Easing Curves</h4>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {Object.entries(animations.easing)
             .slice(0, 8)
@@ -2440,12 +2277,7 @@ export function AnimationPreview({
 
       {/* Common UI Patterns */}
       <div className="space-y-4">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedColor }}
-        >
-          Common UI Patterns
-        </h4>
+        <h4 className="text-sm font-medium">Common UI Patterns</h4>
         <div className="grid grid-cols-2 gap-4">
           {/* Button hover */}
           <div className="space-y-2">
@@ -2543,10 +2375,7 @@ export function AnimationPreview({
 
       {/* Curve Comparison Demos */}
       <div className="space-y-4">
-        <h4
-          className="text-xs font-medium uppercase tracking-wider"
-          style={{ color: mutedColor }}
-        >
+        <h4 className="text-sm font-medium">
           Easing Curve Comparison (Hover to animate)
         </h4>
         <div className="space-y-3">

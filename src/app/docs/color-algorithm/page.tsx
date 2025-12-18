@@ -14,8 +14,10 @@ export default function ColorAlgorithmPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Color Scale Algorithm</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-4xl font-serif font-medium mb-4">
+          Color Scale Algorithm
+        </h1>
+        <p className="text-lg text-foreground/85 leading-relaxed">
           How Tokens generates professional, perceptually balanced color scales
         </p>
       </div>
@@ -23,8 +25,8 @@ export default function ColorAlgorithmPage() {
       <div className="space-y-12">
         {/* Overview */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">Overview</h2>
-          <p className="text-muted-foreground mb-4">
+          <h2 className="text-3xl font-serif font-medium mb-6">Overview</h2>
+          <p className="text-md text-foreground/85 leading-relaxed mb-6">
             Tokens uses a sophisticated dual-algorithm approach to generate{" "}
             <Term term="color-scale">color scales</Term> that are both
             aesthetically pleasing and functionally superior for UI design. The
@@ -33,11 +35,11 @@ export default function ColorAlgorithmPage() {
           </p>
 
           <div className="rounded-xl border p-6 bg-card">
-            <h3 className="font-semibold mb-3">Why Two Algorithms?</h3>
-            <p className="text-sm text-muted-foreground mb-3">
+            <h3 className="text-lg font-medium mb-3">Why Two Algorithms?</h3>
+            <p className="text-sm text-foreground/75 leading-relaxed mb-3">
               Different colors have different needs in UI design:
             </p>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <ul className="space-y-2 text-sm text-foreground/75">
               <li>
                 <strong>Chromatic colors</strong> (blues, greens, oranges, etc.)
                 benefit from vibrant mid-tones and smooth transitions
@@ -55,8 +57,10 @@ export default function ColorAlgorithmPage() {
 
         {/* The OKLCH Foundation */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">The OKLCH Foundation</h2>
-          <p className="text-muted-foreground mb-4">
+          <h2 className="text-3xl font-serif font-medium mb-6">
+            The OKLCH Foundation
+          </h2>
+          <p className="text-foreground/75 mb-4">
             Both algorithms use <Term term="oklch">OKLCH</Term> color space,
             which provides perceptually uniform color manipulation. This means
             equal numeric changes produce equal visual changes—something RGB and
@@ -70,28 +74,28 @@ export default function ColorAlgorithmPage() {
             <CardContent className="space-y-3">
               <div>
                 <p className="font-medium text-sm mb-1">L - Lightness (0-1)</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Perceived brightness from black (0) to white (1). Unlike HSL,
                   lightness values match human perception.
                 </p>
               </div>
               <div>
                 <p className="font-medium text-sm mb-1">C - Chroma (0+)</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Colorfulness or saturation. Higher values = more vibrant. Can
                   exceed 0.37 for very saturated colors.
                 </p>
               </div>
               <div>
                 <p className="font-medium text-sm mb-1">H - Hue (0-360°)</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Color angle: 0° = red, 120° = green, 240° = blue, etc.
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground/75">
             Learn more at{" "}
             <a
               href="https://oklch.com"
@@ -108,10 +112,10 @@ export default function ColorAlgorithmPage() {
 
         {/* APCA Contrast */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-3xl font-serif font-medium mb-6">
             APCA Contrast for Accessibility
           </h2>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-foreground/75 mb-4">
             We use <Term term="apca">APCA</Term> (Advanced Perceptual Contrast
             Algorithm) to ensure our color scales meet modern accessibility
             standards. Unlike WCAG 2.x contrast ratios, APCA provides
@@ -127,7 +131,7 @@ export default function ColorAlgorithmPage() {
                 <p className="font-medium text-sm mb-1">
                   Perceptually Accurate
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   APCA accounts for how humans actually perceive contrast,
                   including spatial frequency, polarity effects, and ambient
                   lighting conditions.
@@ -137,7 +141,7 @@ export default function ColorAlgorithmPage() {
                 <p className="font-medium text-sm mb-1">
                   Directional Awareness
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Unlike WCAG ratios, APCA recognizes that light text on dark
                   backgrounds needs different treatment than dark text on light
                   backgrounds.
@@ -147,7 +151,7 @@ export default function ColorAlgorithmPage() {
                 <p className="font-medium text-sm mb-1">
                   Context-Aware Scoring
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   APCA Lc values directly relate to use cases: Lc 90 for body
                   text, Lc 75 for large text, Lc 60 for UI elements, Lc 45 for
                   disabled states.
@@ -158,12 +162,12 @@ export default function ColorAlgorithmPage() {
 
           <div className="rounded-xl border p-6 bg-card">
             <h3 className="font-semibold mb-2">How We Use APCA</h3>
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-foreground/75 mb-3">
               When generating color scales, we use APCA to compute optimal
               lightness values that ensure sufficient contrast for different use
               cases. This guarantees that:
             </p>
-            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+            <ul className="space-y-2 text-sm text-foreground/75 list-disc list-inside">
               <li>
                 Light shades work for subtle backgrounds without accessibility
                 issues
@@ -182,8 +186,10 @@ export default function ColorAlgorithmPage() {
 
         {/* Chromatic Color Algorithm */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">Chromatic Color Algorithm</h2>
-          <p className="text-muted-foreground mb-6">
+          <h2 className="text-3xl font-serif font-medium mb-6">
+            Chromatic Color Algorithm
+          </h2>
+          <p className="text-foreground/75 mb-6">
             For colors with hue (blues, greens, oranges, purples, etc.), we use
             a Radix Colors-inspired approach with smooth easing curves,
             progressive chroma distribution, and constant hue for brand
@@ -199,7 +205,7 @@ export default function ColorAlgorithmPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-foreground/75 mb-4">
                   Lightness uses adaptive scaling based on available headroom
                   above and below the base color. Smooth easing curves at the
                   light end optimize for UI backgrounds, while larger jumps at
@@ -222,7 +228,7 @@ export default function ColorAlgorithmPage() {
  950   -90% of available   Highest contrast`}
                   </pre>
                 </div>
-                <p className="text-sm text-muted-foreground mt-4">
+                <p className="text-sm text-foreground/75 mt-4">
                   This adaptive approach ensures optimal results regardless of
                   your base color's lightness—whether you start with a light
                   pastel or a dark, rich hue.
@@ -238,7 +244,7 @@ export default function ColorAlgorithmPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-foreground/75 mb-4">
                   Chroma follows a progressive easing curve that creates subtle
                   pastel tints at the light end while maintaining full vibrancy
                   through the interactive range (shades 400-900).
@@ -254,7 +260,7 @@ export default function ColorAlgorithmPage() {
   900-950    94-100%    Minimal reduction`}
                   </pre>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   This distribution ensures light backgrounds feel clean and
                   subtle while interactive elements (buttons, links, badges)
                   remain vibrant and engaging. The extended peak range through
@@ -271,7 +277,7 @@ export default function ColorAlgorithmPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-foreground/75 mb-4">
                   Unlike some algorithms that apply hue rotation, we maintain
                   constant hue across all shades. This ensures perfect brand
                   color consistency and creates a cohesive, recognizable
@@ -287,7 +293,7 @@ Example: If base hue = 310.4° (purple)
   Shade 950: 310.4°`}
                   </pre>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   This approach, inspired by Radix Colors, prioritizes brand
                   recognition and visual consistency. Users will immediately
                   recognize your brand color across all shades, from the
@@ -299,7 +305,7 @@ Example: If base hue = 310.4° (purple)
 
           <div className="rounded-xl border p-6 bg-card mt-6">
             <h3 className="font-semibold mb-2">Reference</h3>
-            <p className="text-sm text-muted-foreground mb-2">
+            <p className="text-sm text-foreground/75 mb-2">
               This approach is inspired by Radix Colors' methodology for
               creating accessible, beautiful color systems:
             </p>
@@ -318,10 +324,10 @@ Example: If base hue = 310.4° (purple)
 
         {/* Achromatic Color Algorithm */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-3xl font-serif font-medium mb-6">
             Achromatic Color Algorithm
           </h2>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-foreground/75 mb-6">
             For neutral colors (grays with chroma &lt; 0.01), we use a
             distribution pattern inspired by{" "}
             <Term term="tailwind">Tailwind CSS</Term> that prioritizes
@@ -335,7 +341,7 @@ Example: If base hue = 310.4° (purple)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-foreground/75 mb-4">
                 Neutrals need different behavior than chromatic colors. Light
                 shades must be very subtle (close to white) for card backgrounds
                 and subtle borders, while dark shades need aggressive contrast
@@ -357,7 +363,7 @@ Example: If base hue = 310.4° (purple)
  950   -0.411                           Deep backgrounds`}
                 </pre>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/75">
                 Notice the massive lightness drops between shades 300-500. This
                 creates excellent contrast for text on light backgrounds while
                 keeping the lighter shades subtle and non-distracting.
@@ -367,7 +373,7 @@ Example: If base hue = 310.4° (purple)
 
           <div className="rounded-xl border p-6 bg-card">
             <h3 className="font-semibold mb-2">Real-World Validation</h3>
-            <p className="text-sm text-muted-foreground mb-2">
+            <p className="text-sm text-foreground/75 mb-2">
               This distribution closely matches Tailwind CSS's neutral scale,
               which has been battle-tested across thousands of production
               applications:
@@ -388,7 +394,9 @@ Our algorithm at base 0.556:
 
         {/* Benefits */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">Benefits of This Approach</h2>
+          <h2 className="text-3xl font-serif font-medium mb-6">
+            Benefits of This Approach
+          </h2>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Card>
@@ -396,7 +404,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Perceptually Uniform</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   OKLCH ensures equal lightness changes produce equal visual
                   changes. Shade 300 looks equally lighter than 400 as 700 looks
                   darker than 600.
@@ -409,7 +417,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Vibrant Mid-Tones</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   The parabolic chroma curve creates punchy, engaging colors for
                   interactive elements like buttons and links without
                   oversaturating backgrounds.
@@ -422,7 +430,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Excellent Readability</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Neutral scales provide high-contrast text options while
                   keeping light shades subtle enough for backgrounds and
                   dividers.
@@ -435,7 +443,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Battle-Tested</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Based on proven approaches from Radix Colors and Tailwind CSS,
                   methodologies used in thousands of production applications and
                   design systems.
@@ -448,7 +456,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Brand Consistent</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Constant hue throughout the scale ensures perfect brand color
                   recognition. Your purple stays purple from the lightest tint
                   to the darkest shade.
@@ -461,7 +469,7 @@ Our algorithm at base 0.556:
                 <CardTitle className="text-lg">Harmonious</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-foreground/75">
                   Both chromatic and achromatic scales work together seamlessly,
                   ensuring your entire design system feels cohesive.
                 </p>
@@ -474,14 +482,16 @@ Our algorithm at base 0.556:
 
         {/* Technical Details */}
         <section>
-          <h2 className="text-2xl font-bold mb-4">Technical Implementation</h2>
+          <h2 className="text-3xl font-serif font-medium mb-6">
+            Technical Implementation
+          </h2>
 
           <Card className="mb-4">
             <CardHeader>
               <CardTitle className="text-lg">Detection Threshold</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/75">
                 A color is considered achromatic (neutral) if its chroma value
                 is less than 0.01. This catches pure grays as well as colors
                 that are nearly imperceptible from gray.
@@ -494,7 +504,7 @@ Our algorithm at base 0.556:
               <CardTitle className="text-lg">Constraint Preservation</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/75">
                 Regardless of algorithm, shade 500 always exactly matches your
                 input color. This ensures your brand color appears precisely as
                 intended in the generated scale.
@@ -507,7 +517,7 @@ Our algorithm at base 0.556:
               <CardTitle className="text-lg">View the Source</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-sm text-foreground/75 mb-3">
                 The complete implementation is open source and available in our
                 repository:
               </p>

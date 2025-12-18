@@ -254,7 +254,7 @@ export function ExportDialog({
             <div className="flex-1 overflow-hidden min-h-0">
               <div className="relative h-full">
                 {exportType === "tokens" && (
-                  <div className="absolute top-2 right-2 z-10">
+                  <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
                     <Select
                       value={colorFormat}
                       onValueChange={(v) => setColorFormat(v as ColorFormat)}
@@ -277,6 +277,15 @@ export function ExportDialog({
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleCopy}
+                      className="h-7 w-20 text-xs bg-background/80 backdrop-blur-sm border-border/50 justify-center gap-2"
+                    >
+                      <ClipboardIcon className="h-4 w-4" />
+                      Copy
+                    </Button>
                   </div>
                 )}
                 <pre
@@ -293,15 +302,6 @@ export function ExportDialog({
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-2 pt-2">
-              <Button
-                intent="default"
-                variant="outline"
-                onClick={handleCopy}
-                className="gap-2"
-              >
-                <ClipboardIcon className="h-4 w-4" />
-                Copy
-              </Button>
               <Button
                 intent="default"
                 onClick={handleDownload}

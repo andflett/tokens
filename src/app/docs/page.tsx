@@ -18,10 +18,10 @@ export const metadata: Metadata = {
 
 export default function DocsPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-12">
+    <div className="mx-auto w-full max-w-5xl">
       {/* Header */}
-      <section className="max-w-3xl mx-auto text-center pb-12">
-        <h1 className="text-4xl md:text-5xl font-serif font-medium leading-tight tracking-tight mb-4">
+      <section className="max-w-3xl mx-auto text-left pb-6">
+        <h1 className="text-4xl md:text-4xl font-serif font-medium leading-tight tracking-tight mb-4">
           Documentation
         </h1>
         <p className="text-lg text-foreground/85 leading-relaxed">
@@ -244,7 +244,9 @@ export default function DocsPage() {
               </div>
 
               <div className="space-y-3">
-                <p className="text-sm font-medium">Option 2: Local NPM Package</p>
+                <p className="text-sm font-medium">
+                  Option 2: Local NPM Package
+                </p>
                 <p className="text-xs text-foreground/75">
                   First install:{" "}
                   <code className="bg-muted px-2 py-0.5 rounded">
@@ -276,7 +278,9 @@ export default function DocsPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
                   <CodeBracketIcon className="h-5 w-5 text-foreground" />
                 </div>
-                <h3 className="text-xl font-medium">VS Code + GitHub Copilot</h3>
+                <h3 className="text-xl font-medium">
+                  VS Code + GitHub Copilot
+                </h3>
               </div>
               <p className="text-sm text-foreground/75">
                 Add this to your <Term term="vs-code">VS Code</Term>{" "}
