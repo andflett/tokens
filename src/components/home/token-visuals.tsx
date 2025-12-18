@@ -38,7 +38,9 @@ export function ColorEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Saturation</Label>
-            <span className="text-xs font-mono text-foreground">{saturation}%</span>
+            <span className="text-xs font-mono text-foreground">
+              {saturation}%
+            </span>
           </div>
           <Slider
             value={[saturation]}
@@ -53,7 +55,9 @@ export function ColorEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Lightness</Label>
-            <span className="text-xs font-mono text-foreground">{lightness}%</span>
+            <span className="text-xs font-mono text-foreground">
+              {lightness}%
+            </span>
           </div>
           <Slider
             value={[lightness]}
@@ -71,25 +75,45 @@ export function ColorEditorMini() {
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Preview</Label>
           <div className="grid grid-cols-5 gap-1.5">
-            <div 
+            <div
               className="h-8 rounded border border-border"
-              style={{ backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.max(10, lightness - 30)}%)` }}
+              style={{
+                backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.max(
+                  10,
+                  lightness - 30
+                )}%)`,
+              }}
             />
-            <div 
+            <div
               className="h-8 rounded border border-border"
-              style={{ backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.max(10, lightness - 15)}%)` }}
+              style={{
+                backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.max(
+                  10,
+                  lightness - 15
+                )}%)`,
+              }}
             />
-            <div 
+            <div
               className="h-8 rounded border border-border ring-2 ring-primary/30"
               style={{ backgroundColor: previewColor }}
             />
-            <div 
+            <div
               className="h-8 rounded border border-border"
-              style={{ backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.min(90, lightness + 15)}%)` }}
+              style={{
+                backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.min(
+                  90,
+                  lightness + 15
+                )}%)`,
+              }}
             />
-            <div 
+            <div
               className="h-8 rounded border border-border"
-              style={{ backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.min(95, lightness + 30)}%)` }}
+              style={{
+                backgroundColor: `hsl(${hue}, ${saturation}%, ${Math.min(
+                  95,
+                  lightness + 30
+                )}%)`,
+              }}
             />
           </div>
         </div>
@@ -113,7 +137,9 @@ export function SpacingEditorMini() {
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <Label className="text-xs text-muted-foreground">Base Unit</Label>
-          <span className="text-xs font-mono text-foreground">{baseUnit}px</span>
+          <span className="text-xs font-mono text-foreground">
+            {baseUnit}px
+          </span>
         </div>
         <Slider
           value={[baseUnit]}
@@ -137,7 +163,7 @@ export function SpacingEditorMini() {
                   <span className="text-xs font-mono text-muted-foreground w-8">
                     {multiplier}
                   </span>
-                  <div 
+                  <div
                     className="h-4 bg-primary/60 rounded-sm"
                     style={{ width: `${Math.min(value * 2, 120)}px` }}
                   />
@@ -177,7 +203,9 @@ export function TypographyEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Base Size</Label>
-            <span className="text-xs font-mono text-foreground">{baseSize}px</span>
+            <span className="text-xs font-mono text-foreground">
+              {baseSize}px
+            </span>
           </div>
           <Slider
             value={[baseSize]}
@@ -192,7 +220,9 @@ export function TypographyEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Scale Ratio</Label>
-            <span className="text-xs font-mono text-foreground">{scale.toFixed(2)}</span>
+            <span className="text-xs font-mono text-foreground">
+              {scale.toFixed(2)}
+            </span>
           </div>
           <Slider
             value={[scale]}
@@ -217,7 +247,7 @@ export function TypographyEditorMini() {
                   <span className="text-xs font-mono text-muted-foreground w-10">
                     {size.name}
                   </span>
-                  <span 
+                  <span
                     className="font-medium text-foreground"
                     style={{ fontSize: `${fontSize}px` }}
                   >
@@ -256,7 +286,9 @@ export function BorderRadiusEditorMini() {
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <Label className="text-xs text-muted-foreground">Base Radius</Label>
-          <span className="text-xs font-mono text-foreground">{baseRadius}px</span>
+          <span className="text-xs font-mono text-foreground">
+            {baseRadius}px
+          </span>
         </div>
         <Slider
           value={[baseRadius]}
@@ -277,7 +309,7 @@ export function BorderRadiusEditorMini() {
               const value = baseRadius * radius.multiplier;
               return (
                 <div key={radius.name} className="space-y-1">
-                  <div 
+                  <div
                     className="h-12 w-full bg-primary/60 border border-border"
                     style={{ borderRadius: `${value}px` }}
                   />
@@ -335,7 +367,9 @@ export function ShadowEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Spread</Label>
-            <span className="text-xs font-mono text-foreground">{spread}px</span>
+            <span className="text-xs font-mono text-foreground">
+              {spread}px
+            </span>
           </div>
           <Slider
             value={[spread]}
@@ -358,10 +392,10 @@ export function ShadowEditorMini() {
                 <span className="text-xs font-mono text-muted-foreground w-8">
                   {level.name}
                 </span>
-                <div 
+                <div
                   className="flex-1 h-8 bg-card rounded border border-border"
-                  style={{ 
-                    boxShadow: `0 ${level.offsetY}px ${level.blur}px ${spread}px rgba(0, 0, 0, 0.1)`
+                  style={{
+                    boxShadow: `0 ${level.offsetY}px ${level.blur}px ${spread}px rgba(0, 0, 0, 0.1)`,
                   }}
                 />
               </div>
@@ -394,7 +428,8 @@ export function AnimationEditorMini() {
     setTimeout(() => setIsAnimating(false), duration + 50);
   };
 
-  const currentCurve = curves.find((c) => c.name === selectedCurve)?.value || curves[0].value;
+  const currentCurve =
+    curves.find((c) => c.name === selectedCurve)?.value || curves[0].value;
 
   return (
     <div className="border border-border rounded-lg overflow-hidden bg-card p-4 space-y-3">
@@ -403,7 +438,9 @@ export function AnimationEditorMini() {
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-xs text-muted-foreground">Duration</Label>
-            <span className="text-xs font-mono text-foreground">{duration}ms</span>
+            <span className="text-xs font-mono text-foreground">
+              {duration}ms
+            </span>
           </div>
           <Slider
             value={[duration]}
