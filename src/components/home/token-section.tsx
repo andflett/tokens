@@ -33,7 +33,6 @@ export function TokenSection({
   description,
   visual,
   prompt,
-  generateTab,
   index,
 }: {
   id: string;
@@ -41,8 +40,6 @@ export function TokenSection({
   description: string;
   visual: React.ReactNode;
   prompt: string;
-  /** The tab name to link to on the generate page */
-  generateTab?: string;
   /** The index of the section for alternating order */
   index?: number;
 }) {
@@ -63,12 +60,12 @@ export function TokenSection({
         </div>
 
         <div className={`${isReversed ? "lg:order-1" : ""}`}>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             {/* Tabs for Demo / Prompt */}
             <div className="flex justify-center mb-4">
               <AnimatedTabsList
                 value={activeTab}
-                onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}
+                onValueChange={setActiveTab}
                 items={[
                   { value: "demo", label: "Demo" },
                   { value: "prompt", label: "Prompt" },
