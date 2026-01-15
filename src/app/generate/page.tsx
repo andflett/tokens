@@ -11,7 +11,7 @@ function GeneratorContent() {
   const tab = searchParams.get("tab") as string | undefined;
 
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
       <div className="py-10">
         <TokenGenerator initialTab={tab} />
       </div>
