@@ -1,9 +1,6 @@
 "use client";
 
-import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import React from "react";
-import { Button } from "../ui/button";
 import { ExamplePrompt } from "../example-prompt";
 import { AnimatedTabsList, Tabs } from "../ui/tabs";
 import { motion, AnimatePresence } from "motion/react";
@@ -50,7 +47,6 @@ export function TokenSection({
   index?: number;
 }) {
   const [activeTab, setActiveTab] = React.useState<"demo" | "prompt">("demo");
-  const tabLink = generateTab || id;
   const isReversed = typeof index === "number" && index % 2 === 1;
   const gridCols = isReversed
     ? "lg:grid-cols-[1fr_1.5fr]"

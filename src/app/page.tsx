@@ -24,7 +24,7 @@ import { BrushIcon } from "@/components/animate-ui/icons/brush";
 import { AIInstructionsDemo } from "@/components/home/ai-instructions-demo";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
 import { TokenDesignShowcaseV1 } from "@/components/home/token-design-showcase";
-import { ExamplePrompt, TOKEN_PROMPTS } from "@/components/example-prompt";
+import { TOKEN_PROMPTS } from "@/components/example-prompt";
 import tokenTypes from "@/lib/token-types.json";
 
 export default function HomePage() {
