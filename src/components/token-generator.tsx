@@ -540,7 +540,7 @@ export function TokenGenerator({
             },
             {
               value: "export",
-              icon: <ArrowUpCircleIcon className="h-5 w-5" />,
+              icon: <ArrowUpCircleIcon className="h-4 w-4" />,
               label: "Use Your Tokens",
               onClick: () => setExportOpen(true),
               ariaLabel: "Export tokens",

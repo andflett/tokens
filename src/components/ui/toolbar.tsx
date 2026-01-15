@@ -42,6 +42,8 @@ export interface ResponsiveToolbarProps {
  * - Full keyboard navigation with Radix dropdown
  * - Accessible with proper ARIA attributes
  */
+const CONTAINER_PADDING = 6; // px value matching p-1.5 (6px) in container
+
 export function ResponsiveToolbar({
   value,
   onValueChange,
@@ -50,7 +52,10 @@ export function ResponsiveToolbar({
   className,
   mobileVisibleTabs = 3,
 }: ResponsiveToolbarProps) {
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = React.useState(() => {
+    const idx = tabs.findIndex((item) => item.value === value);
+    return idx !== -1 ? idx : 0;
+  });
   const tabsRef = React.useRef<(HTMLButtonElement | null)[]>([]);
   const [pillStyle, setPillStyle] = React.useState({ left: 0, width: 0 });
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -70,7 +75,7 @@ export function ResponsiveToolbar({
         const containerRect = containerRef.current.getBoundingClientRect();
         const tabRect = activeTab.getBoundingClientRect();
         setPillStyle({
-          left: tabRect.left - containerRect.left - 6, // Account for container padding
+          left: tabRect.left - containerRect.left - CONTAINER_PADDING,
           width: tabRect.width,
         });
       }
@@ -191,8 +196,7 @@ export function ResponsiveToolbar({
                 aria-label="More options"
                 className={cn(
                   "cursor-pointer relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
-                  "text-foreground/80 hover:text-foreground hover:bg-primary-subdued/50",
-                  "md:inline-flex"
+                  "text-foreground/80 hover:text-foreground hover:bg-primary-subdued/50"
                 )}
               >
                 <EllipsisHorizontalIcon className="h-5 w-5" />
