@@ -44,22 +44,28 @@ export function TokenSection({
   index?: number;
 }) {
   const [activeTab, setActiveTab] = React.useState<"demo" | "prompt">("demo");
-  const isReversed = typeof index === "number" && index % 2 === 1;
-  const gridCols = isReversed
-    ? "lg:grid-cols-[1fr_1.5fr]"
-    : "lg:grid-cols-[1.5fr_1fr]";
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [minHeight, setMinHeight] = React.useState<number>(0);
+
+  // Measure content height on mount and tab change to prevent layout shift
+  React.useEffect(() => {
+    if (contentRef.current) {
+      const height = contentRef.current.scrollHeight;
+      setMinHeight((prev) => Math.max(prev, height));
+    }
+  }, [activeTab]);
 
   return (
     <section id={id} className="">
-      <div className={`grid gap-4 md:gap-12 ${gridCols} items-start`}>
-        <div className={`space-y-4 ${isReversed ? "lg:order-2" : ""}`}>
+      <div className="grid gap-4 md:gap-12 lg:grid-cols-[1fr_1.5fr] items-start">
+        <div className="space-y-4">
           <h2 className="text-3xl font-serif">{title}</h2>
           <p className="leading-relaxed text-md text-foreground/85">
             {description}
           </p>
         </div>
 
-        <div className={`${isReversed ? "lg:order-1" : ""}`}>
+        <div>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {/* Tabs for Demo / Prompt */}
             <div className="flex justify-center mb-4">
@@ -74,37 +80,44 @@ export function TokenSection({
             </div>
 
             {/* Animated tab content */}
-            <AnimatePresence mode="wait">
-              {activeTab === "demo" ? (
-                <motion.div
-                  key="demo"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                >
-                  <BrowserWindow>{visual}</BrowserWindow>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="prompt"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                >
-                  <ExamplePrompt prompt={prompt} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div
+              ref={contentRef}
+              style={{ minHeight: minHeight > 0 ? `${minHeight}px` : undefined }}
+            >
+              <AnimatePresence mode="wait">
+                {activeTab === "demo" ? (
+                  <motion.div
+                    key="demo"
+                    initial={{ opacity: 0.8, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0.8, y: -20 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 20,
+                      duration: 0.3,
+                    }}
+                  >
+                    <BrowserWindow>{visual}</BrowserWindow>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="prompt"
+                    initial={{ opacity: 0.8, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0.8, y: -20 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 20,
+                      duration: 0.3,
+                    }}
+                  >
+                    <ExamplePrompt prompt={prompt} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </Tabs>
         </div>
       </div>
