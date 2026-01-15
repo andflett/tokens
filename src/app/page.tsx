@@ -150,10 +150,10 @@ export default function HomePage() {
 
       <section className="py-14">
         <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-20">
-          <div className="shrink-0 md:w-1/2 w-full">
+          <div className="shrink-0 md:w-1/2 w-full md:order-1 order-2">
             <AIInstructionsDemo />
           </div>
-          <div className="space-y-6 mt-[-0.5rem]">
+          <div className="space-y-6 mt-[-0.5rem] md:order-2 order-1">
             <h2 className="text-4xl font-serif tracking-tight">
               Keep your AI on track
             </h2>

@@ -5,6 +5,8 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import { ExamplePrompt } from "../example-prompt";
+import { AnimatedTabsList, Tabs } from "../ui/tabs";
+import { motion, AnimatePresence } from "motion/react";
 
 function BrowserWindow({ children }: { children: React.ReactNode }) {
   return (
@@ -47,6 +49,7 @@ export function TokenSection({
   /** The index of the section for alternating order */
   index?: number;
 }) {
+  const [activeTab, setActiveTab] = React.useState<"demo" | "prompt">("demo");
   const tabLink = generateTab || id;
   const isReversed = typeof index === "number" && index % 2 === 1;
   const gridCols = isReversed
@@ -56,17 +59,60 @@ export function TokenSection({
   return (
     <section id={id} className="">
       <div className={`grid gap-4 md:gap-12 ${gridCols} items-start`}>
-        <div className={`space-y-4 p-4 ${isReversed ? "lg:order-2" : ""}`}>
+        <div className={`space-y-4 ${isReversed ? "lg:order-2" : ""}`}>
           <h2 className="text-3xl font-serif">{title}</h2>
           <p className="leading-relaxed text-md text-foreground/85">
             {description}
           </p>
-
-          <ExamplePrompt prompt={prompt} className="mt-2" />
         </div>
 
         <div className={`${isReversed ? "lg:order-1" : ""}`}>
-          <BrowserWindow>{visual}</BrowserWindow>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}>
+            {/* Tabs for Demo / Prompt */}
+            <div className="flex justify-center mb-4">
+              <AnimatedTabsList
+                value={activeTab}
+                onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}
+                items={[
+                  { value: "demo", label: "Demo" },
+                  { value: "prompt", label: "Prompt" },
+                ]}
+              />
+            </div>
+
+            {/* Animated tab content */}
+            <AnimatePresence mode="wait">
+              {activeTab === "demo" ? (
+                <motion.div
+                  key="demo"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                >
+                  <BrowserWindow>{visual}</BrowserWindow>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="prompt"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                >
+                  <ExamplePrompt prompt={prompt} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Tabs>
         </div>
       </div>
     </section>
