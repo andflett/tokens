@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, AnimatedTabsList } from "@/components/ui/tabs";
 import { ResponsiveToolbar, type ToolbarItem } from "@/components/ui/toolbar";
 import { BrandColorPickers } from "@/components/color-picker";
 import {
