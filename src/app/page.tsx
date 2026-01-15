@@ -83,7 +83,6 @@ export default function HomePage() {
                     type: "spring",
                     stiffness: 500,
                     damping: 20,
-                    duration: 0.3,
                   }}
                 >
                   <Card>
@@ -143,7 +142,6 @@ export default function HomePage() {
                     type: "spring",
                     stiffness: 500,
                     damping: 20,
-                    duration: 0.3,
                   }}
                 >
                   <Card>

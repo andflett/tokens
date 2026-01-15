@@ -95,7 +95,6 @@ export function TokenSection({
                       type: "spring",
                       stiffness: 500,
                       damping: 20,
-                      duration: 0.3,
                     }}
                   >
                     <BrowserWindow>{visual}</BrowserWindow>
@@ -110,7 +109,6 @@ export function TokenSection({
                       type: "spring",
                       stiffness: 500,
                       damping: 20,
-                      duration: 0.3,
                     }}
                   >
                     <ExamplePrompt prompt={prompt} />
