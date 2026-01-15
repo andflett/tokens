@@ -24,8 +24,9 @@ import { BrushIcon } from "@/components/animate-ui/icons/brush";
 import { AIInstructionsDemo } from "@/components/home/ai-instructions-demo";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
 import { TokenDesignShowcaseV1 } from "@/components/home/token-design-showcase";
-import { ExamplePrompt, TOKEN_PROMPTS } from "@/components/example-prompt";
+import { TOKEN_PROMPTS } from "@/components/example-prompt";
 import tokenTypes from "@/lib/token-types.json";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = React.useState("design");
@@ -72,77 +73,105 @@ export default function HomePage() {
             </div>
 
             <TabsContent value="design">
-              <Card>
-                <CardContent className="space-y-6 pt-2 pb-1 px-10">
-                  <div className="grid gap-12 md:grid-cols-[1fr_225px] items-start">
-                    <div className="space-y-4">
-                      <div className="flex flex-col items-start gap-6">
-                        <div className="gap-3 flex flex-col">
-                          <h3 className="text-2xl font-serif">
-                            Take control with design tokens
-                          </h3>
-                          <p className="text-foreground/85 text-md leading-6.5">
-                            Tokens are the blueprint for every color, spacing
-                            value, and corner in your app. Not a theme, but a
-                            foundational design layer that keeps things
-                            coherent. Without it, your AI's frontend will
-                            eventually turn into a sloppy mess.
-                          </p>
-                          <Button
-                            intent="default"
-                            asChild
-                            className="mt-4 self-start"
-                          >
-                            <Link href="/generate">
-                              <BrushIcon
-                                animateOnHover
-                                className="h-4 w-4 mr-1"
-                              />
-                              Design Your AI-Friendly Tokens
-                            </Link>
-                          </Button>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="design"
+                  initial={{ opacity: 0.8, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0.8, y: -20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 20,
+                  }}
+                >
+                  <Card>
+                    <CardContent className="space-y-6 pt-2 pb-1 px-10">
+                      <div className="grid gap-12 md:grid-cols-[1fr_225px] items-start">
+                        <div className="space-y-4">
+                          <div className="flex flex-col items-start gap-6">
+                            <div className="gap-3 flex flex-col">
+                              <h3 className="text-2xl font-serif">
+                                Take control with design tokens
+                              </h3>
+                              <p className="text-foreground/85 text-md leading-6.5">
+                                Tokens are the blueprint for every color, spacing
+                                value, and corner in your app. Not a theme, but a
+                                foundational design layer that keeps things
+                                coherent. Without it, your AI's frontend will
+                                eventually turn into a sloppy mess.
+                              </p>
+                              <Button
+                                intent="default"
+                                asChild
+                                className="mt-4 self-start"
+                              >
+                                <Link href="/generate">
+                                  <BrushIcon
+                                    animateOnHover
+                                    className="h-4 w-4 mr-1"
+                                  />
+                                  Design Your AI-Friendly Tokens
+                                </Link>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mr-[-6]">
+                          {/* <TokenDesignShowcaseV4 /> */}
+                          {/* <TokenShowcasePanel /> */}
+                          <TokenDesignShowcaseV1 />
+                          {/* <TokenDesignShowcaseV2 />
+                          <TokenDesignShowcaseV3 /> */}
                         </div>
                       </div>
-                    </div>
-                    <div className="mr-[-6]">
-                      {/* <TokenDesignShowcaseV4 /> */}
-                      {/* <TokenShowcasePanel /> */}
-                      <TokenDesignShowcaseV1 />
-                      {/* <TokenDesignShowcaseV2 />
-                      <TokenDesignShowcaseV3 /> */}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </AnimatePresence>
             </TabsContent>
 
             <TabsContent value="teach">
-              <Card>
-                <CardContent className="space-y-6">
-                  <div className="grid gap-12 md:grid-cols-[1fr_320px] items-start">
-                    <div className="space-y-4">
-                      <div className="flex flex-col items-start gap-6">
-                        <div className="gap-2 flex flex-col">
-                          <h3 className="text-2xl font-serif mb-1">
-                            Train your AI
-                          </h3>
-                          <p className="text-foreground/85 text-md">
-                            Integrate tokens into your AI workflows so
-                            generators produce consistent, token-driven UI. Use
-                            the MCP to programmatically generate token sets.
-                          </p>
-                          <Button intent="default" className="mt-2" asChild>
-                            <Link href="/docs">Read the MCP docs</Link>
-                          </Button>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="teach"
+                  initial={{ opacity: 0.8, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0.8, y: -20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 20,
+                  }}
+                >
+                  <Card>
+                    <CardContent className="space-y-6">
+                      <div className="grid gap-12 md:grid-cols-[1fr_320px] items-start">
+                        <div className="space-y-4">
+                          <div className="flex flex-col items-start gap-6">
+                            <div className="gap-2 flex flex-col">
+                              <h3 className="text-2xl font-serif mb-1">
+                                Train your AI
+                              </h3>
+                              <p className="text-foreground/85 text-md">
+                                Integrate tokens into your AI workflows so
+                                generators produce consistent, token-driven UI. Use
+                                the MCP to programmatically generate token sets.
+                              </p>
+                              <Button intent="default" className="mt-2" asChild>
+                                <Link href="/docs">Read the MCP docs</Link>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="">
+                          <AnimatedTerminal />
                         </div>
                       </div>
-                    </div>
-                    <div className="">
-                      <AnimatedTerminal />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </AnimatePresence>
             </TabsContent>
           </Tabs>
         </div>
@@ -150,10 +179,10 @@ export default function HomePage() {
 
       <section className="py-14">
         <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-20">
-          <div className="shrink-0 md:w-1/2 w-full">
+          <div className="shrink-0 md:w-1/2 w-full md:order-1 order-2">
             <AIInstructionsDemo />
           </div>
-          <div className="space-y-6 mt-[-0.5rem]">
+          <div className="space-y-6 mt-[-0.5rem] md:order-2 order-1">
             <h2 className="text-4xl font-serif tracking-tight">
               Keep your AI on track
             </h2>
@@ -181,7 +210,6 @@ export default function HomePage() {
           description={tokenTypes.colors.description}
           visual={<ColorEditorMini />}
           prompt={TOKEN_PROMPTS.colors}
-          index={0}
         />
 
         {/* Token type sections */}
@@ -191,7 +219,6 @@ export default function HomePage() {
           description={tokenTypes.spacing.description}
           visual={<SpacingEditorMini />}
           prompt={TOKEN_PROMPTS.spacing}
-          index={1}
         />
 
         <TokenSection
@@ -200,7 +227,6 @@ export default function HomePage() {
           description={tokenTypes.typography.description}
           visual={<TypographyEditorMini />}
           prompt={TOKEN_PROMPTS.typography}
-          index={2}
         />
 
         <TokenSection
@@ -209,7 +235,6 @@ export default function HomePage() {
           description={tokenTypes.shadows.description}
           visual={<ShadowEditorMini />}
           prompt={TOKEN_PROMPTS.shadows}
-          index={3}
         />
 
         <TokenSection
@@ -218,7 +243,6 @@ export default function HomePage() {
           description={tokenTypes.borders.description}
           visual={<BorderRadiusEditorMini />}
           prompt={TOKEN_PROMPTS.borders}
-          index={4}
         />
 
         <TokenSection
@@ -227,7 +251,6 @@ export default function HomePage() {
           description={tokenTypes.animations.description}
           visual={<AnimationEditorMini />}
           prompt={TOKEN_PROMPTS.animations}
-          index={5}
         />
       </div>
 
