@@ -3,7 +3,7 @@ import TurdLogo from "./turd-logo";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t py-8">
+    <footer className="py-8">
       <div className="mx-auto w-full max-w-5xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
