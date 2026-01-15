@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -162,7 +163,7 @@ export function ResponsiveToolbar({
               )}
             >
               <span className="shrink-0 [&_svg]:size-4">{item.icon}</span>
-              <span className="hidden md:inline">{item.label}</span>
+              <span>{item.label}</span>
             </button>
           );
         })}
@@ -223,6 +224,10 @@ export function ResponsiveToolbar({
                       </DropdownMenuItem>
                     );
                   })}
+                  {/* Separator between tabs and actions on mobile */}
+                  {actions.length > 0 && (
+                    <DropdownMenuSeparator className="md:hidden" />
+                  )}
                 </>
               )}
 
