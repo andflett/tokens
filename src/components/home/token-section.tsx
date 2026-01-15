@@ -63,12 +63,12 @@ export function TokenSection({
         </div>
 
         <div>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}>
             {/* Tabs for Demo / Prompt */}
             <div className="flex justify-center mb-4">
               <AnimatedTabsList
                 value={activeTab}
-                onValueChange={setActiveTab}
+                onValueChange={(value) => setActiveTab(value as "demo" | "prompt")}
                 items={[
                   { value: "demo", label: "Demo" },
                   { value: "prompt", label: "Prompt" },
