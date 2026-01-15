@@ -39,7 +39,7 @@ export interface ResponsiveToolbarProps {
  * 
  * Features:
  * - Desktop: tabs on left, actions on right, all styled consistently
- * - Mobile: icon-only display, overflow items move to "More" dropdown
+ * - Mobile: tabs with text labels, overflow items move to "More" dropdown
  * - Full keyboard navigation with Radix dropdown
  * - Accessible with proper ARIA attributes
  */
