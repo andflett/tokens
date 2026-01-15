@@ -14,7 +14,7 @@ export default function ColorAlgorithmPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-serif font-medium mb-4">
+        <h1 className="text-4xl font-serif mb-4">
           Color Scale Algorithm
         </h1>
         <p className="text-lg text-foreground/85 leading-relaxed">
@@ -25,7 +25,7 @@ export default function ColorAlgorithmPage() {
       <div className="space-y-12">
         {/* Overview */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">Overview</h2>
+          <h2 className="text-3xl font-serif mb-6">Overview</h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-6">
             Tokens uses a sophisticated dual-algorithm approach to generate{" "}
             <Term term="color-scale">color scales</Term> that are both
@@ -57,7 +57,7 @@ export default function ColorAlgorithmPage() {
 
         {/* The OKLCH Foundation */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             The OKLCH Foundation
           </h2>
           <p className="text-foreground/75 mb-4">
@@ -112,7 +112,7 @@ export default function ColorAlgorithmPage() {
 
         {/* APCA Contrast */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             APCA Contrast for Accessibility
           </h2>
           <p className="text-foreground/75 mb-4">
@@ -186,7 +186,7 @@ export default function ColorAlgorithmPage() {
 
         {/* Chromatic Color Algorithm */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Chromatic Color Algorithm
           </h2>
           <p className="text-foreground/75 mb-6">
@@ -324,7 +324,7 @@ Example: If base hue = 310.4° (purple)
 
         {/* Achromatic Color Algorithm */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Achromatic Color Algorithm
           </h2>
           <p className="text-foreground/75 mb-6">
@@ -394,7 +394,7 @@ Our algorithm at base 0.556:
 
         {/* Benefits */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Benefits of This Approach
           </h2>
 
@@ -482,7 +482,7 @@ Our algorithm at base 0.556:
 
         {/* Technical Details */}
         <section>
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Technical Implementation
           </h2>
 

@@ -471,7 +471,7 @@ export function TokenGenerator({
     const data = tokenTypes[type];
     return (
       <div className="">
-        <h2 className="font-serif font-medium mb-3 text-2xl">{data.title}</h2>
+        <h2 className="font-serif mb-3 text-2xl">{data.title}</h2>
         <p className="text-foreground/90 mb-6">{data.description}</p>
         <ExamplePrompt type={type} />
       </div>
@@ -675,7 +675,7 @@ export function TokenGenerator({
               {/* Editor Card */}
               <Card className="w-full lg:w-96">
                 <CardHeader className="gap-1">
-                  <CardTitle className="text-lg font-serif font-medium mt-[-1]">
+                  <CardTitle className="text-lg font-serif mt-[-1]">
                     Generate new colour tokens
                   </CardTitle>
                   <CardDescription>

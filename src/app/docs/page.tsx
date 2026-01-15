@@ -21,7 +21,7 @@ export default function DocsPage() {
     <div className="mx-auto w-full max-w-5xl">
       {/* Header */}
       <section className="max-w-3xl mx-auto text-left pb-6">
-        <h1 className="text-4xl md:text-4xl font-serif font-medium leading-tight tracking-tight mb-4">
+        <h1 className="text-4xl md:text-4xl font-serif leading-tight tracking-tight mb-4">
           Documentation
         </h1>
         <p className="text-lg text-foreground/85 leading-relaxed">
@@ -32,7 +32,7 @@ export default function DocsPage() {
       <div className="max-w-3xl mx-auto space-y-16">
         {/* Getting Started */}
         <section id="getting-started">
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Getting Started
           </h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-8">
@@ -80,7 +80,7 @@ export default function DocsPage() {
 
         {/* What are Design Tokens */}
         <section id="design-tokens">
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             What are Design Tokens?
           </h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-6">
@@ -164,7 +164,7 @@ export default function DocsPage() {
 
         {/* MCP Setup */}
         <section id="mcp-setup">
-          <h2 className="text-3xl font-serif font-medium mb-6">MCP Setup</h2>
+          <h2 className="text-3xl font-serif mb-6">MCP Setup</h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-8">
             The <Term term="mcp">Model Context Protocol</Term> allows AI
             assistants to use external tools. There are two ways to use Tokens
@@ -341,7 +341,7 @@ export default function DocsPage() {
 
         {/* Available Tools */}
         <section id="tools">
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Available Tools
           </h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-8">
@@ -415,7 +415,7 @@ export default function DocsPage() {
 
         {/* Color Algorithm */}
         <section id="color-algorithm">
-          <h2 className="text-3xl font-serif font-medium mb-6">
+          <h2 className="text-3xl font-serif mb-6">
             Color Algorithm
           </h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-8">
@@ -451,7 +451,7 @@ export default function DocsPage() {
 
         {/* Glossary */}
         <section id="glossary">
-          <h2 className="text-3xl font-serif font-medium mb-6">Glossary</h2>
+          <h2 className="text-3xl font-serif mb-6">Glossary</h2>
           <p className="text-md text-foreground/85 leading-relaxed mb-8">
             Hover over or tap any underlined term to see its definition. Here
             are some key terms:
