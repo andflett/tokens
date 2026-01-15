@@ -57,7 +57,7 @@ export function TokenSection({
     <section id={id} className="">
       <div className={`grid gap-4 md:gap-12 ${gridCols} items-start`}>
         <div className={`space-y-4 p-4 ${isReversed ? "lg:order-2" : ""}`}>
-          <h2 className="text-3xl font-medium font-serif">{title}</h2>
+          <h2 className="text-3xl font-serif">{title}</h2>
           <p className="leading-relaxed text-md text-foreground/85">
             {description}
           </p>

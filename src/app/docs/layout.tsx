@@ -8,7 +8,7 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div className="mx-auto w-full max-w-6xl px-6">
       <div className="py-10">
         <div className="flex gap-8">
           {/* Left Sidebar - Desktop only */}

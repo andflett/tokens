@@ -34,7 +34,7 @@ export default function HomePage() {
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
       <section className="max-w-3xl text-center mx-auto pb-8 pt-12 md:pt-22 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15] tracking-tight relative">
+        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] tracking-tight relative">
           Why does everything I build with AI look like{" "}
           <span className="text-primary-600">turd</span>?
         </h1>
@@ -78,7 +78,7 @@ export default function HomePage() {
                     <div className="space-y-4">
                       <div className="flex flex-col items-start gap-6">
                         <div className="gap-3 flex flex-col">
-                          <h3 className="text-2xl font-serif font-medium">
+                          <h3 className="text-2xl font-serif">
                             Take control with design tokens
                           </h3>
                           <p className="text-foreground/85 text-md leading-6.5">
@@ -123,7 +123,7 @@ export default function HomePage() {
                     <div className="space-y-4">
                       <div className="flex flex-col items-start gap-6">
                         <div className="gap-2 flex flex-col">
-                          <h3 className="text-2xl font-medium font-serif mb-1">
+                          <h3 className="text-2xl font-serif mb-1">
                             Train your AI
                           </h3>
                           <p className="text-foreground/85 text-md">
@@ -149,12 +149,12 @@ export default function HomePage() {
       </section>
 
       <section className="py-14">
-        <div className="flex items-center gap-8 lg:gap-20">
-          <div className="shrink-0 w-1/2">
+        <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-20">
+          <div className="shrink-0 md:w-1/2 w-full">
             <AIInstructionsDemo />
           </div>
           <div className="space-y-6 mt-[-0.5rem]">
-            <h2 className="text-4xl font-medium font-serif tracking-tight">
+            <h2 className="text-4xl font-serif tracking-tight">
               Keep your AI on track
             </h2>
             <p className="text-md text-foreground/85 leading-relaxed">

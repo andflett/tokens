@@ -10,7 +10,7 @@ export default function MCPPage() {
     <div className="mx-auto w-full max-w-5xl px-6 py-12">
       {/* Hero Section */}
       <section className="max-w-3xl mx-auto text-center pb-12">
-        <h1 className="text-4xl md:text-5xl font-serif font-medium leading-tight tracking-tight mb-4">
+        <h1 className="text-4xl md:text-5xl font-serif leading-tight tracking-tight mb-4">
           Token MCP Server
         </h1>
         <p className="text-lg text-foreground/85 leading-relaxed">
@@ -22,7 +22,7 @@ export default function MCPPage() {
       {/* Example Section */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-2xl font-serif font-medium mb-3">
+          <h2 className="text-2xl font-serif mb-3">
             Try it with your AI assistant
           </h2>
           <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
@@ -85,7 +85,7 @@ export default function MCPPage() {
       {/* What is MCP */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-serif font-medium mb-4">
+          <h2 className="text-3xl font-serif mb-4">
             What is MCP?
           </h2>
           <p className="text-md text-foreground/85 leading-relaxed">
@@ -100,7 +100,7 @@ export default function MCPPage() {
       {/* Installation Options */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-3xl font-serif font-medium">Installation</h2>
+          <h2 className="text-3xl font-serif">Installation</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border bg-card p-6">
               <div className="text-2xl mb-2">🌐</div>
@@ -136,7 +136,7 @@ export default function MCPPage() {
       {/* Setup Instructions */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-3xl font-serif font-medium">Setup</h2>
+          <h2 className="text-3xl font-serif">Setup</h2>
 
           {/* Claude Desktop */}
           <div className="rounded-xl border bg-card p-6 space-y-4">
@@ -225,7 +225,7 @@ export default function MCPPage() {
       {/* Example Prompts */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-3xl font-serif font-medium">Example Prompts</h2>
+          <h2 className="text-3xl font-serif">Example Prompts</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border bg-card p-4">
               <p className="text-sm leading-relaxed">
