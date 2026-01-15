@@ -12,7 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, AnimatedTabsList } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { ResponsiveToolbar, type ToolbarItem } from "@/components/ui/toolbar";
 import { BrandColorPickers } from "@/components/color-picker";
 import {
   PalettePreviewEditable,
@@ -480,105 +481,74 @@ export function TokenGenerator({
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* Top bar with token type nav (left) and action buttons (right) */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        {tokens && (
-          <Tabs value={tokenTab} onValueChange={setTokenTab}>
-            <AnimatedTabsList
-              value={tokenTab}
-              onValueChange={setTokenTab}
-              items={[
-                {
-                  value: "colors",
-                  label: (
-                    <>
-                      <SwatchIcon className="h-4 w-4" />
-                      Colors
-                    </>
-                  ),
-                },
-                {
-                  value: "typography",
-                  label: (
-                    <>
-                      <DocumentTextIcon className="h-4 w-4" />
-                      Typography
-                    </>
-                  ),
-                },
-                {
-                  value: "spacing",
-                  label: (
-                    <>
-                      <ArrowsPointingOutIcon className="h-4 w-4" />
-                      Space
-                    </>
-                  ),
-                },
-                {
-                  value: "radii",
-                  label: (
-                    <>
-                      <StopIcon className="h-4 w-4" />
-                      Radius
-                    </>
-                  ),
-                },
-                {
-                  value: "shadows",
-                  label: (
-                    <>
-                      <Square3Stack3DIcon className="h-4 w-4" />
-                      Shadows
-                    </>
-                  ),
-                },
-                {
-                  value: "borders",
-                  label: (
-                    <>
-                      <ViewColumnsIcon className="h-4 w-4" />
-                      Borders
-                    </>
-                  ),
-                },
-                {
-                  value: "animations",
-                  label: (
-                    <>
-                      <BoltIcon className="h-4 w-4" />
-                      Motion
-                    </>
-                  ),
-                },
-                /* {
-                  value: "layout",
-                  label: (
-                    <>
-                      <Squares2X2Icon className="h-4 w-4" />
-                      Layout
-                    </>
-                  ),
-                } */
-              ]}
-              className="flex-wrap"
-            />
-          </Tabs>
-        )}
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            onClick={() => setShowPreview(true)}
-            className=""
-          >
-            <MonitorSmartphoneIcon />
-          </Button>
-          <Button variant="ghost" onClick={() => setExportOpen(true)}>
-            <ArrowUpCircleIcon className="!h-5 !w-5 mr-0.5" />
-            Use Your Tokens
-          </Button>
-        </div>
-      </div>
+      {/* Responsive toolbar with tabs and actions */}
+      {tokens && (
+        <ResponsiveToolbar
+          value={tokenTab}
+          onValueChange={setTokenTab}
+          tabs={[
+            {
+              value: "colors",
+              icon: <SwatchIcon className="h-4 w-4" />,
+              label: "Colors",
+              ariaLabel: "Colors tokens",
+            },
+            {
+              value: "typography",
+              icon: <DocumentTextIcon className="h-4 w-4" />,
+              label: "Typography",
+              ariaLabel: "Typography tokens",
+            },
+            {
+              value: "spacing",
+              icon: <ArrowsPointingOutIcon className="h-4 w-4" />,
+              label: "Space",
+              ariaLabel: "Spacing tokens",
+            },
+            {
+              value: "radii",
+              icon: <StopIcon className="h-4 w-4" />,
+              label: "Radius",
+              ariaLabel: "Border radius tokens",
+            },
+            {
+              value: "shadows",
+              icon: <Square3Stack3DIcon className="h-4 w-4" />,
+              label: "Shadows",
+              ariaLabel: "Shadow tokens",
+            },
+            {
+              value: "borders",
+              icon: <ViewColumnsIcon className="h-4 w-4" />,
+              label: "Borders",
+              ariaLabel: "Border tokens",
+            },
+            {
+              value: "animations",
+              icon: <BoltIcon className="h-4 w-4" />,
+              label: "Motion",
+              ariaLabel: "Animation tokens",
+            },
+          ]}
+          actions={[
+            {
+              value: "preview",
+              icon: <MonitorSmartphoneIcon className="h-4 w-4" />,
+              label: "Preview",
+              onClick: () => setShowPreview(true),
+              ariaLabel: "Preview UI components",
+            },
+            {
+              value: "export",
+              icon: <ArrowUpCircleIcon className="h-5 w-5" />,
+              label: "Use Your Tokens",
+              onClick: () => setExportOpen(true),
+              ariaLabel: "Export tokens",
+            },
+          ]}
+          mobileVisibleTabs={3}
+        />
+      )}
 
       {/* UI Preview Modal */}
       <UIPreviewModal open={showPreview} onOpenChange={setShowPreview} />
