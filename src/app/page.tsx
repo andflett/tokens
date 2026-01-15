@@ -210,7 +210,6 @@ export default function HomePage() {
           description={tokenTypes.colors.description}
           visual={<ColorEditorMini />}
           prompt={TOKEN_PROMPTS.colors}
-          index={0}
         />
 
         {/* Token type sections */}
@@ -220,7 +219,6 @@ export default function HomePage() {
           description={tokenTypes.spacing.description}
           visual={<SpacingEditorMini />}
           prompt={TOKEN_PROMPTS.spacing}
-          index={1}
         />
 
         <TokenSection
@@ -229,7 +227,6 @@ export default function HomePage() {
           description={tokenTypes.typography.description}
           visual={<TypographyEditorMini />}
           prompt={TOKEN_PROMPTS.typography}
-          index={2}
         />
 
         <TokenSection
@@ -238,7 +235,6 @@ export default function HomePage() {
           description={tokenTypes.shadows.description}
           visual={<ShadowEditorMini />}
           prompt={TOKEN_PROMPTS.shadows}
-          index={3}
         />
 
         <TokenSection
@@ -247,7 +243,6 @@ export default function HomePage() {
           description={tokenTypes.borders.description}
           visual={<BorderRadiusEditorMini />}
           prompt={TOKEN_PROMPTS.borders}
-          index={4}
         />
 
         <TokenSection
@@ -256,7 +251,6 @@ export default function HomePage() {
           description={tokenTypes.animations.description}
           visual={<AnimationEditorMini />}
           prompt={TOKEN_PROMPTS.animations}
-          index={5}
         />
       </div>
 

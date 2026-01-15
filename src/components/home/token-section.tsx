@@ -33,15 +33,12 @@ export function TokenSection({
   description,
   visual,
   prompt,
-  index,
 }: {
   id: string;
   title: string;
   description: string;
   visual: React.ReactNode;
   prompt: string;
-  /** The index of the section for alternating order */
-  index?: number;
 }) {
   const [activeTab, setActiveTab] = React.useState<"demo" | "prompt">("demo");
   const contentRef = React.useRef<HTMLDivElement>(null);
