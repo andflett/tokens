@@ -70,10 +70,8 @@ export function SiteHeader() {
         <div className="flex md:hidden items-center gap-2">
           {mounted && <ThemeSwitch size="sm" />}
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className=""
+          <button
+            className="p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -102,7 +100,7 @@ export function SiteHeader() {
                 )}
               />
             </div>
-          </Button>
+          </button>
         </div>
       </div>
 
