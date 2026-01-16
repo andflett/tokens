@@ -35,7 +35,7 @@ export default function HomePage() {
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
       <section className="max-w-3xl text-center mx-auto pb-4 pt-12 md:pt-22 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.25] tracking-tight relative max-w-2xl">
+        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.3] tracking-tight relative max-w-3xl">
           Why does everything I build with AI look like{" "}
           <span className="text-primary-600">turd</span>?
         </h1>
