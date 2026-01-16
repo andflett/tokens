@@ -63,7 +63,7 @@ export function ExamplePrompt({ type, prompt, className }: ExamplePromptProps) {
         </Button>
       </div>
       {/* Input area */}
-      <div className="px-4 py-4 flex items-start gap-3">
+      <div className="px-4 py-4 flex items-start gap-3 bg-card">
         <TerminalIcon
           size={16}
           className="text-primary mt-1 shrink-0"

@@ -38,7 +38,6 @@ import {
   AnimationEditor,
   // TailwindUsageExample,
 } from "@/components/token-editors";
-import { ExamplePrompt } from "@/components/example-prompt";
 import { UIPreviewModal } from "@/components/ui-preview-modal";
 import {
   generateTokens,
@@ -474,7 +473,6 @@ export function TokenGenerator({
       <div className="">
         <h2 className="font-serif mb-3 text-2xl">{data.title}</h2>
         <p className="text-foreground/90 mb-6">{data.description}</p>
-        <ExamplePrompt type={type} />
       </div>
     );
   };

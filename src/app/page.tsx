@@ -34,8 +34,8 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="max-w-3xl text-center mx-auto pb-8 pt-12 md:pt-22 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.25] tracking-tight relative max-w-2xl">
+      <section className="max-w-3xl text-center mx-auto pb-9 pt-8 md:pt-14 relative flex flex-col items-center gap-4">
+        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.25] tracking-tight relative md:max-w-3xl">
           Why does everything I build with AI look like{" "}
           <span className="text-primary-600">turd</span>?
         </h1>
@@ -45,7 +45,7 @@ export default function HomePage() {
       <section className="pb-18">
         <div className="mx-auto max-w-3xl">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-9">
+            <div className="flex justify-center mb-6">
               <AnimatedTabsList
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -95,11 +95,12 @@ export default function HomePage() {
                                 Take control with design tokens
                               </h3>
                               <p className="text-foreground/85 text-md leading-6.5">
-                                Tokens are the blueprint for every color, spacing
-                                value, and corner in your app. Not a theme, but a
-                                foundational design layer that keeps things
-                                coherent. Without it, your AI's frontend will
-                                eventually turn into a sloppy mess.
+                                Tokens are the blueprint for every color,
+                                spacing value, and corner in your app. Not a
+                                theme, but a foundational design layer that
+                                keeps things coherent. Without it, your AI's
+                                frontend will eventually turn into a sloppy
+                                mess.
                               </p>
                               <Button
                                 intent="default"
@@ -155,8 +156,9 @@ export default function HomePage() {
                               </h3>
                               <p className="text-foreground/85 text-md">
                                 Integrate tokens into your AI workflows so
-                                generators produce consistent, token-driven UI. Use
-                                the MCP to programmatically generate token sets.
+                                generators produce consistent, token-driven UI.
+                                Use the MCP to programmatically generate token
+                                sets.
                               </p>
                               <Button intent="default" className="mt-2" asChild>
                                 <Link href="/docs">Read the MCP docs</Link>

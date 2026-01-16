@@ -21,8 +21,10 @@ export function SiteHeader() {
 
   const navLinkClass = (href: string) =>
     cn(
-      "py-1 text-sm font-medium rounded-full px-4 text-foreground/90 hover:bg-muted transition-colors",
-      pathname === href && pathname !== "/" ? "text-foreground bg-muted" : ""
+      "py-1 text-sm font-medium rounded-full px-4 text-foreground/80 hover:text-foreground hover:bg-primary-subdued transition-colors",
+      pathname === href && pathname !== "/"
+        ? "text-primary-subdued-foreground bg-primary-subdued"
+        : ""
     );
 
   const mobileNavLinkClass = (href: string) =>
@@ -33,7 +35,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-sm w-full">
-      <div className="flex h-16 items-center justify-between w-full max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="flex h-18 items-center justify-between w-full max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center gap-0">
           <Link href="/" aria-label="Home" className="flex items-center">
             <TurdLogo
