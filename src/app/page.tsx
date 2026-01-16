@@ -260,7 +260,7 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-16 lg:py-20">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl leading-tight tracking-tight font-bold sm:text-3xl">
+          <h2 className="text-4xl leading-tight tracking-tight font-serif font-light sm:text-3xl">
             Ready to level up your AI generated code?
           </h2>
           <p className="mt-4 text-lg text-foreground/80">
