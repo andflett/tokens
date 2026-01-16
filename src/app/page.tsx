@@ -34,15 +34,15 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Hero */}
-      <section className="max-w-3xl text-center mx-auto pb-9 pt-8 md:pt-14 relative flex flex-col items-center gap-4">
-        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.25] tracking-tight relative md:max-w-3xl">
+      <section className="max-w-3xl text-center mx-auto pb-4 pt-12 md:pt-22 relative flex flex-col items-center gap-4">
+        <h1 className="text-4xl md:text-6xl font-serif leading-[1.15] md:leading-[1.25] tracking-tight relative max-w-2xl">
           Why does everything I build with AI look like{" "}
           <span className="text-primary-600">turd</span>?
         </h1>
       </section>
 
       {/* Next Steps */}
-      <section className="pb-18">
+      <section className="pb-8">
         <div className="mx-auto max-w-3xl">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex justify-center mb-6">
@@ -179,7 +179,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-14">
+      <section className="py-8">
         <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-20">
           <div className="shrink-0 md:w-1/2 w-full md:order-1 order-2">
             <AIInstructionsDemo />
@@ -205,7 +205,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="space-y-28 mt-20">
+      <div className="space-y-16 mt-16">
+        <h2 className="text-4xl font-serif tracking-tight text-center">
+          A brief primer on tokens
+        </h2>
         <TokenSection
           id="colors"
           title={tokenTypes.colors.title}
@@ -259,7 +262,7 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-16 lg:py-20">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl leading-tight tracking-tight font-bold sm:text-3xl">
+          <h2 className="text-4xl leading-tight tracking-tight font-serif font-light sm:text-3xl">
             Ready to level up your AI generated code?
           </h2>
           <p className="mt-4 text-lg text-foreground/80">
