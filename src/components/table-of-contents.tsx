@@ -48,9 +48,7 @@ export function TableOfContents() {
             <span
               className={cn(
                 "absolute left-0 top-0 bottom-0 w-0.5 transition-all",
-                activeId === heading.id
-                  ? "bg-primary"
-                  : "bg-transparent"
+                activeId === heading.id ? "bg-primary" : "bg-transparent"
               )}
             />
             {heading.text}
@@ -62,7 +60,7 @@ export function TableOfContents() {
   return (
     <>
       {/* Desktop: Static position in flex row */}
-      <aside className="hidden xl:block w-56 flex-shrink-0 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+      <aside className="hidden xl:block w-56 flex-shrink-0 self-start max-h-[calc(100vh-6rem)] overflow-y-auto relative">
         <div className="sticky top-20">
           <h4 className="text-sm font-semibold mb-4">On This Page</h4>
           {tocContent}
